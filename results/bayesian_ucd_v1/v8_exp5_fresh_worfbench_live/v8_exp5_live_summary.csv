@@ -1,0 +1,5 @@
+method,runs,live_cert_rate,med_live_steps,med_live_tokens,med_live_infer_s,med_cert_oracle_s,mean_unseen_test_f1,mean_unseen_test_regret
+indep_os,2,0.0,140.0,65468.0,2217.75,0.0,0.43582,0.0
+cd_joint_nominal,2,1.0,45.0,20052.0,783.08,0.0178,0.43582,0.0
+cd_joint_calibrated,2,1.0,45.0,20052.0,777.79,0.0179,0.43582,0.0
+cd_joint_hybrid,2,1.0,45.0,20052.0,781.26,0.0174,0.43582,0.0

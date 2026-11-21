@@ -1,0 +1,10 @@
+{
+  "rows": 704,
+  "completed": 588,
+  "invalid_certificates": 0,
+  "confidence_conflicts": 0,
+  "coupling_rows": 44,
+  "coupled_rollouts": 1763201,
+  "direct_dp_checks": 829,
+  "memory_rows": 176
+}

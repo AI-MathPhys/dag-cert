@@ -1,0 +1,10 @@
+{
+  "experiment": "exp9_samegame_midgame",
+  "smoke": false,
+  "python": "3.12.14",
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "elapsed_s": 795.36,
+  "sha256_diagnostics": "7a1df92661d36b59286800990caa647beb3d61970f398d0adc30e027a10d3012",
+  "sha256_runs": "51eae6bbd262ed2013a9050e50ffaeb36ac302fc0d0a86c4cc40dbd7bc02f404",
+  "sha256_memory": "637782d681247f6d7e1f79ae418079f3bbc2b33adaf7249ee4573ac315b74df3"
+}

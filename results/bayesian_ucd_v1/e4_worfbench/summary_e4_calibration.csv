@@ -1,0 +1,11 @@
+domain,feature_model,n_workflows,feature_dim,cv5_r2,cv5_pearson_r,cv5_mae,cv5_max_residual
+all,main_effects_d9,80,9,0.921,0.9597,0.0334,0.2112
+all,main_plus_pair_d33,80,33,0.9467,0.9739,0.0279,0.1495
+toolbench,main_effects_d9,80,9,0.7495,0.8667,0.0541,0.2689
+toolbench,main_plus_pair_d33,80,33,0.8676,0.932,0.0352,0.2079
+toolalpaca,main_effects_d9,80,9,0.8436,0.9188,0.0533,0.322
+toolalpaca,main_plus_pair_d33,80,33,0.8956,0.9468,0.0453,0.2381
+seal_tools,main_effects_d9,80,9,0.8156,0.9036,0.0543,0.3628
+seal_tools,main_plus_pair_d33,80,33,0.8984,0.9483,0.0365,0.2626
+webshop,main_effects_d9,80,9,0.9562,0.978,0.0356,0.1375
+webshop,main_plus_pair_d33,80,33,0.9616,0.984,0.0282,0.1798

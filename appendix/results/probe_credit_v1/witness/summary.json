@@ -1,0 +1,62 @@
+{
+  "403005-interleaved": {
+    "slack": 142613,
+    "rec": {
+      "sweep": 137,
+      "visits": [
+        5,
+        63
+      ],
+      "prefix_slack": -69753,
+      "unbuilt_fee": 1444,
+      "forecast": [
+        129075,
+        583731
+      ],
+      "balance": 2787,
+      "lower": 2631,
+      "covered": true,
+      "score": 2631,
+      "audit_lower": 2647,
+      "probes": [
+        [
+          256,
+          142613
+        ]
+      ],
+      "refinements": 0
+    },
+    "gap": 2677,
+    "bytes": 39840
+  },
+  "403006-interleaved": {
+    "slack": 49676,
+    "rec": {
+      "sweep": 148,
+      "visits": [
+        5,
+        69
+      ],
+      "prefix_slack": -108429,
+      "unbuilt_fee": 1428,
+      "forecast": [
+        43855,
+        437071
+      ],
+      "balance": 3006,
+      "lower": 2850,
+      "covered": true,
+      "score": 2850,
+      "audit_lower": 2866,
+      "probes": [
+        [
+          256,
+          49676
+        ]
+      ],
+      "refinements": 0
+    },
+    "gap": 2896,
+    "bytes": 40336
+  }
+}

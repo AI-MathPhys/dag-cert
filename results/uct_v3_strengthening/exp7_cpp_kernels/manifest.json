@@ -1,0 +1,9 @@
+{
+  "experiment": "exp7_cpp_kernels",
+  "smoke": false,
+  "python": "3.12.14",
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "elapsed_s": 37.79,
+  "sha256_runs": "a88e18bbfc961e9dbe473bdea060b6590b07dcc1a71ef065c716b939b9b7e741",
+  "sha256_parity_audit": "ea705e2ec2d5731958bbb2b467fd1e58632da1e437bf7f95dec1e7743ef6705b"
+}

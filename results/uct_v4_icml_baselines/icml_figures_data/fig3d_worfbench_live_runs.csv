@@ -1,0 +1,9 @@
+method,seed,certified,steps,capped_steps,cap,live_total_tokens,live_gen_calls,live_infer_s,action_label
+opt_sep,810001,0,235,235,235,109005,312,6435.263,Verifier->dag_repair
+flat_lucb_root,810001,0,235,235,235,100847,294,6191.591,Verifier->dag_repair
+flat_lucb_term,810001,0,235,235,235,100847,294,6204.932,Planner->one_shot
+lucb_micro_marg,810001,0,235,235,235,101070,294,6280.279,Planner->one_shot
+opt_sep,810002,0,235,235,235,111475,323,6429.165,Verifier->dag_repair
+flat_lucb_root,810002,0,235,235,235,108031,315,6318.894,Verifier->dag_repair
+flat_lucb_term,810002,0,235,235,235,108031,315,6355.109,Decoder->mbr_select
+lucb_micro_marg,810002,0,235,235,235,109846,322,6405.437,Decoder->mbr_select

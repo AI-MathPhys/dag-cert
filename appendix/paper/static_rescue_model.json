@@ -1,0 +1,53 @@
+{
+  "sources": {
+    "results\\peg_fragment_v1\\runs.jsonl": "c7372519a46ba35a0e84ff337a23d6c425629d415bad46b6d3284ef83dd68e5b",
+    "results\\peg_precision_v1\\runs.jsonl": "1cdd4ea3e53d733ffa9559e614721ee0883e41655e51598c670a4a03a1ce4398",
+    "results\\frontier_gate_v1\\runs.jsonl": "96c504821b728b3b005b64b951896438655e0058449ab05da55c9ffdad0f514a"
+  },
+  "review_cases": 119,
+  "static_yes_cases": 32,
+  "rescue": {
+    "feature": "lag",
+    "threshold": 2.5055769999999997,
+    "left": {
+      "admit": false,
+      "n": 41
+    },
+    "right": {
+      "feature": "lag",
+      "threshold": 4.4042985,
+      "left": {
+        "admit": true,
+        "n": 13
+      },
+      "right": {
+        "admit": false,
+        "n": 65
+      }
+    }
+  },
+  "geometry": {
+    "feature": "actions",
+    "threshold": 3.0,
+    "left": {
+      "admit": false,
+      "n": 24
+    },
+    "right": {
+      "feature": "load",
+      "threshold": 40.625,
+      "left": {
+        "admit": false,
+        "n": 81
+      },
+      "right": {
+        "admit": true,
+        "n": 14
+      }
+    }
+  },
+  "veto": {
+    "admit": false,
+    "n": 32
+  }
+}

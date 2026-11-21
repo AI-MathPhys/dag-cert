@@ -1,0 +1,88 @@
+{
+  "graphs": [
+    {
+      "name": "sharp-192-389001",
+      "family": "layout4",
+      "M": 192,
+      "A": 4,
+      "good": 2,
+      "law": "constant",
+      "profile": "sharp",
+      "seed": 389001,
+      "eps": 0.0125,
+      "cohort": "fragment-sign"
+    },
+    {
+      "name": "sharp-224-389002",
+      "family": "layout4",
+      "M": 224,
+      "A": 4,
+      "good": 2,
+      "law": "constant",
+      "profile": "sharp",
+      "seed": 389002,
+      "eps": 0.0125,
+      "cohort": "fragment-sign"
+    },
+    {
+      "name": "sharp-256-389003",
+      "family": "layout4",
+      "M": 256,
+      "A": 4,
+      "good": 2,
+      "law": "constant",
+      "profile": "sharp",
+      "seed": 389003,
+      "eps": 0.0125,
+      "cohort": "fragment-sign"
+    },
+    {
+      "name": "shoulder-192-389004",
+      "family": "layout4",
+      "M": 192,
+      "A": 4,
+      "good": 2,
+      "law": "constant",
+      "profile": "shoulder",
+      "seed": 389004,
+      "eps": 0.0125,
+      "cohort": "fragment-sign"
+    },
+    {
+      "name": "shoulder-224-389005",
+      "family": "layout4",
+      "M": 224,
+      "A": 4,
+      "good": 2,
+      "law": "constant",
+      "profile": "shoulder",
+      "seed": 389005,
+      "eps": 0.0125,
+      "cohort": "fragment-sign"
+    },
+    {
+      "name": "shoulder-256-389006",
+      "family": "layout4",
+      "M": 256,
+      "A": 4,
+      "good": 2,
+      "law": "constant",
+      "profile": "shoulder",
+      "seed": 389006,
+      "eps": 0.0125,
+      "cohort": "fragment-sign"
+    }
+  ],
+  "tapes": 12,
+  "methods": [
+    "reference",
+    "immediate",
+    "threshold"
+  ],
+  "caps": [
+    102400000,
+    262144,
+    12.0
+  ],
+  "protocol": "eecb902146e3659c8f299745d00c7ef63cec9c1320c221760bdea4f83273df80"
+}

@@ -1,0 +1,56 @@
+{
+  "412001-interleaved": {
+    "sign": "prefix-dependent",
+    "loss": 557572,
+    "launch_slack": 71351.625
+  },
+  "412001-short-runs": {
+    "sign": "immediate",
+    "margin": 60
+  },
+  "412002-interleaved": {
+    "sign": "prefix-dependent",
+    "loss": 562612,
+    "launch_slack": 71653.5
+  },
+  "412002-short-runs": {
+    "sign": "immediate",
+    "margin": 60
+  },
+  "412003-interleaved": {
+    "sign": "prefix-dependent",
+    "loss": 567652,
+    "launch_slack": 71962.875
+  },
+  "412003-short-runs": {
+    "sign": "immediate",
+    "margin": 60
+  },
+  "412004-interleaved": {
+    "sign": "prefix-dependent",
+    "loss": 572692,
+    "launch_slack": 72273.75
+  },
+  "412004-short-runs": {
+    "sign": "immediate",
+    "margin": 60
+  },
+  "412005-interleaved": {
+    "sign": "prefix-dependent",
+    "loss": 582772,
+    "launch_slack": 72920.25
+  },
+  "412005-short-runs": {
+    "sign": "immediate",
+    "margin": 60
+  },
+  "412006-interleaved": {
+    "sign": "prefix-dependent",
+    "loss": 592852,
+    "launch_slack": 50347.0
+  },
+  "412006-short-runs": {
+    "sign": "immediate",
+    "margin": 60
+  }
+}

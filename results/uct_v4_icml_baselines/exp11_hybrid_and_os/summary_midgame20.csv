@@ -1,0 +1,9 @@
+stratum,method,runs,cert_rate,median_capped_steps,median_total_ms,mean_total_ms,mean_final_regret,false_certificates
+midgame_15x15_d4_with_contain,ucb,2,1.0,0.0,0.564,0.564,0.0,0
+midgame_15x15_d4_with_contain,lcb_fast,2,1.0,0.0,0.537,0.537,0.0,0
+midgame_15x15_d4_with_contain,hybrid,2,1.0,0.0,0.547,0.547,0.0,0
+midgame_15x15_d4_with_contain,opt_sep,2,1.0,0.0,0.62,0.62,0.0,0
+midgame_15x15_d4_zero_contain,ucb,38,0.3684,60000.0,1800.143,1411.5,2e-05,0
+midgame_15x15_d4_zero_contain,lcb_fast,38,0.4737,60000.0,1800.136,1238.887,0.00013,0
+midgame_15x15_d4_zero_contain,hybrid,38,0.4211,60000.0,1800.124,1334.648,0.00013,0
+midgame_15x15_d4_zero_contain,opt_sep,38,0.3684,60000.0,1800.133,1435.084,2e-05,0

@@ -1,0 +1,24 @@
+{
+  "experiment": "v8_exp3_factorial_phase",
+  "smoke": false,
+  "elapsed_s": 154.47,
+  "python": "3.12.14",
+  "files": {
+    "v8_exp3_phase_runs.jsonl": {
+      "sha256": "e6b8d5e414203e279a7a3f3a048cf97387bba0e74b2e6ab879e8a0ad02cd4047",
+      "bytes": 1138395
+    },
+    "v8_exp3_phase_summary.csv": {
+      "sha256": "1c879afaba5f914f74c4988ea443682fd11f956ac53cb6f6fb84298004b13e2b",
+      "bytes": 18156
+    },
+    "v8_exp3_proxy_runs.jsonl": {
+      "sha256": "a0de81b2f7513fbd2527da8fb56bfd0c6103b47f0038dca3acbe6c2d8463b46b",
+      "bytes": 943055
+    },
+    "v8_exp3_proxy_summary.csv": {
+      "sha256": "c6857f73670baca35d2ea23e43bac1dbc64d9a9ff53fccc71cf84822bd8288d5",
+      "bytes": 5287
+    }
+  }
+}

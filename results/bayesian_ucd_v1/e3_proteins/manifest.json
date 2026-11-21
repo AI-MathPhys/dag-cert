@@ -1,0 +1,8 @@
+{
+  "suite": "v7_e3_proteins",
+  "smoke": false,
+  "python": "3.12.14",
+  "elapsed_s": 175.46,
+  "total_runs": 992,
+  "sha256_runs": "21cbdcd4e9795c6641d400b266ddc596a7a1f2396cba9dca415cb6e39819683d"
+}

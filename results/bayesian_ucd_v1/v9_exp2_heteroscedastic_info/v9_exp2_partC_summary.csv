@@ -1,0 +1,17 @@
+profile,method,runs,cert_rate,false_certs,false_cert_rate,med_samples,mean_samples
+sig_025_025,cd_joint_nom_sig1,60,1.0,0,0.0,30.0,30.7
+sig_025_025,indep_student_os,60,1.0,0,0.0,24.0,22.1
+sig_025_025,known_sigma_tracker,60,1.0,0,0.0,3.0,3.0
+sig_025_025,v34_vanilla,60,1.0,0,0.0,43.0,46.5
+sig_025_400,cd_joint_nom_sig1,60,1.0,9,0.15,12.5,16.0
+sig_025_400,indep_student_os,60,1.0,0,0.0,1547.5,1787.5
+sig_025_400,known_sigma_tracker,60,1.0,0,0.0,192.5,218.2
+sig_025_400,v34_vanilla,60,1.0,0,0.0,867.0,927.8
+sig_050_200,cd_joint_nom_sig1,60,1.0,3,0.05,24.0,25.2
+sig_050_200,indep_student_os,60,1.0,0,0.0,377.0,532.4
+sig_050_200,known_sigma_tracker,60,1.0,0,0.0,56.0,60.9
+sig_050_200,v34_vanilla,60,1.0,0,0.0,197.0,219.3
+sig_400_400,cd_joint_nom_sig1,60,1.0,36,0.6,3.0,6.8
+sig_400_400,indep_student_os,60,1.0,0,0.0,9660.0,9684.3
+sig_400_400,known_sigma_tracker,60,1.0,0,0.0,432.0,439.2
+sig_400_400,v34_vanilla,60,1.0,0,0.0,2361.0,2516.3

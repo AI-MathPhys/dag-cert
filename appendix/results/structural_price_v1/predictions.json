@@ -1,0 +1,468 @@
+{
+  "394001-spread": {
+    "M": 176,
+    "height": 8,
+    "join": 8,
+    "kmin": 174,
+    "kmax": 176,
+    "cover_fee": 5624,
+    "max_intervals": [
+      88,
+      88,
+      87,
+      87
+    ],
+    "min_intervals": [
+      44,
+      44,
+      44,
+      44
+    ],
+    "eligible": 4,
+    "sweep": 137,
+    "lis": 4,
+    "nstar": 10,
+    "cold_unit": 3,
+    "cold_floor": 510,
+    "hot_debt": 156,
+    "margin": 198,
+    "early": 11701,
+    "clip": [
+      562853,
+      1831077
+    ],
+    "funding": 70045,
+    "forecast": 167894.5,
+    "pre_return": 0.03098160135373602,
+    "cold_clear": 0.026372360655861016,
+    "sign": "deferred",
+    "bound": 198
+  },
+  "394001-neighbors": {
+    "M": 176,
+    "height": 8,
+    "join": 1,
+    "kmin": 176,
+    "kmax": 176,
+    "cover_fee": 5640,
+    "max_intervals": [
+      88,
+      88,
+      88,
+      88
+    ],
+    "min_intervals": [
+      44,
+      44,
+      44,
+      44
+    ],
+    "eligible": 4,
+    "sweep": 137,
+    "lis": 5,
+    "nstar": 10,
+    "cold_unit": 3,
+    "cold_floor": 510,
+    "hot_debt": 156,
+    "margin": 198,
+    "early": 11442,
+    "clip": [
+      -206539,
+      -317131
+    ],
+    "funding": 73063,
+    "forecast": 173930.5,
+    "pre_return": 0.03098160135373602,
+    "cold_clear": 0.026372360655861016,
+    "sign": "abstain",
+    "bound": null
+  },
+  "394001-short-runs": {
+    "M": 176,
+    "height": 8,
+    "join": 8,
+    "kmin": 7,
+    "kmax": 44,
+    "cover_fee": 1110,
+    "max_intervals": [
+      15,
+      4,
+      1,
+      15
+    ],
+    "min_intervals": [
+      9,
+      2,
+      1,
+      9
+    ],
+    "eligible": 2,
+    "sweep": 137,
+    "lis": 8,
+    "no_launch": true,
+    "permanent": 2048,
+    "probe_checks": [
+      4,
+      8,
+      16,
+      32,
+      64,
+      128,
+      256,
+      512,
+      1024
+    ],
+    "sign": "immediate",
+    "bound": 60
+  },
+  "394002-spread": {
+    "M": 176,
+    "height": 8,
+    "join": 8,
+    "kmin": 174,
+    "kmax": 176,
+    "cover_fee": 5624,
+    "max_intervals": [
+      87,
+      88,
+      87,
+      88
+    ],
+    "min_intervals": [
+      44,
+      44,
+      44,
+      44
+    ],
+    "eligible": 4,
+    "sweep": 137,
+    "lis": 4,
+    "nstar": 10,
+    "cold_unit": 3,
+    "cold_floor": 510,
+    "hot_debt": 156,
+    "margin": 198,
+    "early": 11701,
+    "clip": [
+      562853,
+      1831077
+    ],
+    "funding": 70045,
+    "forecast": 167894.5,
+    "pre_return": 0.03098160135373602,
+    "cold_clear": 0.026258078429298615,
+    "sign": "deferred",
+    "bound": 198
+  },
+  "394002-neighbors": {
+    "M": 176,
+    "height": 8,
+    "join": 1,
+    "kmin": 176,
+    "kmax": 176,
+    "cover_fee": 5640,
+    "max_intervals": [
+      88,
+      88,
+      88,
+      88
+    ],
+    "min_intervals": [
+      44,
+      44,
+      44,
+      44
+    ],
+    "eligible": 4,
+    "sweep": 137,
+    "lis": 5,
+    "nstar": 10,
+    "cold_unit": 3,
+    "cold_floor": 510,
+    "hot_debt": 156,
+    "margin": 198,
+    "early": 11442,
+    "clip": [
+      -206539,
+      -317131
+    ],
+    "funding": 73063,
+    "forecast": 173930.5,
+    "pre_return": 0.03098160135373602,
+    "cold_clear": 0.026258078429298615,
+    "sign": "abstain",
+    "bound": null
+  },
+  "394002-short-runs": {
+    "M": 176,
+    "height": 8,
+    "join": 8,
+    "kmin": 7,
+    "kmax": 36,
+    "cover_fee": 816,
+    "max_intervals": [
+      2,
+      1,
+      8,
+      9
+    ],
+    "min_intervals": [
+      2,
+      1,
+      6,
+      7
+    ],
+    "eligible": 2,
+    "sweep": 137,
+    "lis": 8,
+    "no_launch": true,
+    "permanent": 2048,
+    "probe_checks": [
+      4,
+      8,
+      16,
+      32,
+      64,
+      128,
+      256,
+      512,
+      1024
+    ],
+    "sign": "immediate",
+    "bound": 12
+  },
+  "394003-spread": {
+    "M": 192,
+    "height": 8,
+    "join": 8,
+    "kmin": 190,
+    "kmax": 192,
+    "cover_fee": 6136,
+    "max_intervals": [
+      95,
+      96,
+      96,
+      95
+    ],
+    "min_intervals": [
+      48,
+      48,
+      48,
+      48
+    ],
+    "eligible": 4,
+    "sweep": 149,
+    "lis": 4,
+    "nstar": 10,
+    "cold_unit": 3,
+    "cold_floor": 558,
+    "hot_debt": 156,
+    "margin": 246,
+    "early": 12019,
+    "clip": [
+      439301,
+      1646085
+    ],
+    "funding": 76781,
+    "forecast": 212429.75,
+    "pre_return": 0.031161401503758412,
+    "cold_clear": 0.023357121493613575,
+    "sign": "deferred",
+    "bound": 246
+  },
+  "394003-neighbors": {
+    "M": 192,
+    "height": 8,
+    "join": 1,
+    "kmin": 192,
+    "kmax": 192,
+    "cover_fee": 6152,
+    "max_intervals": [
+      96,
+      96,
+      96,
+      96
+    ],
+    "min_intervals": [
+      48,
+      48,
+      48,
+      48
+    ],
+    "eligible": 4,
+    "sweep": 149,
+    "lis": 5,
+    "nstar": 10,
+    "cold_unit": 3,
+    "cold_floor": 558,
+    "hot_debt": 156,
+    "margin": 246,
+    "early": 11760,
+    "clip": [
+      -276331,
+      -448363
+    ],
+    "funding": 79799,
+    "forecast": 218465.75,
+    "pre_return": 0.031161401503758412,
+    "cold_clear": 0.023357121493613575,
+    "sign": "abstain",
+    "bound": null
+  },
+  "394003-short-runs": {
+    "M": 192,
+    "height": 8,
+    "join": 8,
+    "kmin": 4,
+    "kmax": 40,
+    "cover_fee": 1016,
+    "max_intervals": [
+      2,
+      1,
+      11,
+      11
+    ],
+    "min_intervals": [
+      2,
+      1,
+      9,
+      9
+    ],
+    "eligible": 2,
+    "sweep": 149,
+    "lis": 8,
+    "no_launch": true,
+    "permanent": 4096,
+    "probe_checks": [
+      4,
+      8,
+      16,
+      32,
+      64,
+      128,
+      256,
+      512,
+      1024,
+      2048
+    ],
+    "sign": "immediate",
+    "bound": 60
+  },
+  "394004-spread": {
+    "M": 192,
+    "height": 8,
+    "join": 8,
+    "kmin": 190,
+    "kmax": 192,
+    "cover_fee": 6136,
+    "max_intervals": [
+      95,
+      95,
+      96,
+      96
+    ],
+    "min_intervals": [
+      48,
+      48,
+      48,
+      48
+    ],
+    "eligible": 4,
+    "sweep": 149,
+    "lis": 4,
+    "nstar": 10,
+    "cold_unit": 3,
+    "cold_floor": 558,
+    "hot_debt": 156,
+    "margin": 246,
+    "early": 12019,
+    "clip": [
+      439301,
+      1646085
+    ],
+    "funding": 76781,
+    "forecast": 212429.75,
+    "pre_return": 0.031161401503758412,
+    "cold_clear": 0.023252409579551103,
+    "sign": "deferred",
+    "bound": 246
+  },
+  "394004-neighbors": {
+    "M": 192,
+    "height": 8,
+    "join": 1,
+    "kmin": 192,
+    "kmax": 192,
+    "cover_fee": 6152,
+    "max_intervals": [
+      96,
+      96,
+      96,
+      96
+    ],
+    "min_intervals": [
+      48,
+      48,
+      48,
+      48
+    ],
+    "eligible": 4,
+    "sweep": 149,
+    "lis": 5,
+    "nstar": 10,
+    "cold_unit": 3,
+    "cold_floor": 558,
+    "hot_debt": 156,
+    "margin": 246,
+    "early": 11760,
+    "clip": [
+      -276331,
+      -448363
+    ],
+    "funding": 79799,
+    "forecast": 218465.75,
+    "pre_return": 0.031161401503758412,
+    "cold_clear": 0.023252409579551103,
+    "sign": "abstain",
+    "bound": null
+  },
+  "394004-short-runs": {
+    "M": 192,
+    "height": 8,
+    "join": 8,
+    "kmin": 4,
+    "kmax": 31,
+    "cover_fee": 928,
+    "max_intervals": [
+      9,
+      2,
+      9,
+      1
+    ],
+    "min_intervals": [
+      9,
+      2,
+      9,
+      1
+    ],
+    "eligible": 2,
+    "sweep": 149,
+    "lis": 8,
+    "no_launch": true,
+    "permanent": 4096,
+    "probe_checks": [
+      4,
+      8,
+      16,
+      32,
+      64,
+      128,
+      256,
+      512,
+      1024,
+      2048
+    ],
+    "sign": "immediate",
+    "bound": 60
+  }
+}

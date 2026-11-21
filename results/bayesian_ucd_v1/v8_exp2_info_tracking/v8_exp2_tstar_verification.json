@@ -1,0 +1,54 @@
+[
+  {
+    "instance": "proxy_M5_d3",
+    "m_leaves": 5,
+    "d_feat": 3,
+    "eps": 0.015,
+    "target_action": 0.0,
+    "dual_rate": 0.904005116977701,
+    "primal_qp_rate": 0.9040051170144425,
+    "characteristic_time": 1.1061884288257484,
+    "max_qp_dual_diff": 3.6741498732340006e-11,
+    "best_random_rate": 0.7400131959697568,
+    "rate_dominates_random": 1.0
+  },
+  {
+    "instance": "gauss_M16_d4",
+    "m_leaves": 16,
+    "d_feat": 4,
+    "eps": 0.025,
+    "target_action": 3.0,
+    "dual_rate": 0.3523675292296615,
+    "primal_qp_rate": 0.35236752922973585,
+    "characteristic_time": 2.8379459429368503,
+    "max_qp_dual_diff": 3.214619681557451e-10,
+    "best_random_rate": 0.2291694108009887,
+    "rate_dominates_random": 1.0
+  },
+  {
+    "instance": "gauss_M32_d6",
+    "m_leaves": 32,
+    "d_feat": 6,
+    "eps": 0.025,
+    "target_action": 1.0,
+    "dual_rate": 0.0963327439014232,
+    "primal_qp_rate": 0.09633274390165261,
+    "characteristic_time": 10.380686353368018,
+    "max_qp_dual_diff": 7.566924864477187e-11,
+    "best_random_rate": 0.05123643769201382,
+    "rate_dominates_random": 1.0
+  },
+  {
+    "instance": "gauss_M64_d8",
+    "m_leaves": 64,
+    "d_feat": 8,
+    "eps": 0.025,
+    "target_action": 7.0,
+    "dual_rate": 0.2731064642294714,
+    "primal_qp_rate": 0.2731064642295613,
+    "characteristic_time": 3.6615757258670127,
+    "max_qp_dual_diff": 3.451527952336164e-11,
+    "best_random_rate": 0.16458416704305703,
+    "rate_dominates_random": 1.0
+  }
+]

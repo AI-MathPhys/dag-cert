@@ -1,0 +1,24 @@
+{
+  "experiment": "v8_exp5_fresh_worfbench_live",
+  "smoke": false,
+  "elapsed_s": 2282.92,
+  "python": "3.12.14",
+  "files": {
+    "v8_exp5_offline_runs.jsonl": {
+      "sha256": "63f60d01ae2929a2d27a8cb94a655d13f92cce2326ecc37ccc3976f521b33159",
+      "bytes": 386707
+    },
+    "v8_exp5_offline_summary.csv": {
+      "sha256": "80eae0ee433f400f4db1be7275a6e3ea6a31d1a31d9201e1cdf517afb3f8007d",
+      "bytes": 566
+    },
+    "v8_exp5_live_runs.jsonl": {
+      "sha256": "a79d0ad675d972911be095b9f7a7c06481b55ced306b6a3e5f9bb912de200a33",
+      "bytes": 3764
+    },
+    "v8_exp5_live_summary.csv": {
+      "sha256": "21d18cffc43c3bae74be845b987630e4f8bf11387dbec3404395195dd06c74f2",
+      "bytes": 383
+    }
+  }
+}

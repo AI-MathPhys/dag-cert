@@ -1,0 +1,10 @@
+\begin{table}[t]\centering\small
+\caption{Public index repairs on the recorded observation paths. Pull counts are pooled millions across the inputs. Batch counts include the first unchanged parent. Extra saving compares the paid two-leaf certificate with the strong clock-aware batch, as a percentage of total work.}
+\label{tab:ancestor-replay}
+\begin{tabular}{@{}llrrrrr@{}}\toprule
+Sampler & Cohort & Eager pulls & Batch pulls & Changed & Batch saving & Extra saving\\\midrule
+Compact & Broad & 23.85 & 2.00 & 1.86 & 31.3\% & 1.83\%\\
+Compact & Overlap & 10.84 & 0.67 & 0.65 & 68.6\% & 0.00\%\\
+Range & Broad & 32.05 & 2.55 & 2.40 & 43.9\% & 0.00\%\\
+Range & Overlap & 10.84 & 0.67 & 0.65 & 68.8\% & 0.00\%\\
+\bottomrule\end{tabular}\end{table}

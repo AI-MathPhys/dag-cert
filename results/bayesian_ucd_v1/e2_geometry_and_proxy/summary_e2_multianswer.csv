@@ -1,0 +1,5 @@
+method,runs,cert_rate,false_certificates,frac_chose_hull_action_a1,median_steps,q25_steps,q75_steps,median_t5_lb_a0,median_t5_lb_a1
+greedy_answer_cd,20,1.0,0,0.1,73.0,55.2,86.2,9.02,0.62
+support_aware_cd,20,1.0,0,1.0,10.0,7.8,13.0,9.02,0.62
+support_aware_mc,20,1.0,0,1.0,10.0,8.8,12.2,9.02,0.62
+opt_sep_indep,20,1.0,0,0.0,5461.5,5345.8,5557.0,9.02,0.62

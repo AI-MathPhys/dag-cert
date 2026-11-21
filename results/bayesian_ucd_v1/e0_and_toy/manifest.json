@@ -1,0 +1,10 @@
+{
+  "suite": "v7_e0_and_toy",
+  "smoke": false,
+  "python": "3.12.14",
+  "elapsed_s": 52.84,
+  "e0_instances": 200,
+  "toy_runs": 400,
+  "sha256_e0": "c9b4c66b9fbb9c67d995547c239512d97553f02e08d97f6d5286fd3a93fea2d6",
+  "sha256_toy": "6539ca4077db6488bbd1fc5884e8eefd0b2ca7e92d1e8c825d28c2efa07e90cc"
+}

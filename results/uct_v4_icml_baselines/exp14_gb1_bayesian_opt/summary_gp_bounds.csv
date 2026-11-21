@@ -1,0 +1,13 @@
+stratum,beta_mode,acquisition,runs,mean_rkhs_norm,cert_rate,conflict_rate,false_cert_rate,false_certificates,median_capped_steps,median_total_ms
+all,nominal_gp,gp_ucb,40,22.998,0.15,0.0,0.0,0,45000.0,741.18
+all,nominal_gp,gp_root_info,40,22.998,1.0,0.0,0.0,0,8775.0,1182.76
+all,rkhs_calibrated,gp_ucb,40,22.998,0.0,0.0,0.0,0,45000.0,745.92
+all,rkhs_calibrated,gp_root_info,40,22.998,0.0,0.0,0.0,0,45000.0,5635.61
+epistatic_ridge,nominal_gp,gp_ucb,16,22.782,0.125,0.0,0.0,0,45000.0,754.38
+epistatic_ridge,nominal_gp,gp_root_info,16,22.782,1.0,0.0,0.0,0,10275.0,1331.38
+epistatic_ridge,rkhs_calibrated,gp_ucb,16,22.782,0.0,0.0,0.0,0,45000.0,752.09
+epistatic_ridge,rkhs_calibrated,gp_root_info,16,22.782,0.0,0.0,0.0,0,45000.0,5631.65
+single_peak,nominal_gp,gp_ucb,24,23.141,0.1667,0.0,0.0,0,45000.0,726.48
+single_peak,nominal_gp,gp_root_info,24,23.141,1.0,0.0,0.0,0,8675.0,1182.76
+single_peak,rkhs_calibrated,gp_ucb,24,23.141,0.0,0.0,0.0,0,45000.0,741.91
+single_peak,rkhs_calibrated,gp_root_info,24,23.141,0.0,0.0,0.0,0,45000.0,5635.61

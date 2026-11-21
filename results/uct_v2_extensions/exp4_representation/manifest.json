@@ -1,0 +1,37 @@
+{
+  "experiment": "exp4_representation_selector",
+  "smoke": false,
+  "cases": [
+    "coded_8",
+    "coded_16",
+    "coded_32",
+    "window_64",
+    "window_256",
+    "window_1024",
+    "core_8",
+    "core_16",
+    "core_32",
+    "sparse_4",
+    "dense_4",
+    "funnel_256",
+    "funnel_1024",
+    "overlap_256_rho50",
+    "samegame_6x6_d3",
+    "samegame_std_d3"
+  ],
+  "methods": [
+    "direct-graph-regret",
+    "dual-covers",
+    "factorized-regret",
+    "paid-selector"
+  ],
+  "seeds": [
+    640001,
+    640002,
+    640003,
+    640004
+  ],
+  "python": "3.12.14",
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "sha256_runs": "8d2931eb3433f91a81c85e07dfcb8617122469edb0cb56949add2f70d5b8e7ff"
+}

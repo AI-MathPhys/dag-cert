@@ -1,0 +1,58 @@
+Frozen repeated timing study. Development used only previous 173xxx inputs.
+Use eight fresh master seeds 184101..184108 after source and protocol freeze.
+Scientific question: does a compact post-seal service improve complete wall
+time relative to a memoized Range-32 baseline with the same general optimizations?
+
+Primary cases: four large fragmented settings with nominal support probabilities
+.5, .25, .75 and shoulder background (as in partial_benchmark). Secondary
+controls: fragmented128, ordinary six-feature lattice, permuted/thinned eight-
+feature lattice and flat128. Two observation work prices 1 and64 reuse inputs,
+not actual latency. Levels and graph/reward generation unchanged from the
+preceding experiment except new seeds. Work caps 102.4M, physical caps65536.
+All incomplete endpoints retained in both wall and work completion counts.
+8 settings x 8 master seeds x 2 prices =128 case-price pairs, 64 inputs.
+Five methods and five technical timing repetitions give 3200 cold solves.
+
+Methods: original Range, accelerated Range, original Partial, accelerated
+Partial with the shared batch and range scan only, accelerated Partial with
+the compact service after seal. Both accelerated solvers use the same ordinary
+batch kernel, conservative per-draw confidence tariff, full canonical routes,
+and exact memoized cover scans. All pay the three-unit shared dispatch setup.
+Only on a successful seal the compact method can use a frontier-only lower
+candidate and direct upper/outside service with paid lazy support partitions.
+It never uses true means, known elite identity, or precomputed global answers.
+
+Primary endpoint: complete end-to-end elapsed ratio fast_partial/fast_range on
+jointly certified large fragmented pairs, plus completion at the stated caps.
+For each pair take the median of its five within-block time ratios. Pool by
+geometric mean, equal weight per case-price pair. For uncertainty resample
+whole master seed blocks (20000 draws; both prices, variants and technical
+medians stay together). Report percentile interval and all eight seed ratios.
+Describe elapsed advantage on this cohort if point ratio and upper interval
+endpoint <1 and no lower completed count. Work and CPU ratios secondary,
+as are original/original and compact versus batch-only ablations. Report
+all family/price strata, worst cases, wall checkpoints .02,.05,.1,.2,.3,.5,1,2s,
+and equal work checkpoints .1,.4,1.6,6.4,25.6,102.4M. Use median time of each
+case/method for fixed-wall-budget completion. Ratios use completed pairs.
+
+All five methods run sequentially within each block on the same immutable
+input and RNG seed. Shuffle block order and randomly assign methods to
+Latin-square positions by case. Each method occupies each position once in
+the five repetitions; reverse the square on alternating seed blocks. Warm
+interpreter with one separate development input per method. Create new oracle,
+indexes, controller and caches per timed solve. Collect unrelated garbage
+before each solve; leave normal GC enabled. One uninterrupted perf_counter_ns
+timer includes solver construction, root queries, ordinary work, caps,
+commit and rollback through return. Record process CPU in addition. Exclude
+input generation, truth, audit hashing, data serialization and post-return
+object teardown. No profiling, tests, document edits/preview compilations,
+or heavy reports during timing. This is a single-machine Python experiment.
+Do not tune on these fresh cases. Profile data from older inputs are separate.
+
+Post-timing: compare trajectories against the original method on fresh inputs,
+checking observations and failed witnesses, fresh tie convention, final action
+and confidence decision. The reference and fast final answer may differ in
+representation below the achieved threshold. Report any divergence, including
+economic thresholds near the three-unit dispatch setup boundary. Verify the
+fast noncommitting ledger against fast range. Keep the current TeX open and
+compile its main source only after timing has completed.

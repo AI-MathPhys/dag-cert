@@ -1,0 +1,13 @@
+track,K,method,peak_kb
+rank2_cubic,4,v33_full,36.8
+rank2_cubic,4,v34_full,24.69
+rank2_cubic,16,v33_full,79.74
+rank2_cubic,16,v34_full,37.88
+rank2_cubic,64,v33_full,722.03
+rank2_cubic,64,v34_full,170.24
+gend_d4_bnb,4,v33_full,64.56
+gend_d4_bnb,4,v34_full,52.88
+gend_d4_bnb,16,v33_full,69.39
+gend_d4_bnb,16,v34_full,67.58
+gend_d4_bnb,32,v33_full,93.71
+gend_d4_bnb,32,v34_full,93.41

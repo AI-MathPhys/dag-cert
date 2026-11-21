@@ -1,0 +1,8 @@
+{
+  "suite": "v7_e6_scaling",
+  "smoke": false,
+  "python": "3.12.14",
+  "elapsed_s": 215.54,
+  "total_rows": 63,
+  "sha256_runs": "8cc99ba65f75a08c34fa201e2aebb096befb8348848aadc6723b23c85b5b4b4c"
+}

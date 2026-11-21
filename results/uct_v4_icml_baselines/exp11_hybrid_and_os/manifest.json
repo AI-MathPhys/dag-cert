@@ -1,0 +1,10 @@
+{
+  "experiment": "exp11_hybrid_and_os",
+  "smoke": false,
+  "python": "3.12.14",
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "elapsed_s": 584.01,
+  "sha256_hybrid": "98833f6d32d66d6d0f209c7d0b3b9bd2004d7158477e529d71faeddbbf5494dc",
+  "sha256_midgame20": "d0e14744ffcc61d354e6f60605cd42541117594f11e9c78742a69f6894acdb00",
+  "sha256_star": "aff0942f3f369c9f48e64dec453fcde362e43ac799fc2f59d72d33235db16f30"
+}

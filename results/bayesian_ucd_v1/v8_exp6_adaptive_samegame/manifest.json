@@ -1,0 +1,16 @@
+{
+  "experiment": "v8_exp6_adaptive_samegame",
+  "smoke": false,
+  "elapsed_s": 136.5,
+  "python": "3.12.14",
+  "files": {
+    "v8_exp6_runs.jsonl": {
+      "sha256": "c4c12761a9fd2c81ffa832b22c7b914e04c1e0490bb99890be68e60cecf8c4c4",
+      "bytes": 327294
+    },
+    "v8_exp6_summary.csv": {
+      "sha256": "66273b19cbb54d97e3bade248c1736c4531b813a97a3b3fbbbba4e88b9527689",
+      "bytes": 4688
+    }
+  }
+}

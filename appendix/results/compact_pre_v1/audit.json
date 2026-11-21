@@ -1,0 +1,15 @@
+{
+  "tally": {
+    "certificates": 2432,
+    "coupled_endpoints": 1920
+  },
+  "max_regret": 0.0,
+  "distinct": {
+    "broad": 48,
+    "overlap": 8
+  },
+  "overlapping_archived": {
+    "broad": 0,
+    "overlap": 0
+  }
+}

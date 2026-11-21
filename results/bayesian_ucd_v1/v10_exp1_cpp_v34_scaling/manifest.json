@@ -1,0 +1,20 @@
+{
+  "experiment": "v10_exp1_cpp_v34_scaling",
+  "smoke": false,
+  "elapsed_s": 324.47,
+  "total_runs": 1488,
+  "files": {
+    "v10_exp1_runs.jsonl": {
+      "sha256": "15b0b94c5fbcf7dddcd47b4eea4b79575710aee282ae8504f11f686127962a00",
+      "bytes": 507242
+    },
+    "v10_exp1_summary.csv": {
+      "sha256": "b1fab723ea55dcd383c1ff426cd9c38fe43d8211475aef50eec0672aa53abd71",
+      "bytes": 9213
+    },
+    "v10_exp1_cpp_speedup.csv": {
+      "sha256": "7c15432ec49af4d43afdaf88f7b07d38182b20502000d53e9bdee44a1111031a",
+      "bytes": 462
+    }
+  }
+}

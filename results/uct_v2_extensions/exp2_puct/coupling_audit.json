@@ -1,0 +1,41 @@
+{
+  "checks": [
+    {
+      "regime": "root_puct",
+      "prior": "unit_lambda",
+      "tau": 20000,
+      "coupled": true
+    },
+    {
+      "regime": "root_puct",
+      "prior": "informative",
+      "tau": 20000,
+      "coupled": true
+    },
+    {
+      "regime": "root_puct",
+      "prior": "misleading",
+      "tau": 20000,
+      "coupled": true
+    },
+    {
+      "regime": "recursive_puct",
+      "prior": "uniform",
+      "tau": 4256,
+      "coupled": true
+    },
+    {
+      "regime": "recursive_puct",
+      "prior": "informative",
+      "tau": 9339,
+      "coupled": true
+    },
+    {
+      "regime": "recursive_puct",
+      "prior": "misleading",
+      "tau": 12006,
+      "coupled": true
+    }
+  ],
+  "all_coupled": true
+}

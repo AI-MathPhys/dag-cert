@@ -1,0 +1,80 @@
+{
+  "cases": 8,
+  "total_rollouts_audited": 32860,
+  "total_dp_checks": 6890,
+  "zero_discrepancies": true,
+  "records": [
+    {
+      "case": "overlap_64_rho0",
+      "steps_audited": 5000,
+      "dp_reference_checks": 39,
+      "tau_exact": null,
+      "tau_marginal": null,
+      "conflicts": 0,
+      "discrepancies": 0
+    },
+    {
+      "case": "overlap_64_rho50",
+      "steps_audited": 5000,
+      "dp_reference_checks": 2174,
+      "tau_exact": 2865,
+      "tau_marginal": null,
+      "conflicts": 0,
+      "discrepancies": 0
+    },
+    {
+      "case": "overlap_64_rho88_det",
+      "steps_audited": 5000,
+      "dp_reference_checks": 4484,
+      "tau_exact": 553,
+      "tau_marginal": null,
+      "conflicts": 0,
+      "discrepancies": 0
+    },
+    {
+      "case": "funnel_64",
+      "steps_audited": 2156,
+      "dp_reference_checks": 39,
+      "tau_exact": 2156,
+      "tau_marginal": 2156,
+      "conflicts": 0,
+      "discrepancies": 0
+    },
+    {
+      "case": "parity_8",
+      "steps_audited": 704,
+      "dp_reference_checks": 37,
+      "tau_exact": 704,
+      "tau_marginal": 704,
+      "conflicts": 0,
+      "discrepancies": 0
+    },
+    {
+      "case": "window_64",
+      "steps_audited": 5000,
+      "dp_reference_checks": 39,
+      "tau_exact": null,
+      "tau_marginal": null,
+      "conflicts": 0,
+      "discrepancies": 0
+    },
+    {
+      "case": "samegame_5x5_d3",
+      "steps_audited": 5000,
+      "dp_reference_checks": 39,
+      "tau_exact": null,
+      "tau_marginal": null,
+      "conflicts": 0,
+      "discrepancies": 0
+    },
+    {
+      "case": "samegame_std01_d3",
+      "steps_audited": 5000,
+      "dp_reference_checks": 39,
+      "tau_exact": null,
+      "tau_marginal": null,
+      "conflicts": 0,
+      "discrepancies": 0
+    }
+  ]
+}

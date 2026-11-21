@@ -1,0 +1,15 @@
+{
+  "suite": "exp12_real_world",
+  "smoke": false,
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "python": "3.12.14",
+  "delta": 0.05,
+  "schedule": "emp_bernstein",
+  "gb1_runs": 420,
+  "gb1_sweep_runs": 336,
+  "worfbench_runs": 840,
+  "total_runs": 1596,
+  "sha256_gb1_campaigns": "0b5bad72534b6eaff61f077906cbb891f283e61430622ab827ad4d9a3121b19f",
+  "sha256_gb1_panel_sweep": "61ebba3c048259fd53d8ca2da04ffc59e555bd5b4da5a84bb7b7f32aa1fb8ae6",
+  "sha256_worfbench": "c7d2423825dcf33d3ff3da54221653760951515c990a63edfdf311fbb3ab7b9a"
+}

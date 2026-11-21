@@ -1,0 +1,28 @@
+{
+  "experiment": "v8_exp4_compute_breakeven",
+  "smoke": false,
+  "elapsed_s": 411.13,
+  "python": "3.12.14",
+  "files": {
+    "v8_exp4_coupled_runs.jsonl": {
+      "sha256": "85fcab3b4067f5ad99830e262dd86c621f97554f86c4e42f2134decfa52cd1c0",
+      "bytes": 67159
+    },
+    "v8_exp4_coupled_summary.csv": {
+      "sha256": "abcbee171f8298accda1d93906d8f477d17627400374147b6d908cc3ca068327",
+      "bytes": 1978
+    },
+    "v8_exp4_end2end_runs.jsonl": {
+      "sha256": "aec6b00acb65d38b3628f8d829db311a5ba61266902e816342c4161241c7ee65",
+      "bytes": 92011
+    },
+    "v8_exp4_end2end_summary.csv": {
+      "sha256": "af5b726abeb984e16cc05f7328240aa0efdc80a7e1e1bed85dbe760ec49df325",
+      "bytes": 2860
+    },
+    "v8_exp4_kappa_frontier.csv": {
+      "sha256": "19baa7803c9306e0c8dcc8ca070456a0e5da49d0b0a15e6df0b5a80ba83b2b8b",
+      "bytes": 13851
+    }
+  }
+}

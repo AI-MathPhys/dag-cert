@@ -1,0 +1,6 @@
+track,method,runs,cert_rate,false_certs,med_steps,med_llm_tokens,token_speedup_vs_os,mean_unseen_test_f1,mean_unseen_test_regret,med_total_ms
+distribution_free,indep_os,200,1.0,0,1897.5,944389.0,1.0,0.52874,0.0,32.09
+distribution_free,df_cd_fallback,200,1.0,0,1897.5,944389.0,1.0,0.52874,0.0,77.38
+nominal_bayesian,cd_joint_nominal,200,0.98,0,727.5,365752.0,2.58,0.51871,0.01003,283.65
+calibrated_eb_gp,cd_joint_calibrated,200,0.985,0,318.0,164832.0,5.73,0.51885,0.00989,194.73
+hybrid_valid,cd_joint_hybrid,200,1.0,0,327.0,172335.0,5.48,0.52709,0.00165,174.38

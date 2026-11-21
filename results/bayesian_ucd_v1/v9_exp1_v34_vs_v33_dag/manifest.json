@@ -1,0 +1,24 @@
+{
+  "suite": "v9_exp1_v34_vs_v33_dag",
+  "smoke": false,
+  "total_rows": 3168,
+  "wall_s": 1190.74,
+  "files": {
+    "v9_exp1_runs.jsonl": {
+      "bytes": 1400265,
+      "sha256": "8ab25e8bab12dcea256f6dda3a5a784a265b8021933b3bef8408053877fae6c6"
+    },
+    "v9_exp1_summary.csv": {
+      "bytes": 16063,
+      "sha256": "fc7a9504eb4a183329e22be284c1f7128562a1216ab1855f2d6e5ec748e87c3d"
+    },
+    "v9_exp1_wallclock_stack.csv": {
+      "bytes": 42236,
+      "sha256": "1eb3b968748875cb3bd237e9382639b354d0f1cefe46022416888cef278101f3"
+    },
+    "v9_exp1_memory.csv": {
+      "bytes": 393,
+      "sha256": "4c23cd73b556ff92df550177ddd68363e3a7db0ca9c73145e380dc906306c72f"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+noise_model,n_templates,spearman_flat_term_vs_ridge,spearman_flat_root_vs_ridge
+calibrated,10,0.7697,0.7697
+bernoulli,10,0.2432,0.2432
+low_var_uniform,10,0.697,0.697

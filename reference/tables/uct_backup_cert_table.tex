@@ -1,0 +1,25 @@
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{3pt}
+\caption{Primary cohort. Restricted mean certification time in ms, with all nonreturns scored at 2,000 ms. $N$ is the mean audited first certificate rollout where the common trajectory reached it. Returns are counts out of 16 per backend, in column order.}
+\label{tab:ta-cert}
+\begin{tabular}{lr r rrrr c}\toprule
+Family & Size & $N$ & Eager & Selective & Flat & Covers & Returns\\\midrule
+Two exits & 16 & 1185 & 15.0 & 17.6 & 15.0 & 13.4 & 16/16/16/16\\
+Two exits & 64 & 1327 & 23.6 & 27.7 & 16.6 & 14.7 & 16/16/16/16\\
+Two exits & 256 & 1599 & 60.3 & 79.4 & 22.1 & 20.4 & 16/16/16/16\\
+Two exits & 1024 & 1931 & 189.9 & 261.0 & 26.7 & 25.1 & 16/16/16/16\\
+One exit & 64 & 1285 & 34.0 & 34.9 & 16.8 & 25.7 & 16/16/16/16\\
+One exit & 256 & 1550 & 97.2 & 95.3 & 22.0 & 19.4 & 16/16/16/16\\
+Winning fanout & 64 & 1285 & 338.7 & 458.5 & 28.9 & 24.5 & 16/16/16/16\\
+Winning fanout & 256 & 1550 & 1592.7 & 1999.5 & 41.8 & 34.5 & 16/1/16/16\\
+Fixed gap & 64 & 5380 & 94.4 & 87.2 & 74.4 & 71.7 & 16/16/16/16\\
+Fixed gap & 256 & 5380 & 164.4 & 143.2 & 72.8 & 63.0 & 16/16/16/16\\
+Noisy & 256 & 1368 & 48.5 & 52.3 & 15.3 & 12.7 & 16/16/16/16\\
+Common core & 8 & 356 & 5.8 & 5.7 & 6.8 & 8.4 & 16/16/16/16\\
+Common core & 16 & 502 & 11.5 & 11.0 & 16.9 & 18.8 & 16/16/16/16\\
+Common core & 32 & 793 & 30.3 & 31.5 & 70.4 & 46.9 & 16/16/16/16\\
+Lattice & 6 & 39960 & 1080.9 & 1191.2 & 847.7 & 866.1 & 16/16/16/16\\
+Merge & 32 & -- & 2000.0 & 2000.0 & 2000.0 & 2000.0 & 0/0/0/0\\
+\bottomrule\end{tabular}
+\end{table}

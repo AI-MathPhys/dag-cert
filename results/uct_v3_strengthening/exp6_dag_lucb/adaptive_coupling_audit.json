@@ -1,0 +1,84 @@
+{
+  "cases": 7,
+  "total_adaptive_steps_audited": 9029,
+  "zero_discrepancies": true,
+  "records": [
+    {
+      "case": "overlap_64_rho00_box",
+      "schedule": "box",
+      "steps_audited": 2342,
+      "certified": true,
+      "action": 4,
+      "work_dual_covers": 220373,
+      "work_direct_graph": 475070,
+      "work_factorized": 258598,
+      "discrepancies": 0
+    },
+    {
+      "case": "overlap_64_rho50_box",
+      "schedule": "box",
+      "steps_audited": 1317,
+      "certified": true,
+      "action": 4,
+      "work_dual_covers": 131440,
+      "work_direct_graph": 513148,
+      "work_factorized": 141298,
+      "discrepancies": 0
+    },
+    {
+      "case": "overlap_64_rho88_eb",
+      "schedule": "emp_bernstein",
+      "steps_audited": 592,
+      "certified": true,
+      "action": 7,
+      "work_dual_covers": 62635,
+      "work_direct_graph": 386018,
+      "work_factorized": 58194,
+      "discrepancies": 0
+    },
+    {
+      "case": "window_64_box",
+      "schedule": "box",
+      "steps_audited": 2043,
+      "certified": true,
+      "action": 6,
+      "work_dual_covers": 173004,
+      "work_direct_graph": 503996,
+      "work_factorized": 177430,
+      "discrepancies": 0
+    },
+    {
+      "case": "parity_8_box",
+      "schedule": "box",
+      "steps_audited": 1441,
+      "certified": true,
+      "action": 9,
+      "work_dual_covers": 418175,
+      "work_direct_graph": 1191866,
+      "work_factorized": 706144,
+      "discrepancies": 0
+    },
+    {
+      "case": "samegame_5x5_d3_eb",
+      "schedule": "emp_bernstein",
+      "steps_audited": 460,
+      "certified": true,
+      "action": 1,
+      "work_dual_covers": 57210,
+      "work_direct_graph": 70510,
+      "work_factorized": 54219,
+      "discrepancies": 0
+    },
+    {
+      "case": "samegame_std01_d3_eb",
+      "schedule": "emp_bernstein",
+      "steps_audited": 834,
+      "certified": true,
+      "action": 0,
+      "work_dual_covers": 139992,
+      "work_direct_graph": 195699,
+      "work_factorized": 176969,
+      "discrepancies": 0
+    }
+  ]
+}

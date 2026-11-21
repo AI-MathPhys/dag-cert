@@ -1,0 +1,8 @@
+{
+  "suite": "v7_e5_calibration",
+  "smoke": false,
+  "python": "3.12.14",
+  "elapsed_s": 227.65,
+  "total_runs": 5800,
+  "sha256_runs": "d643f04ccd6ca5ed9e710d39294aba4ee667f79617cfd8143258bf905a3d3be5"
+}

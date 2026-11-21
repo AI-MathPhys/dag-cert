@@ -1,0 +1,11 @@
+# Full CPU dependencies for reproducing all v1--v11 experiments, figures, tests,
+# dataset fetchers, and independent CVXPY numerical-oracle audits.
+# (The frozen v1 archive keeps `requirements.txt` and `requirements.lock` untouched
+# so `python -B reproduce.py verify` passes byte-exact manifest checks.)
+numpy>=1.26,<3
+scipy>=1.13
+matplotlib>=3.9
+cvxpy>=1.5
+pandas>=2.1
+requests>=2.31
+networkx>=3.2

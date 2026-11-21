@@ -1,0 +1,36 @@
+{
+  "experiment": "v8_exp2_info_tracking",
+  "smoke": false,
+  "elapsed_s": 467.66,
+  "python": "3.12.14",
+  "files": {
+    "v8_exp2_tstar_verification.json": {
+      "sha256": "b685da85f9e92656c1a9f01989c85b638f6687a63af6c25898c6f546a4faf1f2",
+      "bytes": 1493
+    },
+    "v8_exp2_partA_runs.jsonl": {
+      "sha256": "c3357055633cd73d10da5746291c066404cff418cde25e8ee98b7f8e43b851d1",
+      "bytes": 4049701
+    },
+    "v8_exp2_partA_summary.csv": {
+      "sha256": "b9c25c5b9dcffcfc9d57a63a837cf9d58d79d9df62de6f08029ea08308dc55bd",
+      "bytes": 11300
+    },
+    "v8_exp2_partB_runs.jsonl": {
+      "sha256": "ad10fd2da49704569111794a84bddd7ea3bceed6ae04419cee50efee005711bb",
+      "bytes": 74960
+    },
+    "v8_exp2_partB_summary.csv": {
+      "sha256": "801113b3861a3b717fcd22e674bbc9c628ce03b3ba26aa7928851400dcc58af8",
+      "bytes": 1081
+    },
+    "v8_exp2_partC_runs.jsonl": {
+      "sha256": "06ebde6c96df2d18345500e778d21fdf0f8c11110c2287f392eb1703069b8bd0",
+      "bytes": 102508
+    },
+    "v8_exp2_partC_summary.csv": {
+      "sha256": "82be4a6e389db1fc39589344b64a46a21e997194f6475ef054ce937b8b33fadd",
+      "bytes": 391
+    }
+  }
+}

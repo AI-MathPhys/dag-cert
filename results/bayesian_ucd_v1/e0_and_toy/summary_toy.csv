@@ -1,0 +1,9 @@
+method,runs,cert_rate,false_certificates,median_steps,q25_steps,q75_steps,mean_steps,speedup_vs_opt_sep,mean_proxy_frac,mean_z_out_pulls
+exact_dag_lucb,50,1.0,0,791.0,691.2,885.8,801.2,1.0,0.0327,343.9
+opt_sep,50,1.0,0,791.0,691.2,885.8,801.2,1.0,0.0327,343.9
+enclosing_box_cd,50,0.46,0,4000.0,943.2,4000.0,2628.2,0.2,0.7429,0.0
+gp_ucb_joint,50,1.0,0,1579.0,199.5,2010.2,1235.3,0.5,0.0295,54.8
+direct_witness_joint,50,1.0,0,281.5,173.2,368.2,293.0,2.81,0.0059,141.6
+contrast_directed_joint,50,1.0,0,25.5,18.0,49.0,36.7,31.02,0.7678,0.0
+bayes_ids_joint,50,1.0,0,37.0,28.0,51.8,40.8,21.38,0.2104,0.6
+maxmin_tracking_joint,50,1.0,0,15.5,11.2,22.0,16.6,51.03,0.552,1.0

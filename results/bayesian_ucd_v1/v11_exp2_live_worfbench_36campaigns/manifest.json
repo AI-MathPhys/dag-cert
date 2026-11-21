@@ -1,0 +1,16 @@
+{
+  "experiment": "v11_exp2_live_worfbench_36campaigns",
+  "smoke": false,
+  "elapsed_s": 11140.85,
+  "python": "3.12.14",
+  "files": {
+    "v11_exp2_live_runs.jsonl": {
+      "sha256": "fdf348d231884cf410589cfa777802c2ad80036e9d3a55616328c53b3a9e5a2a",
+      "bytes": 96734
+    },
+    "v11_exp2_live_summary.csv": {
+      "sha256": "7ba41d46e9ebc13dae5dde602ee5369a95a49edd3bf48eac3c133a486fab90da",
+      "bytes": 5911
+    }
+  }
+}

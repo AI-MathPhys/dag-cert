@@ -1,0 +1,17 @@
+landscape,stream,rule,track,runs,cert_rate,false_certs,cp95_upper_err,med_steps,q25_steps,q75_steps,ratio_vs_df_same_stream,ratio_ci95_lo,ratio_ci95_hi,pointwise_box_cov,med_max_z_ratio,regret_bound_cov
+gb1,os_stream,DF_EmpBernstein,formal_df,200,1.0,0,0.0149,13889.5,13337.5,18495.0,1.0,1.0,1.0,1.0,0.0,1.0
+gb1,os_stream,Robust_xi005,valid_if_bias_le_005,200,0.55,0,0.0149,13380.0,12148.5,18495.0,1.038,1.02,1.056,1.0,0.47,1.0
+gb1,os_stream,Nominal_GP,model_based_nominal,200,1.0,0,0.0149,10320.0,9360.0,14940.0,1.346,1.309,1.37,1.0,0.511,1.0
+gb1,os_stream,Calibrated_EBLOO,model_based_eb,200,0.995,0,0.0149,10680.0,9480.0,15435.0,1.301,1.258,1.355,0.9799,0.634,1.0
+gb1,eb_stream,DF_EmpBernstein,formal_df,200,0.0,0,0.0149,25000.0,25000.0,25000.0,1.0,1.0,1.0,1.0,0.0,1.0
+gb1,eb_stream,Robust_xi005,valid_if_bias_le_005,200,0.21,0,0.0149,25000.0,25000.0,25000.0,1.0,1.0,1.0,0.9762,0.658,1.0
+gb1,eb_stream,Nominal_GP,model_based_nominal,200,0.265,0,0.0149,25000.0,14730.0,25000.0,1.0,1.0,1.0,1.0,0.561,1.0
+gb1,eb_stream,Calibrated_EBLOO,model_based_eb,200,0.995,0,0.0149,2910.0,1800.0,6360.0,8.591,6.944,10.04,0.9146,0.747,1.0
+trpb,os_stream,DF_EmpBernstein,formal_df,210,1.0,0,0.0142,16313.0,14622.2,17305.0,1.0,1.0,1.0,1.0,0.0,1.0
+trpb,os_stream,Robust_xi005,valid_if_bias_le_005,210,0.7048,0,0.0142,12690.0,11580.0,14355.8,1.286,1.263,1.306,1.0,0.203,1.0
+trpb,os_stream,Nominal_GP,model_based_nominal,210,1.0,0,0.0142,9960.0,9585.0,10620.0,1.638,1.616,1.645,0.9381,0.6,1.0
+trpb,os_stream,Calibrated_EBLOO,model_based_eb,210,1.0,0,0.0142,10080.0,9420.0,10620.0,1.618,1.606,1.649,0.919,0.578,1.0
+trpb,eb_stream,DF_EmpBernstein,formal_df,210,0.0,0,0.0142,25000.0,25000.0,25000.0,1.0,1.0,1.0,1.0,0.0,1.0
+trpb,eb_stream,Robust_xi005,valid_if_bias_le_005,210,0.0143,0,0.0142,25000.0,25000.0,25000.0,1.0,1.0,1.0,1.0,0.116,1.0
+trpb,eb_stream,Nominal_GP,model_based_nominal,210,0.5048,0,0.0142,15300.0,5220.0,25000.0,1.634,1.0,2.662,1.0,0.678,1.0
+trpb,eb_stream,Calibrated_EBLOO,model_based_eb,210,1.0,0,0.0142,4440.0,2355.0,6495.0,5.631,5.144,6.614,0.8238,0.697,1.0

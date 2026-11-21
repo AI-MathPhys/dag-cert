@@ -1,0 +1,8 @@
+# Optional extra dependencies for running fresh uncached live Qwen3-0.6B +
+# Qwen3-Embedding-0.6B WorFBench certification suites (v8_5, v10_3, v11_2)
+# and rebuilding `dag_mcts/data/worfbench_qwen3_*.npz` from scratch.
+-r requirements-full.txt
+torch>=2.4
+transformers>=4.51
+huggingface_hub>=0.26
+accelerate>=1.0

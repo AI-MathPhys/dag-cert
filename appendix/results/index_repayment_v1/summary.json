@@ -1,0 +1,632 @@
+{
+  "cohort": {
+    "all": {
+      "inputs": 104,
+      "full": 654943576,
+      "counts": {
+        "setup": 4704,
+        "long": 270218,
+        "lower": 20027847,
+        "upper": 20465358,
+        "point": 21370470,
+        "screen": 8287647,
+        "bound": 9476304,
+        "storage": 7274454,
+        "group_net": 20181813,
+        "short": 26405,
+        "common_short": 698320,
+        "comparisons": 280440,
+        "retired_records": 56838,
+        "record_slots": 3765522,
+        "live_retirement": 5499523,
+        "disposal": 5502646,
+        "saving": 7111311,
+        "refinement": 8258
+      },
+      "classes": {
+        "deferred-scan": {
+          "groups": 70779,
+          "events": 946918,
+          "gross": 9859828,
+          "storage": 7274454,
+          "positive": 54061,
+          "nonpositive": 10578,
+          "unresolved": 6140
+        },
+        "bulk-independent": {
+          "groups": 119940,
+          "events": 1775436,
+          "gross": -359820,
+          "storage": 0,
+          "positive": 0,
+          "nonpositive": 119940,
+          "unresolved": 0
+        },
+        "bulk-stationary": {
+          "groups": 4403,
+          "events": 38189,
+          "gross": 13209,
+          "storage": 0,
+          "positive": 4403,
+          "nonpositive": 0,
+          "unresolved": 0
+        },
+        "collapsed-scan": {
+          "groups": 75096,
+          "events": 1187726,
+          "gross": 10668596,
+          "storage": 0,
+          "positive": 75096,
+          "nonpositive": 0,
+          "unresolved": 0
+        }
+      }
+    },
+    "joint": {
+      "inputs": 100,
+      "full": 562784804,
+      "counts": {
+        "setup": 4656,
+        "long": 270218,
+        "lower": 20027847,
+        "upper": 20465358,
+        "point": 21370470,
+        "screen": 8287647,
+        "bound": 9476304,
+        "storage": 7274454,
+        "group_net": 20181813,
+        "short": 26405,
+        "common_short": 698320,
+        "comparisons": 280440,
+        "retired_records": 56838,
+        "record_slots": 3765522,
+        "live_retirement": 5499523,
+        "disposal": 5502546,
+        "saving": 7111459,
+        "refinement": 8258
+      },
+      "classes": {
+        "deferred-scan": {
+          "groups": 70779,
+          "events": 946918,
+          "gross": 9859828,
+          "storage": 7274454,
+          "positive": 54061,
+          "nonpositive": 10578,
+          "unresolved": 6140
+        },
+        "bulk-independent": {
+          "groups": 119940,
+          "events": 1775436,
+          "gross": -359820,
+          "storage": 0,
+          "positive": 0,
+          "nonpositive": 119940,
+          "unresolved": 0
+        },
+        "bulk-stationary": {
+          "groups": 4403,
+          "events": 38189,
+          "gross": 13209,
+          "storage": 0,
+          "positive": 4403,
+          "nonpositive": 0,
+          "unresolved": 0
+        },
+        "collapsed-scan": {
+          "groups": 75096,
+          "events": 1187726,
+          "gross": 10668596,
+          "storage": 0,
+          "positive": 75096,
+          "nonpositive": 0,
+          "unresolved": 0
+        }
+      }
+    },
+    "admitted": {
+      "inputs": 47,
+      "full": 177523123,
+      "counts": {
+        "setup": 2820,
+        "long": 33562,
+        "lower": 2939978,
+        "upper": 3163715,
+        "point": 3182921,
+        "screen": 934377,
+        "bound": 1101774,
+        "storage": 1276365,
+        "group_net": 3015524,
+        "short": 3350,
+        "common_short": 88732,
+        "comparisons": 280208,
+        "retired_records": 0,
+        "record_slots": 0,
+        "live_retirement": 0,
+        "disposal": 1598,
+        "saving": 1446275,
+        "refinement": 8258
+      },
+      "classes": {
+        "deferred-scan": {
+          "groups": 13941,
+          "events": 133423,
+          "gross": 1367155,
+          "storage": 1276365,
+          "positive": 5443,
+          "nonpositive": 4516,
+          "unresolved": 3982
+        },
+        "bulk-independent": {
+          "groups": 5630,
+          "events": 72901,
+          "gross": -16890,
+          "storage": 0,
+          "positive": 0,
+          "nonpositive": 5630,
+          "unresolved": 0
+        },
+        "bulk-stationary": {
+          "groups": 1145,
+          "events": 13483,
+          "gross": 3435,
+          "storage": 0,
+          "positive": 1145,
+          "nonpositive": 0,
+          "unresolved": 0
+        },
+        "collapsed-scan": {
+          "groups": 12846,
+          "events": 201421,
+          "gross": 1661824,
+          "storage": 0,
+          "positive": 12846,
+          "nonpositive": 0,
+          "unresolved": 0
+        }
+      }
+    },
+    "never_admitted": {
+      "inputs": 53,
+      "full": 385261681,
+      "counts": {
+        "setup": 1836,
+        "long": 236656,
+        "lower": 17087869,
+        "upper": 17301643,
+        "point": 18187549,
+        "screen": 7353270,
+        "bound": 8374530,
+        "storage": 5998089,
+        "group_net": 17166289,
+        "short": 23055,
+        "common_short": 609588,
+        "comparisons": 232,
+        "retired_records": 56838,
+        "record_slots": 3765522,
+        "live_retirement": 5499523,
+        "disposal": 5500948,
+        "saving": 5665184
+      },
+      "classes": {
+        "deferred-scan": {
+          "groups": 56838,
+          "events": 813495,
+          "gross": 8492673,
+          "storage": 5998089,
+          "positive": 48618,
+          "nonpositive": 6062,
+          "unresolved": 2158
+        },
+        "bulk-stationary": {
+          "groups": 3258,
+          "events": 24706,
+          "gross": 9774,
+          "storage": 0,
+          "positive": 3258,
+          "nonpositive": 0,
+          "unresolved": 0
+        },
+        "bulk-independent": {
+          "groups": 114310,
+          "events": 1702535,
+          "gross": -342930,
+          "storage": 0,
+          "positive": 0,
+          "nonpositive": 114310,
+          "unresolved": 0
+        },
+        "collapsed-scan": {
+          "groups": 62250,
+          "events": 986305,
+          "gross": 9006772,
+          "storage": 0,
+          "positive": 62250,
+          "nonpositive": 0,
+          "unresolved": 0
+        }
+      }
+    },
+    "prefix": {
+      "counts": {
+        "inputs": 104,
+        "available": 102,
+        "abstain": 56,
+        "full": 44,
+        "right": 46,
+        "threshold": 2,
+        "threshold_correct": 2,
+        "not_applicable": 2
+      },
+      "median_lead": 76688.0,
+      "min_lead": 8352,
+      "median_positive_slack_per_long": 1.2575396825396825,
+      "positive_after_monitor": {
+        "0": 2,
+        "8": 0,
+        "16": 0
+      }
+    },
+    "prefix_active": {
+      "counts": {
+        "inputs": 72,
+        "available": 72,
+        "abstain": 56,
+        "full": 14,
+        "right": 16,
+        "threshold": 2,
+        "threshold_correct": 2
+      },
+      "median_lead": 42497.0,
+      "min_lead": 8352,
+      "median_positive_slack_per_long": 1.2575396825396825,
+      "positive_after_monitor": {
+        "0": 2,
+        "8": 0,
+        "16": 0
+      }
+    },
+    "launch": {
+      "counts": {
+        "inputs": 100,
+        "not_applicable": 76,
+        "available": 24,
+        "threshold": 21,
+        "right": 21,
+        "threshold_correct": 21,
+        "abstain": 3
+      },
+      "median_lead": 73888,
+      "min_lead": 3897,
+      "median_positive_slack_per_long": 53.94060773480663,
+      "positive_after_monitor": {
+        "0": 21,
+        "8": 14,
+        "16": 12
+      }
+    }
+  },
+  "fresh": {
+    "all": {
+      "inputs": 64,
+      "full": 746891967,
+      "counts": {
+        "setup": 3840,
+        "long": 500457,
+        "lower": 38263017,
+        "upper": 39147261,
+        "point": 40833711,
+        "screen": 15816867,
+        "bound": 18027765,
+        "storage": 13354743,
+        "group_net": 38622813,
+        "short": 45183,
+        "common_short": 1201246,
+        "comparisons": 145536,
+        "retired_records": 114483,
+        "record_slots": 7651683,
+        "live_retirement": 11193489,
+        "disposal": 11195505,
+        "saving": 13891165,
+        "refinement": 32024
+      },
+      "classes": {
+        "deferred-scan": {
+          "groups": 125805,
+          "events": 1767741,
+          "gross": 18464307,
+          "storage": 13354743,
+          "positive": 103575,
+          "nonpositive": 16089,
+          "unresolved": 6141
+        },
+        "bulk-independent": {
+          "groups": 222537,
+          "events": 3333582,
+          "gross": -667611,
+          "storage": 0,
+          "positive": 0,
+          "nonpositive": 222537,
+          "unresolved": 0
+        },
+        "bulk-stationary": {
+          "groups": 7727,
+          "events": 59761,
+          "gross": 23181,
+          "storage": 0,
+          "positive": 7727,
+          "nonpositive": 0,
+          "unresolved": 0
+        },
+        "collapsed-scan": {
+          "groups": 144388,
+          "events": 2289804,
+          "gross": 20802936,
+          "storage": 0,
+          "positive": 144388,
+          "nonpositive": 0,
+          "unresolved": 0
+        }
+      }
+    },
+    "joint": {
+      "inputs": 64,
+      "full": 746891967,
+      "counts": {
+        "setup": 3840,
+        "long": 500457,
+        "lower": 38263017,
+        "upper": 39147261,
+        "point": 40833711,
+        "screen": 15816867,
+        "bound": 18027765,
+        "storage": 13354743,
+        "group_net": 38622813,
+        "short": 45183,
+        "common_short": 1201246,
+        "comparisons": 145536,
+        "retired_records": 114483,
+        "record_slots": 7651683,
+        "live_retirement": 11193489,
+        "disposal": 11195505,
+        "saving": 13891165,
+        "refinement": 32024
+      },
+      "classes": {
+        "deferred-scan": {
+          "groups": 125805,
+          "events": 1767741,
+          "gross": 18464307,
+          "storage": 13354743,
+          "positive": 103575,
+          "nonpositive": 16089,
+          "unresolved": 6141
+        },
+        "bulk-independent": {
+          "groups": 222537,
+          "events": 3333582,
+          "gross": -667611,
+          "storage": 0,
+          "positive": 0,
+          "nonpositive": 222537,
+          "unresolved": 0
+        },
+        "bulk-stationary": {
+          "groups": 7727,
+          "events": 59761,
+          "gross": 23181,
+          "storage": 0,
+          "positive": 7727,
+          "nonpositive": 0,
+          "unresolved": 0
+        },
+        "collapsed-scan": {
+          "groups": 144388,
+          "events": 2289804,
+          "gross": 20802936,
+          "storage": 0,
+          "positive": 144388,
+          "nonpositive": 0,
+          "unresolved": 0
+        }
+      }
+    },
+    "admitted": {
+      "inputs": 32,
+      "full": 172341506,
+      "counts": {
+        "setup": 1920,
+        "long": 17605,
+        "lower": 1155590,
+        "upper": 1340342,
+        "point": 1294370,
+        "screen": 608205,
+        "bound": 685341,
+        "storage": 1061829,
+        "group_net": 1217234,
+        "short": 2039,
+        "common_short": 52133,
+        "comparisons": 145200,
+        "retired_records": 0,
+        "record_slots": 0,
+        "live_retirement": 0,
+        "disposal": 1088,
+        "saving": -24827,
+        "refinement": 32024
+      },
+      "classes": {
+        "deferred-scan": {
+          "groups": 11322,
+          "events": 112407,
+          "gross": 1159158,
+          "storage": 1061829,
+          "positive": 4680,
+          "nonpositive": 3625,
+          "unresolved": 3017
+        },
+        "bulk-independent": {
+          "groups": 4114,
+          "events": 62626,
+          "gross": -12342,
+          "storage": 0,
+          "positive": 0,
+          "nonpositive": 4114,
+          "unresolved": 0
+        },
+        "bulk-stationary": {
+          "groups": 1356,
+          "events": 14665,
+          "gross": 4068,
+          "storage": 0,
+          "positive": 1356,
+          "nonpositive": 0,
+          "unresolved": 0
+        },
+        "collapsed-scan": {
+          "groups": 813,
+          "events": 7724,
+          "gross": 66350,
+          "storage": 0,
+          "positive": 813,
+          "nonpositive": 0,
+          "unresolved": 0
+        }
+      }
+    },
+    "never_admitted": {
+      "inputs": 32,
+      "full": 574550461,
+      "counts": {
+        "setup": 1920,
+        "long": 482852,
+        "lower": 37107427,
+        "upper": 37806919,
+        "point": 39539341,
+        "screen": 15208662,
+        "bound": 17342424,
+        "storage": 12292914,
+        "group_net": 37405579,
+        "short": 43144,
+        "common_short": 1149113,
+        "comparisons": 336,
+        "retired_records": 114483,
+        "record_slots": 7651683,
+        "live_retirement": 11193489,
+        "disposal": 11194417,
+        "saving": 13915992
+      },
+      "classes": {
+        "deferred-scan": {
+          "groups": 114483,
+          "events": 1655334,
+          "gross": 17305149,
+          "storage": 12292914,
+          "positive": 98895,
+          "nonpositive": 12464,
+          "unresolved": 3124
+        },
+        "bulk-stationary": {
+          "groups": 6371,
+          "events": 45096,
+          "gross": 19113,
+          "storage": 0,
+          "positive": 6371,
+          "nonpositive": 0,
+          "unresolved": 0
+        },
+        "collapsed-scan": {
+          "groups": 143575,
+          "events": 2282080,
+          "gross": 20736586,
+          "storage": 0,
+          "positive": 143575,
+          "nonpositive": 0,
+          "unresolved": 0
+        },
+        "bulk-independent": {
+          "groups": 218423,
+          "events": 3270956,
+          "gross": -655269,
+          "storage": 0,
+          "positive": 0,
+          "nonpositive": 218423,
+          "unresolved": 0
+        }
+      }
+    },
+    "prefix": {
+      "counts": {
+        "inputs": 64,
+        "available": 64,
+        "abstain": 45,
+        "full": 19,
+        "right": 17,
+        "wrong": 2
+      },
+      "median_lead": 177984,
+      "min_lead": 34555,
+      "median_positive_slack_per_long": null,
+      "positive_after_monitor": {
+        "0": 0,
+        "8": 0,
+        "16": 0
+      }
+    },
+    "prefix_active": {
+      "counts": {
+        "inputs": 64,
+        "available": 64,
+        "abstain": 45,
+        "full": 19,
+        "right": 17,
+        "wrong": 2
+      },
+      "median_lead": 177984,
+      "min_lead": 34555,
+      "median_positive_slack_per_long": null,
+      "positive_after_monitor": {
+        "0": 0,
+        "8": 0,
+        "16": 0
+      }
+    },
+    "launch": {
+      "counts": {
+        "inputs": 64,
+        "available": 16,
+        "threshold": 16,
+        "right": 16,
+        "threshold_correct": 16,
+        "not_applicable": 48
+      },
+      "median_lead": 75648.0,
+      "min_lead": 75648,
+      "median_positive_slack_per_long": 8.152141802067947,
+      "positive_after_monitor": {
+        "0": 16,
+        "8": 13,
+        "16": 0
+      }
+    }
+  },
+  "hindsight": {
+    "source": "0d44978fe5ca83d217dc38704f018c585941c1443619d268f64bfd476dd9e65f",
+    "settings": {
+      "constant": {
+        "fixed": 11147879.630208334,
+        "oracle": 11114709.401041666,
+        "headroom": 0.00297547428452527
+      },
+      "mixed": {
+        "fixed": 10897350.489583334,
+        "oracle": 10860775.760416666,
+        "headroom": 0.003356295569425738
+      },
+      "bernoulli": {
+        "fixed": 7752359.713541667,
+        "oracle": 7750455.432291667,
+        "headroom": 0.0002456389177444285
+      }
+    }
+  }
+}

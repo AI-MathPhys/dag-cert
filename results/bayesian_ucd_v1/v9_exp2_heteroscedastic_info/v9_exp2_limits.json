@@ -1,0 +1,30 @@
+{
+  "low_homosced_025_025": {
+    "c_star_unknown": 0.6498921661564969,
+    "i_star_known": 2.545002727803005
+  },
+  "mod_het_050_200": {
+    "c_star_unknown": 0.07521329312017125,
+    "i_star_known": 0.0811630637694537
+  },
+  "balanced_100_100": {
+    "c_star_unknown": 0.13145663962521192,
+    "i_star_known": 0.15906267051694
+  },
+  "ext_het_fav_025_400": {
+    "c_star_unknown": 0.024571842488601857,
+    "i_star_known": 0.025180093818687056
+  },
+  "ext_het_adv_400_025": {
+    "c_star_unknown": 0.021376677631756935,
+    "i_star_known": 0.021838844634282678
+  },
+  "high_homosced_400_400": {
+    "c_star_unknown": 0.00982431697478573,
+    "i_star_known": 0.009941416936560903
+  },
+  "proxy_d3_m4_het": {
+    "c_star_unknown": 0.03511230749622711,
+    "i_star_known": 0.03737933061413375
+  }
+}

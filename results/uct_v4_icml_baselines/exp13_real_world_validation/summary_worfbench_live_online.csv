@@ -1,0 +1,5 @@
+method,runs,cert_rate,mean_steps,mean_live_tokens,mean_live_gen_calls,mean_live_infer_s
+opt_sep,2,0.0,235.0,110240.0,317.5,6432.21
+flat_lucb_root,2,0.0,235.0,104439.0,304.5,6255.24
+flat_lucb_term,2,0.0,235.0,104439.0,304.5,6280.02
+lucb_micro_marg,2,0.0,235.0,105458.0,308.0,6342.86

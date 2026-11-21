@@ -1,0 +1,10 @@
+family,instances,cert_hoeff_conv,cert_hoeff_exact,cert_eb_conv,cert_eb_exact,median_capped_hoeff_conv,median_capped_hoeff_exact,median_capped_eb_conv,median_capped_eb_exact,median_ratio_eb_vs_hoeff_exact,median_ratio_eb_exact_vs_hoeff_conv,conflicts,false_certificates
+overlap_256_bernoulli_rho00,6,1.0,1.0,0.0,0.0,18028.0,18028.0,50000.0,50000.0,2.7865,2.7865,0,0
+overlap_256_bernoulli_rho50,6,1.0,1.0,1.0,1.0,31426.0,14900.0,34790.0,32534.0,2.2103,1.0412,0,0
+overlap_256_bernoulli_rho75,6,0.0,1.0,0.0,1.0,50000.0,6154.0,50000.0,6506.0,1.0736,0.1301,0,0
+overlap_256_bernoulli_rho88,6,0.0,1.0,0.0,1.0,50000.0,3080.0,50000.0,2868.0,0.949,0.0574,0,0
+samegame_5x5_d3,6,0.3333,0.3333,0.3333,0.3333,24000.0,24000.0,24000.0,24000.0,1.0,1.0,0,0
+samegame_6x6_d3,6,0.0,0.0,0.1667,0.3333,24000.0,24000.0,24000.0,24000.0,1.0,1.0,0,0
+samegame_6x6_d4,6,0.0,0.0,0.0,0.0,24000.0,24000.0,24000.0,24000.0,1.0,1.0,0,0
+samegame_std15x15_d3,20,0.25,0.4,1.0,1.0,24000.0,24000.0,1448.0,768.0,0.1303,0.032,0,0
+samegame_std15x15_d4,20,0.35,0.65,0.95,1.0,24000.0,3996.0,2116.0,94.0,0.7432,0.0039,0,0

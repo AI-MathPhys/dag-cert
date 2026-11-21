@@ -1,0 +1,31 @@
+{
+  "total_trace_runs": 432,
+  "total_wall_runs": 1536,
+  "no_overlap_rho0": {
+    "count": 72,
+    "median_tau_ratio": 1.0,
+    "iqr": [
+      1.0,
+      1.0
+    ]
+  },
+  "partial_overlap_0_lt_rho_lt_1": {
+    "count": 288,
+    "median_tau_ratio": 0.39527999999999996,
+    "iqr": [
+      0.08463136033229492,
+      1.0
+    ],
+    "by_rho": {
+      "0.25": 1.0,
+      "0.50": 0.5557253142152767,
+      "0.75": 0.13323977337110482,
+      "0.88": 0.05424
+    }
+  },
+  "identical_support_rho1": {
+    "count": 72,
+    "all_zero_samples_for_exact": true,
+    "median_tau_conv": 50000.0
+  }
+}

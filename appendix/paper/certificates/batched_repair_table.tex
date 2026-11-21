@@ -1,0 +1,14 @@
+\begin{table}[ht]\centering\small
+\caption{Batched divided by fused eager. Work ratios include capped prefixes. Elapsed ratios use joint completions. Pooled elapsed uses total elapsed time across the matched repetitions, while the median gives equal weight to each input.}
+\label{tab:actual-batch}
+\begin{tabular}{@{}llrrrrr@{}}\toprule
+Inputs & Sampler & Joint & Pooled work & Median work & Pooled time & Median time\\\midrule
+Archived broad & Compact & 60/64 & 0.689 & 0.954 & 0.926 & 0.993\\
+Archived broad & Range & 60/64 & 0.563 & 0.912 & 0.794 & 0.914\\
+Archived overlap & Compact & 16/16 & 0.315 & 0.317 & 0.645 & 0.639\\
+Archived overlap & Range & 16/16 & 0.314 & 0.316 & 0.623 & 0.639\\
+Fresh broad & Compact & 16/16 & 0.655 & 1.000 & 0.967 & 1.013\\
+Fresh broad & Range & 16/16 & 0.569 & 0.924 & 0.857 & 0.963\\
+Fresh overlap & Compact & 8/8 & 0.305 & 0.302 & 0.624 & 0.621\\
+Fresh overlap & Range & 8/8 & 0.304 & 0.301 & 0.607 & 0.611\\
+\bottomrule\end{tabular}\end{table}

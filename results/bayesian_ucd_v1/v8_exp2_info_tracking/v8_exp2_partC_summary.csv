@@ -1,0 +1,6 @@
+method,runs,cert_rate,false_certs,easy_action_rate,med_steps,mean_steps,q25_steps,q75_steps,med_total_ms
+info_tracking,48,1.0,0,1.0,40.0,43.8,36.0,52.0,3213.24
+hybrid_cd_tracking,48,1.0,0,1.0,44.0,45.5,36.0,52.0,2955.55
+cd_joint,48,1.0,0,1.0,87.5,85.0,64.0,106.2,274.25
+gp_ucb_joint,48,1.0,0,1.0,68.0,65.9,56.0,76.0,268.5
+indep_gauss_os,48,0.0,0,0.0,3500.0,3500.0,3500.0,3500.0,215.25

@@ -1,0 +1,1747 @@
+{
+  "all": {
+    "n": 24,
+    "methods": {
+      "compact": {
+        "done": 24,
+        "statuses": {
+          "certified": 48
+        },
+        "restricted": 0.3658620625161954,
+        "work": [
+          4,
+          26,
+          48,
+          48
+        ],
+        "wall": [
+          16,
+          32,
+          48,
+          48,
+          48
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 0,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      },
+      "range": {
+        "done": 24,
+        "statuses": {
+          "certified": 48
+        },
+        "restricted": 0.3598153291629084,
+        "work": [
+          4,
+          28,
+          48,
+          48
+        ],
+        "wall": [
+          11,
+          32,
+          48,
+          48,
+          48
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 0,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      },
+      "side_compact": {
+        "done": 24,
+        "statuses": {
+          "certified": 48
+        },
+        "restricted": 0.34316177081200294,
+        "work": [
+          4,
+          28,
+          48,
+          48
+        ],
+        "wall": [
+          14,
+          32,
+          48,
+          48,
+          48
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 24,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 44627,
+          "post_hits": 0,
+          "saved": 2348759,
+          "extra": 798598,
+          "pre_saved": 2348759,
+          "post_saved": 0,
+          "build_work": 100160
+        }
+      },
+      "side_range": {
+        "done": 24,
+        "statuses": {
+          "certified": 48
+        },
+        "restricted": 0.35275023958820384,
+        "work": [
+          4,
+          28,
+          48,
+          48
+        ],
+        "wall": [
+          16,
+          31,
+          48,
+          48,
+          48
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 24,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 44627,
+          "post_hits": 0,
+          "saved": 2348759,
+          "extra": 737366,
+          "pre_saved": 2348759,
+          "post_saved": 0,
+          "build_work": 100160
+        }
+      },
+      "pre_only": {
+        "done": 24,
+        "statuses": {
+          "certified": 48
+        },
+        "restricted": 0.3652692791656591,
+        "work": [
+          4,
+          28,
+          48,
+          48
+        ],
+        "wall": [
+          15,
+          32,
+          48,
+          48,
+          48
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 24,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 44627,
+          "post_hits": 0,
+          "saved": 2348759,
+          "extra": 798598,
+          "pre_saved": 2348759,
+          "post_saved": 0,
+          "build_work": 100160
+        }
+      },
+      "post_only": {
+        "done": 24,
+        "statuses": {
+          "certified": 48
+        },
+        "restricted": 0.34720738539666246,
+        "work": [
+          4,
+          26,
+          48,
+          48
+        ],
+        "wall": [
+          14,
+          32,
+          48,
+          48,
+          48
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 61808,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      }
+    },
+    "ratios": {
+      "compact/range:work": {
+        "joint": 24,
+        "ratio": 1.0021018943261355,
+        "ci": [
+          1.002037595915087,
+          1.0021755525072837
+        ],
+        "wins": 0
+      },
+      "compact/range:seconds": {
+        "joint": 24,
+        "ratio": 0.97206157804171,
+        "ci": [
+          0.9371264396518054,
+          1.0189646221787196
+        ],
+        "wins": 13
+      },
+      "side_compact/compact:work": {
+        "joint": 24,
+        "ratio": 0.9946447882751601,
+        "ci": [
+          0.9941357233409645,
+          0.9953627170869088
+        ],
+        "wins": 19
+      },
+      "side_compact/compact:seconds": {
+        "joint": 24,
+        "ratio": 0.9856755921425929,
+        "ci": [
+          0.9351312072696141,
+          1.031328287474881
+        ],
+        "wins": 14
+      },
+      "side_compact/range:work": {
+        "joint": 24,
+        "ratio": 0.996735426512156,
+        "ci": [
+          0.9962227499547238,
+          0.9974633239022639
+        ],
+        "wins": 16
+      },
+      "side_compact/range:seconds": {
+        "joint": 24,
+        "ratio": 0.950336754331582,
+        "ci": [
+          0.9169152317503676,
+          0.981295789326329
+        ],
+        "wins": 14
+      },
+      "side_compact/side_range:work": {
+        "joint": 24,
+        "ratio": 1.0024623691015075,
+        "ci": [
+          1.0023870087580065,
+          1.0025482769991492
+        ],
+        "wins": 0
+      },
+      "side_compact/side_range:seconds": {
+        "joint": 24,
+        "ratio": 1.009476564274758,
+        "ci": [
+          0.9726066868575257,
+          1.0477450931640977
+        ],
+        "wins": 12
+      },
+      "side_range/range:work": {
+        "joint": 24,
+        "ratio": 0.9942871246184687,
+        "ci": [
+          0.9937791204782797,
+          0.9950054280920491
+        ],
+        "wins": 20
+      },
+      "side_range/range:seconds": {
+        "joint": 24,
+        "ratio": 0.9482014009604681,
+        "ci": [
+          0.922445868047668,
+          0.9779350446132657
+        ],
+        "wins": 15
+      },
+      "side_compact/pre_only:work": {
+        "joint": 24,
+        "ratio": 1.0,
+        "ci": [
+          1.0,
+          1.0
+        ],
+        "wins": 0
+      },
+      "side_compact/pre_only:seconds": {
+        "joint": 24,
+        "ratio": 0.9726174832196512,
+        "ci": [
+          0.939116512992166,
+          1.0122651952302069
+        ],
+        "wins": 18
+      },
+      "post_only/compact:work": {
+        "joint": 24,
+        "ratio": 1.0003595445054971,
+        "ci": [
+          1.000348566880089,
+          1.0003720727610061
+        ],
+        "wins": 0
+      },
+      "post_only/compact:seconds": {
+        "joint": 24,
+        "ratio": 0.9989985347693894,
+        "ci": [
+          0.959642279175216,
+          1.0389656660236888
+        ],
+        "wins": 14
+      },
+      "pre_only/compact:work": {
+        "joint": 24,
+        "ratio": 0.9946447882751601,
+        "ci": [
+          0.9941357233409645,
+          0.9953627170869088
+        ],
+        "wins": 19
+      },
+      "pre_only/compact:seconds": {
+        "joint": 24,
+        "ratio": 1.0161550594660433,
+        "ci": [
+          0.9831493597339975,
+          1.0548237675091952
+        ],
+        "wins": 10
+      }
+    }
+  },
+  "overlap": {
+    "n": 24,
+    "methods": {
+      "compact": {
+        "done": 24,
+        "statuses": {
+          "certified": 48
+        },
+        "restricted": 0.3658620625161954,
+        "work": [
+          4,
+          26,
+          48,
+          48
+        ],
+        "wall": [
+          16,
+          32,
+          48,
+          48,
+          48
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 0,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      },
+      "range": {
+        "done": 24,
+        "statuses": {
+          "certified": 48
+        },
+        "restricted": 0.3598153291629084,
+        "work": [
+          4,
+          28,
+          48,
+          48
+        ],
+        "wall": [
+          11,
+          32,
+          48,
+          48,
+          48
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 0,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      },
+      "side_compact": {
+        "done": 24,
+        "statuses": {
+          "certified": 48
+        },
+        "restricted": 0.34316177081200294,
+        "work": [
+          4,
+          28,
+          48,
+          48
+        ],
+        "wall": [
+          14,
+          32,
+          48,
+          48,
+          48
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 24,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 44627,
+          "post_hits": 0,
+          "saved": 2348759,
+          "extra": 798598,
+          "pre_saved": 2348759,
+          "post_saved": 0,
+          "build_work": 100160
+        }
+      },
+      "side_range": {
+        "done": 24,
+        "statuses": {
+          "certified": 48
+        },
+        "restricted": 0.35275023958820384,
+        "work": [
+          4,
+          28,
+          48,
+          48
+        ],
+        "wall": [
+          16,
+          31,
+          48,
+          48,
+          48
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 24,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 44627,
+          "post_hits": 0,
+          "saved": 2348759,
+          "extra": 737366,
+          "pre_saved": 2348759,
+          "post_saved": 0,
+          "build_work": 100160
+        }
+      },
+      "pre_only": {
+        "done": 24,
+        "statuses": {
+          "certified": 48
+        },
+        "restricted": 0.3652692791656591,
+        "work": [
+          4,
+          28,
+          48,
+          48
+        ],
+        "wall": [
+          15,
+          32,
+          48,
+          48,
+          48
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 24,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 44627,
+          "post_hits": 0,
+          "saved": 2348759,
+          "extra": 798598,
+          "pre_saved": 2348759,
+          "post_saved": 0,
+          "build_work": 100160
+        }
+      },
+      "post_only": {
+        "done": 24,
+        "statuses": {
+          "certified": 48
+        },
+        "restricted": 0.34720738539666246,
+        "work": [
+          4,
+          26,
+          48,
+          48
+        ],
+        "wall": [
+          14,
+          32,
+          48,
+          48,
+          48
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 61808,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      }
+    },
+    "ratios": {
+      "compact/range:work": {
+        "joint": 24,
+        "ratio": 1.0021018943261355,
+        "ci": [
+          1.002037595915087,
+          1.0021755525072837
+        ],
+        "wins": 0
+      },
+      "compact/range:seconds": {
+        "joint": 24,
+        "ratio": 0.97206157804171,
+        "ci": [
+          0.9371264396518054,
+          1.0189646221787196
+        ],
+        "wins": 13
+      },
+      "side_compact/compact:work": {
+        "joint": 24,
+        "ratio": 0.9946447882751601,
+        "ci": [
+          0.9941357233409645,
+          0.9953627170869088
+        ],
+        "wins": 19
+      },
+      "side_compact/compact:seconds": {
+        "joint": 24,
+        "ratio": 0.9856755921425929,
+        "ci": [
+          0.9351312072696141,
+          1.031328287474881
+        ],
+        "wins": 14
+      },
+      "side_compact/range:work": {
+        "joint": 24,
+        "ratio": 0.996735426512156,
+        "ci": [
+          0.9962227499547238,
+          0.9974633239022639
+        ],
+        "wins": 16
+      },
+      "side_compact/range:seconds": {
+        "joint": 24,
+        "ratio": 0.950336754331582,
+        "ci": [
+          0.9169152317503676,
+          0.981295789326329
+        ],
+        "wins": 14
+      },
+      "side_compact/side_range:work": {
+        "joint": 24,
+        "ratio": 1.0024623691015075,
+        "ci": [
+          1.0023870087580065,
+          1.0025482769991492
+        ],
+        "wins": 0
+      },
+      "side_compact/side_range:seconds": {
+        "joint": 24,
+        "ratio": 1.009476564274758,
+        "ci": [
+          0.9726066868575257,
+          1.0477450931640977
+        ],
+        "wins": 12
+      },
+      "side_range/range:work": {
+        "joint": 24,
+        "ratio": 0.9942871246184687,
+        "ci": [
+          0.9937791204782797,
+          0.9950054280920491
+        ],
+        "wins": 20
+      },
+      "side_range/range:seconds": {
+        "joint": 24,
+        "ratio": 0.9482014009604681,
+        "ci": [
+          0.922445868047668,
+          0.9779350446132657
+        ],
+        "wins": 15
+      },
+      "side_compact/pre_only:work": {
+        "joint": 24,
+        "ratio": 1.0,
+        "ci": [
+          1.0,
+          1.0
+        ],
+        "wins": 0
+      },
+      "side_compact/pre_only:seconds": {
+        "joint": 24,
+        "ratio": 0.9726174832196512,
+        "ci": [
+          0.939116512992166,
+          1.0122651952302069
+        ],
+        "wins": 18
+      },
+      "post_only/compact:work": {
+        "joint": 24,
+        "ratio": 1.0003595445054971,
+        "ci": [
+          1.000348566880089,
+          1.0003720727610061
+        ],
+        "wins": 0
+      },
+      "post_only/compact:seconds": {
+        "joint": 24,
+        "ratio": 0.9989985347693894,
+        "ci": [
+          0.959642279175216,
+          1.0389656660236888
+        ],
+        "wins": 14
+      },
+      "pre_only/compact:work": {
+        "joint": 24,
+        "ratio": 0.9946447882751601,
+        "ci": [
+          0.9941357233409645,
+          0.9953627170869088
+        ],
+        "wins": 19
+      },
+      "pre_only/compact:seconds": {
+        "joint": 24,
+        "ratio": 1.0161550594660433,
+        "ci": [
+          0.9831493597339975,
+          1.0548237675091952
+        ],
+        "wins": 10
+      }
+    }
+  },
+  "0.0125": {
+    "n": 8,
+    "methods": {
+      "compact": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.754204606244457,
+        "work": [
+          0,
+          0,
+          16,
+          16
+        ],
+        "wall": [
+          0,
+          0,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 0,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      },
+      "range": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.7229714124987368,
+        "work": [
+          0,
+          0,
+          16,
+          16
+        ],
+        "wall": [
+          0,
+          0,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 0,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      },
+      "side_compact": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.686053124954924,
+        "work": [
+          0,
+          0,
+          16,
+          16
+        ],
+        "wall": [
+          0,
+          0,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 8,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 33143,
+          "post_hits": 0,
+          "saved": 1748097,
+          "extra": 526018,
+          "pre_saved": 1748097,
+          "post_saved": 0,
+          "build_work": 47372
+        }
+      },
+      "side_range": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.718918249986018,
+        "work": [
+          0,
+          0,
+          16,
+          16
+        ],
+        "wall": [
+          0,
+          0,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 8,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 33143,
+          "post_hits": 0,
+          "saved": 1748097,
+          "extra": 486382,
+          "pre_saved": 1748097,
+          "post_saved": 0,
+          "build_work": 47372
+        }
+      },
+      "pre_only": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.7483841625071364,
+        "work": [
+          0,
+          0,
+          16,
+          16
+        ],
+        "wall": [
+          0,
+          0,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 8,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 33143,
+          "post_hits": 0,
+          "saved": 1748097,
+          "extra": 526018,
+          "pre_saved": 1748097,
+          "post_saved": 0,
+          "build_work": 47372
+        }
+      },
+      "post_only": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.6899075249675661,
+        "work": [
+          0,
+          0,
+          16,
+          16
+        ],
+        "wall": [
+          0,
+          0,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 39828,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      }
+    },
+    "ratios": {
+      "compact/range:work": {
+        "joint": 8,
+        "ratio": 1.001853535713922,
+        "ci": [
+          1.001799460660696,
+          1.0019163536450097
+        ],
+        "wins": 0
+      },
+      "compact/range:seconds": {
+        "joint": 8,
+        "ratio": 1.042932440736584,
+        "ci": [
+          0.9585200077596631,
+          1.123348876973291
+        ],
+        "wins": 3
+      },
+      "side_compact/compact:work": {
+        "joint": 8,
+        "ratio": 0.9905268161226779,
+        "ci": [
+          0.9895850850396792,
+          0.9916071662350755
+        ],
+        "wins": 8
+      },
+      "side_compact/compact:seconds": {
+        "joint": 8,
+        "ratio": 0.9244044588070129,
+        "ci": [
+          0.8774940149249671,
+          0.971655222044878
+        ],
+        "wins": 7
+      },
+      "side_compact/range:work": {
+        "joint": 8,
+        "ratio": 0.9923627929519587,
+        "ci": [
+          0.991431335934366,
+          0.9934536996628567
+        ],
+        "wins": 8
+      },
+      "side_compact/range:seconds": {
+        "joint": 8,
+        "ratio": 0.9569608423224796,
+        "ci": [
+          0.8752318826042436,
+          1.0358258453359885
+        ],
+        "wins": 4
+      },
+      "side_compact/side_range:work": {
+        "joint": 8,
+        "ratio": 1.0021832607624959,
+        "ci": [
+          1.0021190290314732,
+          1.0022578708616519
+        ],
+        "wins": 0
+      },
+      "side_compact/side_range:seconds": {
+        "joint": 8,
+        "ratio": 0.9665015241209228,
+        "ci": [
+          0.898602195233941,
+          1.028143022848442
+        ],
+        "wins": 5
+      },
+      "side_range/range:work": {
+        "joint": 8,
+        "ratio": 0.9902009261229674,
+        "ci": [
+          0.9892555466493301,
+          0.9912853014023532
+        ],
+        "wins": 8
+      },
+      "side_range/range:seconds": {
+        "joint": 8,
+        "ratio": 0.9950295316005969,
+        "ci": [
+          0.9056783636405652,
+          1.1224039493555362
+        ],
+        "wins": 5
+      },
+      "side_compact/pre_only:work": {
+        "joint": 8,
+        "ratio": 1.0,
+        "ci": [
+          1.0,
+          1.0
+        ],
+        "wins": 0
+      },
+      "side_compact/pre_only:seconds": {
+        "joint": 8,
+        "ratio": 0.9266799992065929,
+        "ci": [
+          0.878514174907546,
+          0.9693118000607788
+        ],
+        "wins": 8
+      },
+      "post_only/compact:work": {
+        "joint": 8,
+        "ratio": 1.000310596040425,
+        "ci": [
+          1.00030157092363,
+          1.0003210985259061
+        ],
+        "wins": 0
+      },
+      "post_only/compact:seconds": {
+        "joint": 8,
+        "ratio": 0.9306973042384404,
+        "ci": [
+          0.9025643207965826,
+          0.9618495888958166
+        ],
+        "wins": 7
+      },
+      "pre_only/compact:work": {
+        "joint": 8,
+        "ratio": 0.9905268161226779,
+        "ci": [
+          0.9895850850396792,
+          0.9916071662350755
+        ],
+        "wins": 8
+      },
+      "pre_only/compact:seconds": {
+        "joint": 8,
+        "ratio": 0.9970117486866763,
+        "ci": [
+          0.9492892356192386,
+          1.0448985466567984
+        ],
+        "wins": 4
+      }
+    }
+  },
+  "0.02": {
+    "n": 8,
+    "methods": {
+      "compact": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.2681052000261843,
+        "work": [
+          0,
+          10,
+          16,
+          16
+        ],
+        "wall": [
+          0,
+          16,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 0,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      },
+      "range": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.2653829312475864,
+        "work": [
+          0,
+          12,
+          16,
+          16
+        ],
+        "wall": [
+          0,
+          16,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 0,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      },
+      "side_compact": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.2644700687669683,
+        "work": [
+          0,
+          12,
+          16,
+          16
+        ],
+        "wall": [
+          0,
+          16,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 8,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 10344,
+          "post_hits": 0,
+          "saved": 541680,
+          "extra": 213822,
+          "pre_saved": 541680,
+          "post_saved": 0,
+          "build_work": 36580
+        }
+      },
+      "side_range": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.2653225937538082,
+        "work": [
+          0,
+          12,
+          16,
+          16
+        ],
+        "wall": [
+          0,
+          15,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 8,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 10344,
+          "post_hits": 0,
+          "saved": 541680,
+          "extra": 197570,
+          "pre_saved": 541680,
+          "post_saved": 0,
+          "build_work": 36580
+        }
+      },
+      "pre_only": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.26944623747840524,
+        "work": [
+          0,
+          12,
+          16,
+          16
+        ],
+        "wall": [
+          0,
+          16,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 8,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 10344,
+          "post_hits": 0,
+          "saved": 541680,
+          "extra": 213822,
+          "pre_saved": 541680,
+          "post_saved": 0,
+          "build_work": 36580
+        }
+      },
+      "post_only": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.2710415999899851,
+        "work": [
+          0,
+          10,
+          16,
+          16
+        ],
+        "wall": [
+          0,
+          16,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 16444,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      }
+    },
+    "ratios": {
+      "compact/range:work": {
+        "joint": 8,
+        "ratio": 1.0019856839499732,
+        "ci": [
+          1.0019184940736925,
+          1.0020633210945653
+        ],
+        "wins": 0
+      },
+      "compact/range:seconds": {
+        "joint": 8,
+        "ratio": 1.0183751539184243,
+        "ci": [
+          0.9608431981629562,
+          1.0801762285839036
+        ],
+        "wins": 4
+      },
+      "side_compact/compact:work": {
+        "joint": 8,
+        "ratio": 0.9933868578583311,
+        "ci": [
+          0.9926325404429163,
+          0.9943294556683607
+        ],
+        "wins": 8
+      },
+      "side_compact/compact:seconds": {
+        "joint": 8,
+        "ratio": 0.996112626582155,
+        "ci": [
+          0.9389152301723825,
+          1.058036531127044
+        ],
+        "wins": 5
+      },
+      "side_compact/range:work": {
+        "joint": 8,
+        "ratio": 0.9953594101980948,
+        "ci": [
+          0.9946179357756348,
+          0.9963012394673407
+        ],
+        "wins": 8
+      },
+      "side_compact/range:seconds": {
+        "joint": 8,
+        "ratio": 1.01037917417766,
+        "ci": [
+          0.9537747317625455,
+          1.0639655103779544
+        ],
+        "wins": 3
+      },
+      "side_compact/side_range:work": {
+        "joint": 8,
+        "ratio": 1.0023312834485747,
+        "ci": [
+          1.0022519002795278,
+          1.0024236423405013
+        ],
+        "wins": 0
+      },
+      "side_compact/side_range:seconds": {
+        "joint": 8,
+        "ratio": 1.0095670177652771,
+        "ci": [
+          0.9512060325858733,
+          1.0727694709713766
+        ],
+        "wins": 3
+      },
+      "side_range/range:work": {
+        "joint": 8,
+        "ratio": 0.9930443423590524,
+        "ci": [
+          0.9922869150534357,
+          0.9939960344962068
+        ],
+        "wins": 8
+      },
+      "side_range/range:seconds": {
+        "joint": 8,
+        "ratio": 0.9996500754158482,
+        "ci": [
+          0.9629592920550423,
+          1.0365028022632927
+        ],
+        "wins": 4
+      },
+      "side_compact/pre_only:work": {
+        "joint": 8,
+        "ratio": 1.0,
+        "ci": [
+          1.0,
+          1.0
+        ],
+        "wins": 0
+      },
+      "side_compact/pre_only:seconds": {
+        "joint": 8,
+        "ratio": 0.9866782873597515,
+        "ci": [
+          0.9545777609260594,
+          1.023212181531657
+        ],
+        "wins": 6
+      },
+      "post_only/compact:work": {
+        "joint": 8,
+        "ratio": 1.000336137223688,
+        "ci": [
+          1.0003247688745802,
+          1.0003492602520623
+        ],
+        "wins": 0
+      },
+      "post_only/compact:seconds": {
+        "joint": 8,
+        "ratio": 1.0133018898022326,
+        "ci": [
+          0.9798624531418382,
+          1.0528015909139603
+        ],
+        "wins": 4
+      },
+      "pre_only/compact:work": {
+        "joint": 8,
+        "ratio": 0.9933868578583311,
+        "ci": [
+          0.9926325404429163,
+          0.9943294556683607
+        ],
+        "wins": 8
+      },
+      "pre_only/compact:seconds": {
+        "joint": 8,
+        "ratio": 1.0082943371216464,
+        "ci": [
+          0.9499277125299708,
+          1.0763640780683112
+        ],
+        "wins": 3
+      }
+    }
+  },
+  "0.04": {
+    "n": 8,
+    "methods": {
+      "compact": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.07527638127794489,
+        "work": [
+          4,
+          16,
+          16,
+          16
+        ],
+        "wall": [
+          16,
+          16,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 0,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      },
+      "range": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.09109164374240208,
+        "work": [
+          4,
+          16,
+          16,
+          16
+        ],
+        "wall": [
+          11,
+          16,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 0,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      },
+      "side_compact": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.07896211871411651,
+        "work": [
+          4,
+          16,
+          16,
+          16
+        ],
+        "wall": [
+          14,
+          16,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 8,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 1140,
+          "post_hits": 0,
+          "saved": 58982,
+          "extra": 58758,
+          "pre_saved": 58982,
+          "post_saved": 0,
+          "build_work": 16208
+        }
+      },
+      "side_range": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.07400987502478529,
+        "work": [
+          4,
+          16,
+          16,
+          16
+        ],
+        "wall": [
+          16,
+          16,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 8,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 1140,
+          "post_hits": 0,
+          "saved": 58982,
+          "extra": 53414,
+          "pre_saved": 58982,
+          "post_saved": 0,
+          "build_work": 16208
+        }
+      },
+      "pre_only": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.07797743751143571,
+        "work": [
+          4,
+          16,
+          16,
+          16
+        ],
+        "wall": [
+          15,
+          16,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 8,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 1140,
+          "post_hits": 0,
+          "saved": 58982,
+          "extra": 58758,
+          "pre_saved": 58982,
+          "post_saved": 0,
+          "build_work": 16208
+        }
+      },
+      "post_only": {
+        "done": 8,
+        "statuses": {
+          "certified": 16
+        },
+        "restricted": 0.08067303123243619,
+        "work": [
+          4,
+          16,
+          16,
+          16
+        ],
+        "wall": [
+          14,
+          16,
+          16,
+          16,
+          16
+        ],
+        "launches": 0,
+        "seals": 0,
+        "pre_cases": 0,
+        "post_cases": 0,
+        "counters": {
+          "pre_hits": 0,
+          "post_hits": 0,
+          "saved": 0,
+          "extra": 5536,
+          "pre_saved": 0,
+          "post_saved": 0,
+          "build_work": 0
+        }
+      }
+    },
+    "ratios": {
+      "compact/range:work": {
+        "joint": 8,
+        "ratio": 1.0024665671722728,
+        "ci": [
+          1.0023897604917746,
+          1.002548667007754
+        ],
+        "wins": 0
+      },
+      "compact/range:seconds": {
+        "joint": 8,
+        "ratio": 0.864803345077088,
+        "ci": [
+          0.7908853213591494,
+          0.9459480561076263
+        ],
+        "wins": 6
+      },
+      "side_compact/compact:work": {
+        "joint": 8,
+        "ratio": 1.0000446399283416,
+        "ci": [
+          0.9993398143850588,
+          1.0007110796105851
+        ],
+        "wins": 3
+      },
+      "side_compact/compact:seconds": {
+        "joint": 8,
+        "ratio": 1.039995668575792,
+        "ci": [
+          0.9471612011608819,
+          1.1320292054718641
+        ],
+        "wins": 2
+      },
+      "side_compact/range:work": {
+        "joint": 8,
+        "ratio": 1.0025113172079962,
+        "ci": [
+          1.0017666995678502,
+          1.0032073908024537
+        ],
+        "wins": 0
+      },
+      "side_compact/range:seconds": {
+        "joint": 8,
+        "ratio": 0.8876750729704959,
+        "ci": [
+          0.8043632500350648,
+          0.9776246252383302
+        ],
+        "wins": 7
+      },
+      "side_compact/side_range:work": {
+        "joint": 8,
+        "ratio": 1.0028726944808584,
+        "ci": [
+          1.0027835365624316,
+          1.0029674169268936
+        ],
+        "wins": 0
+      },
+      "side_compact/side_range:seconds": {
+        "joint": 8,
+        "ratio": 1.0542680025766311,
+        "ci": [
+          0.9803483215253307,
+          1.1389796794615383
+        ],
+        "wins": 4
+      },
+      "side_range/range:work": {
+        "joint": 8,
+        "ratio": 0.9996396578799575,
+        "ci": [
+          0.9989413335797713,
+          1.0003032025155536
+        ],
+        "wins": 4
+      },
+      "side_range/range:seconds": {
+        "joint": 8,
+        "ratio": 0.8570729812921913,
+        "ci": [
+          0.7963504736034731,
+          0.9273641065261279
+        ],
+        "wins": 6
+      },
+      "side_compact/pre_only:work": {
+        "joint": 8,
+        "ratio": 1.0,
+        "ci": [
+          1.0,
+          1.0
+        ],
+        "wins": 0
+      },
+      "side_compact/pre_only:seconds": {
+        "joint": 8,
+        "ratio": 1.0062846660116918,
+        "ci": [
+          0.9199479336829133,
+          1.1177389015234398
+        ],
+        "wins": 4
+      },
+      "post_only/compact:work": {
+        "joint": 8,
+        "ratio": 1.0004319043407246,
+        "ci": [
+          1.0004186745488128,
+          1.0004461890373957
+        ],
+        "wins": 0
+      },
+      "post_only/compact:seconds": {
+        "joint": 8,
+        "ratio": 1.0571758781119278,
+        "ci": [
+          0.9636216345774233,
+          1.1658313981219912
+        ],
+        "wins": 3
+      },
+      "pre_only/compact:work": {
+        "joint": 8,
+        "ratio": 1.0000446399283416,
+        "ci": [
+          0.9993398143850588,
+          1.0007110796105851
+        ],
+        "wins": 3
+      },
+      "pre_only/compact:seconds": {
+        "joint": 8,
+        "ratio": 1.0437400479104166,
+        "ci": [
+          0.9614142217576275,
+          1.1300600392463267
+        ],
+        "wins": 3
+      }
+    }
+  }
+}

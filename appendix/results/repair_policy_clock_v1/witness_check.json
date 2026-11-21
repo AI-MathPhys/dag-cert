@@ -1,0 +1,15 @@
+{
+  "checked_steps": 2615,
+  "checked_draws": 83671,
+  "reference": 3907522,
+  "fused_eager": 4192570,
+  "physical": 7039864,
+  "physical_unpriced": 6846698,
+  "guard_margins": {
+    "reference": -891704632,
+    "physical": 2984326
+  },
+  "instance_sha256": "b445564811b0365648545aa9f88b6d9e6ae6a7d473b4a35c799396aab61629cf",
+  "checker_sha256": "f864392d2ac0dc395cd60a3457b0033073f248632b31df4a9cef0a222dacc20d",
+  "construction_sha256": "44dfdb9d5e0a259f6fa9f68d087efc059926995c30cf76e3fade6de797a93154"
+}

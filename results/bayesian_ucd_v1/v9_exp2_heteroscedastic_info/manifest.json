@@ -1,0 +1,32 @@
+{
+  "suite": "v9_exp2_heteroscedastic_info",
+  "smoke": false,
+  "total_rows": 5160,
+  "wall_s": 340.23,
+  "files": {
+    "v9_exp2_runs.jsonl": {
+      "bytes": 1863475,
+      "sha256": "c210d7c5e2cc9d13965513ad1628a0b60d28f529f4750ac015cddee7fd022f86"
+    },
+    "v9_exp2_summary.csv": {
+      "bytes": 12474,
+      "sha256": "9faad82b7eadba57588f83b9c8e31a38fe0661fc0dd79e0741db8bd061c00f09"
+    },
+    "v9_exp2_discovery_slope_fit.csv": {
+      "bytes": 1144,
+      "sha256": "41309e01a0058e5084cc736c78da8969e77c8129726dc191c4e697543afc9dff"
+    },
+    "v9_exp2_limits.json": {
+      "bytes": 798,
+      "sha256": "a3556e6a2e3a87009a3dded29f7bce6e5c7c33ce76a0f32ea122ec8be708f5e5"
+    },
+    "v9_exp2_partC_runs.jsonl": {
+      "bytes": 224268,
+      "sha256": "272b7e7564fca7af7bc9188833d91c8b088163afce03a7b6d4b496ef0cf3910d"
+    },
+    "v9_exp2_partC_summary.csv": {
+      "bytes": 949,
+      "sha256": "597baf5b90a2e5eb01701fcb09e456e342f42bf86bfcdddd9e59a86f92973ca7"
+    }
+  }
+}

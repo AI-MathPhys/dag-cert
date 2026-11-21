@@ -1,0 +1,89 @@
+{
+  "cases": [
+    [
+      "sparse",
+      4
+    ],
+    [
+      "sparse",
+      8
+    ],
+    [
+      "dense",
+      4
+    ],
+    [
+      "dense",
+      8
+    ],
+    [
+      "coded",
+      8
+    ],
+    [
+      "coded",
+      16
+    ],
+    [
+      "coded",
+      32
+    ],
+    [
+      "samegame",
+      4
+    ],
+    [
+      "samegame",
+      5
+    ],
+    [
+      "lattice",
+      5
+    ],
+    [
+      "funnel",
+      64
+    ]
+  ],
+  "seeds": [
+    433101,
+    433102,
+    433103,
+    433104
+  ],
+  "efforts": [
+    0,
+    512
+  ],
+  "methods": [
+    "graph-eager",
+    "graph-live",
+    "cover-live",
+    "covers"
+  ],
+  "wall": [
+    0.001,
+    0.01,
+    0.1,
+    0.5,
+    2.0
+  ],
+  "cap": 500000,
+  "repeats": 2,
+  "python": "3.13.12",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "sources": {
+    "dag_mcts/compiled_retirement.py": "0d90a586a1da8809674481b286c9b16207042ad4f9207edae2122327288183da",
+    "paper/uct_frontier_families.py": "0ed18ded8b773f735054112b415921314711187eda88e5ce81680bd4252b334b",
+    "paper/uct_frontier_study.py": "51c1ec2e2d2835f5a610af0c1c7939966181180d6596090aca8e79cf1b42d753",
+    "paper/uct_frontier_protocol.txt": "c97ebd6040d4da506178928a65447039cc3027ad87c845543cbc86fc0315ed93",
+    "dag_mcts/certified_uct.py": "1ab26c21e3caf8097d62c0457dd9af7032e71879252ee03163f17f431adf3325",
+    "dag_mcts/graph.py": "7df732d325d381b4a837de7d849c5da5b9521bcbdb1de8c4d1109f8f365dbd1d",
+    "dag_mcts/retired_bounds.py": "2ba5d8d90cdf4ed60b3c33d70874b8f0eb37b254992e6490e6d498f8389e8f83",
+    "dag_mcts/onpolicy_backup.py": "99a44c5d3d6c30e029e1a5db204b86973c9dd8d1c4e382376278adcdb34e364f",
+    "paper/relevance_frontier.py": "cacd01b5b5e9da937440676ee48d1920bae90890f533ae6ae995e2c090d06ce0",
+    "paper/uniform_selection.py": "fcee91719e7ab393dc0182f5378a871393172b0c7b88b4f9644844d57eca034b",
+    "paper/samegame_gate.py": "adf089ea3ad25ab206dda80d1413dc97c431e282c63e8ed6b34222fffded3485",
+    "paper/uct_backup_families.py": "157d28e2e46b1f7baa9e630d3e9dfef607f1ff2cef3cf52ad98fa4258a44c9e0"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "suite": "exp14_gb1_bayesian_opt",
+  "smoke": false,
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "python": "3.12.14",
+  "delta": 0.05,
+  "eps": 0.01,
+  "schedule": "emp_bernstein",
+  "bo_acquisition_runs": 420,
+  "gp_bounds_runs": 160,
+  "total_runs": 580,
+  "sha256_bo_acquisitions": "b7f2655a33661cb07631d707dd7dd436f43220fc05fb852fbb1ccc686cb7ada2",
+  "sha256_gp_bounds": "4396487138def6cf1710425d5ee9c3d3bd29dcda10cb13444b40479ab96713a7"
+}

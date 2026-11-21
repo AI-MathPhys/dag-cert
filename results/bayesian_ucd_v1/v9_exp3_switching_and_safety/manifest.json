@@ -1,0 +1,27 @@
+{
+  "suite": "v9_exp3_switching_and_safety",
+  "smoke": false,
+  "wall_s": 14.32,
+  "files": {
+    "v9_exp3_partA_runs.jsonl": {
+      "bytes": 1205442,
+      "sha256": "c5f90708edbf607c03cd871ea7861bc60a8586ffde6f70cfeb44b0a90a629807"
+    },
+    "v9_exp3_partB_runs.jsonl": {
+      "bytes": 475994,
+      "sha256": "97ce27afb3f720ee95283bbf7cfdae2c1be2c61dcdd41da9e8440a0a77a29d4d"
+    },
+    "v9_exp3_partA_summary.csv": {
+      "bytes": 1515,
+      "sha256": "41a0d90e3ef46bfc001ddde955022f18d45afadf2a81f4287fcd9b36b5cb6a25"
+    },
+    "v9_exp3_partB_summary.csv": {
+      "bytes": 467,
+      "sha256": "fcb1cd467e010147f16cb07d60293b69a7cf8de132c429a6d54618111432b63b"
+    },
+    "v9_exp3_switching_rates.json": {
+      "bytes": 173,
+      "sha256": "dffbe6819ff27bfb9690721963ba9583943ad118babda5f3f0d5c004527631ff"
+    }
+  }
+}

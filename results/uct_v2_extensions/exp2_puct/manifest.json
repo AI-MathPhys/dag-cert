@@ -1,0 +1,40 @@
+{
+  "experiment": "exp2_puct",
+  "smoke": false,
+  "root_sizes": [
+    16,
+    64,
+    256,
+    1024,
+    2048
+  ],
+  "root_priors": [
+    "unit_lambda",
+    "informative",
+    "misleading"
+  ],
+  "noisy_cases": [
+    "funnel_64_wide",
+    "funnel_256_wide",
+    "funnel_256_narrow",
+    "core_16",
+    "coded_16",
+    "overlap_256_rho50"
+  ],
+  "noisy_priors": [
+    "uniform",
+    "informative",
+    "misleading"
+  ],
+  "methods": [
+    "graph-eager",
+    "protected-selective",
+    "decision-selective",
+    "dual-covers"
+  ],
+  "python": "3.12.14",
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "sha256_root_puct": "1512d5fc2eb040f3afcb1aada9425606931495d6a2dfb1b4a8b606f4eff63732",
+  "sha256_noisy_puct": "99950410a9a48a76fe44b96d4b3d4214f331d234d631178c0779896a2a33cb95",
+  "sha256_memory": "cee1f40435e0ed20ebbbb171007e34cc45422d90167ff0b3fffb81f2e50138c3"
+}

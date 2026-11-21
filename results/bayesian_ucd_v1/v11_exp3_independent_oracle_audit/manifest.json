@@ -1,0 +1,16 @@
+{
+  "experiment": "v11_exp3_independent_oracle_audit",
+  "smoke": false,
+  "elapsed_s": 276.77,
+  "python": "3.12.14",
+  "files": {
+    "v11_exp3_oracle_audit.json": {
+      "sha256": "9f622fe44da7bee8a80bd79af96b949bcbd8dec0b018dfcea6b3dc3805a5ce4e",
+      "bytes": 2690
+    },
+    "v11_exp3_oracle_audit_summary.csv": {
+      "sha256": "248fca72316afcc979589f738f6bae1177126d782b63ce56f1790109d8dcb72d",
+      "bytes": 1199
+    }
+  }
+}

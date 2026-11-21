@@ -1,0 +1,8 @@
+{
+  "suite": "v7_e4_worfbench",
+  "smoke": false,
+  "python": "3.12.14",
+  "elapsed_s": 163.71,
+  "total_runs": 640,
+  "sha256_runs": "9df17ef14d6a929051e0ae7d8d502c6eea114416e2e9715a6c099864c3eb0ae9"
+}

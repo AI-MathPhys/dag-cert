@@ -1,0 +1,8 @@
+{
+  "root_puct_total_runs": 480,
+  "noisy_puct_total_runs": 768,
+  "memory_runs": 192,
+  "root_puct_m1024_unit_lambda_work_ratio_dec_vs_eager": 0.20241868312399242,
+  "root_puct_m1024_unit_lambda_time_ratio_dec_vs_eager": 0.2585668701983251,
+  "root_puct_m2048_unit_lambda_work_ratio_dec_vs_eager": 0.3145816379639626
+}

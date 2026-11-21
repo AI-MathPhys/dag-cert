@@ -1,0 +1,8 @@
+{
+  "suite": "v7_e1_phase_diagram",
+  "smoke": false,
+  "python": "3.12.14",
+  "elapsed_s": 189.36,
+  "total_runs": 3360,
+  "sha256_runs": "a4ed703b27c177e9b65f15b19d8092e3021739f969efa080c47414128e467897"
+}

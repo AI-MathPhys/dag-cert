@@ -1,0 +1,16 @@
+{
+  "experiment": "v10_exp2_real_heteroscedastic_v34",
+  "smoke": false,
+  "elapsed_s": 177.31,
+  "total_runs": 3200,
+  "files": {
+    "v10_exp2_runs.jsonl": {
+      "sha256": "2238e34fcd5b0b4e33d2290de2d0dc294ca3623f32bc0a3d68e41591d76912f7",
+      "bytes": 869404
+    },
+    "v10_exp2_summary.csv": {
+      "sha256": "4dd63cd49f5da13169270bd686b3c054fd1cbba319493552613979ce049468f5",
+      "bytes": 2177
+    }
+  }
+}

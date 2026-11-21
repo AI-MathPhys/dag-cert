@@ -1,0 +1,8 @@
+{
+  "experiment": "exp10_inside_witness",
+  "smoke": false,
+  "python": "3.12.14",
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "elapsed_s": 183.12,
+  "sha256_runs": "9577937bb104ed08b6698637f2f121355da90f5b9cd006a3a315f9d93d496b0d"
+}

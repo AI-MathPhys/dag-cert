@@ -1,0 +1,18 @@
+{
+  "suite": "exp13_real_world_validation",
+  "smoke": false,
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "python": "3.12.14",
+  "delta": 0.05,
+  "schedule": "emp_bernstein",
+  "factorial_runs": 1260,
+  "gb1_noise_runs": 600,
+  "trpb_runs": 420,
+  "worfbench_overlap_runs": 600,
+  "total_runs": 2880,
+  "sha256_factorial": "946bde116e46009ed702f585e84a3e6d95b5ac1718757321e3e511a9a5865c9a",
+  "sha256_gb1_noise": "1869e410c3965fb7f154a0b8af40df22fcb1d258919fe14c15648aa15dda5d42",
+  "sha256_trpb": "35ed3e96aedfc981a3aeb3f422b5739962313d962594ada6e21972e582910434",
+  "sha256_worfbench_overlap": "c4c2676a81e39d15c08ee7b7da2d151d29e52a0b7f97419f2aae36a422c4ecf5",
+  "sha256_worfbench_live_online": "55a1c0b878a65846fac4bf91ebd7f44263e86f193ae5c3c8c8047e3761cd248f"
+}

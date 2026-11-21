@@ -1,0 +1,24 @@
+{
+  "experiment": "v11_exp1_protein_validity_ablation",
+  "smoke": false,
+  "elapsed_s": 1203.38,
+  "python": "3.12.14",
+  "files": {
+    "v11_exp1_interactive_runs.jsonl": {
+      "sha256": "b4c17f4cd7978dd25889ec92e947f557902b2d71a6c4b9be3e090174a63e729a",
+      "bytes": 1933822
+    },
+    "v11_exp1_interactive_summary.csv": {
+      "sha256": "e3770d98b312e0f4524b5f6e862519835157cafe00561ac4af20a2189465f952",
+      "bytes": 4562
+    },
+    "v11_exp1_replay_runs.jsonl": {
+      "sha256": "c1aa997096023d9554bb88b5e6585669ccc67a7c5d790600e95017a493a3a36a",
+      "bytes": 1392869
+    },
+    "v11_exp1_replay_summary.csv": {
+      "sha256": "fcb6375bbd7da30f8d6f4706500358fec02b427edda39cc9309201f85816ffa0",
+      "bytes": 2077
+    }
+  }
+}

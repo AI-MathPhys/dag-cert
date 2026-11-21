@@ -1,0 +1,91 @@
+{
+  "403001-interleaved": {
+    "dominant": 12352,
+    "probes": [
+      {
+        "q": 256,
+        "slack": 398408,
+        "dominant": 4160
+      },
+      {
+        "q": 512,
+        "slack": 1054210,
+        "dominant": 12352
+      }
+    ]
+  },
+  "403001-short-runs": {
+    "dominant": 74144,
+    "probes": []
+  },
+  "403002-interleaved": {
+    "dominant": 3776,
+    "probes": [
+      {
+        "q": 256,
+        "slack": 312797,
+        "dominant": 3776
+      }
+    ]
+  },
+  "403002-short-runs": {
+    "dominant": 74528,
+    "probes": []
+  },
+  "403003-interleaved": {
+    "dominant": 3584,
+    "probes": [
+      {
+        "q": 256,
+        "slack": 273858,
+        "dominant": 3584
+      }
+    ]
+  },
+  "403003-short-runs": {
+    "dominant": 74688,
+    "probes": []
+  },
+  "403004-interleaved": {
+    "dominant": 3392,
+    "probes": [
+      {
+        "q": 256,
+        "slack": 232265,
+        "dominant": 3392
+      }
+    ]
+  },
+  "403004-short-runs": {
+    "dominant": 74848,
+    "probes": []
+  },
+  "403005-interleaved": {
+    "dominant": 3008,
+    "probes": [
+      {
+        "q": 256,
+        "slack": 142799,
+        "dominant": 3008
+      }
+    ]
+  },
+  "403005-short-runs": {
+    "dominant": 75136,
+    "probes": []
+  },
+  "403006-interleaved": {
+    "dominant": 2624,
+    "probes": [
+      {
+        "q": 256,
+        "slack": 61031,
+        "dominant": 2624
+      }
+    ]
+  },
+  "403006-short-runs": {
+    "dominant": 75392,
+    "probes": []
+  }
+}

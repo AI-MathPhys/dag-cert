@@ -1,0 +1,7 @@
+part,method,runs,delta,false_cert_count,false_cert_rate,mean_resets_or_viols,max_viol_nats
+B1_null_reset,neg_ctrl_reset_on_revisit,500,0.05,199,0.398,28.77,0.0
+B1_null_reset,v33_preserved_all,500,0.05,9,0.018,0.0,0.0
+B1_null_reset,v34_preserved_skip,500,0.05,9,0.018,0.0,0.0
+B2_behrens_fisher,certified_bnb_v22,500,0.05,0,0.0,0.0,0.0
+B2_behrens_fisher,certified_cubic_v23,500,0.05,0,0.0,0.0,0.0
+B2_behrens_fisher,neg_ctrl_local_slsqp,500,0.05,0,0.0,0.2,6.7451

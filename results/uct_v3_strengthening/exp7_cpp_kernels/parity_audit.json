@@ -1,0 +1,237 @@
+{
+  "checks": 23,
+  "zero_discrepancies": true,
+  "median_cpp_speedup_over_python": 80.9,
+  "records": [
+    {
+      "case": "overlap_64_box",
+      "method": "graph-eager",
+      "steps": 30000,
+      "certified": false,
+      "python_ms": 379.605,
+      "cpp_ms": 4.2669,
+      "cpp_speedup_over_python": 89.0,
+      "discrepancies": 0
+    },
+    {
+      "case": "overlap_64_box",
+      "method": "protected-selective",
+      "steps": 30000,
+      "certified": false,
+      "python_ms": 376.426,
+      "cpp_ms": 4.2708,
+      "cpp_speedup_over_python": 88.1,
+      "discrepancies": 0
+    },
+    {
+      "case": "overlap_64_box",
+      "method": "decision-selective",
+      "steps": 30000,
+      "certified": false,
+      "python_ms": 386.531,
+      "cpp_ms": 4.318,
+      "cpp_speedup_over_python": 89.5,
+      "discrepancies": 0
+    },
+    {
+      "case": "overlap_64_box",
+      "method": "dual-covers",
+      "steps": 1124,
+      "certified": true,
+      "python_ms": 19.099,
+      "cpp_ms": 0.4087,
+      "cpp_speedup_over_python": 46.7,
+      "discrepancies": 0
+    },
+    {
+      "case": "overlap_64_box",
+      "method": "direct-graph-regret",
+      "steps": 1124,
+      "certified": true,
+      "python_ms": 26.187,
+      "cpp_ms": 0.5068,
+      "cpp_speedup_over_python": 51.7,
+      "discrepancies": 0
+    },
+    {
+      "case": "overlap_64_eb",
+      "method": "graph-eager",
+      "steps": 30000,
+      "certified": false,
+      "python_ms": 393.358,
+      "cpp_ms": 4.8544,
+      "cpp_speedup_over_python": 81.0,
+      "discrepancies": 0
+    },
+    {
+      "case": "overlap_64_eb",
+      "method": "protected-selective",
+      "steps": 30000,
+      "certified": false,
+      "python_ms": 395.037,
+      "cpp_ms": 5.5212,
+      "cpp_speedup_over_python": 71.5,
+      "discrepancies": 0
+    },
+    {
+      "case": "overlap_64_eb",
+      "method": "decision-selective",
+      "steps": 30000,
+      "certified": false,
+      "python_ms": 403.184,
+      "cpp_ms": 4.9819,
+      "cpp_speedup_over_python": 80.9,
+      "discrepancies": 0
+    },
+    {
+      "case": "overlap_64_eb",
+      "method": "dual-covers",
+      "steps": 1124,
+      "certified": true,
+      "python_ms": 20.67,
+      "cpp_ms": 0.4365,
+      "cpp_speedup_over_python": 47.4,
+      "discrepancies": 0
+    },
+    {
+      "case": "overlap_64_eb",
+      "method": "direct-graph-regret",
+      "steps": 1124,
+      "certified": true,
+      "python_ms": 24.997,
+      "cpp_ms": 0.4872,
+      "cpp_speedup_over_python": 51.3,
+      "discrepancies": 0
+    },
+    {
+      "case": "parity_8_box",
+      "method": "graph-eager",
+      "steps": 708,
+      "certified": true,
+      "python_ms": 19.859,
+      "cpp_ms": 0.4491,
+      "cpp_speedup_over_python": 44.2,
+      "discrepancies": 0
+    },
+    {
+      "case": "parity_8_box",
+      "method": "protected-selective",
+      "steps": 708,
+      "certified": true,
+      "python_ms": 20.592,
+      "cpp_ms": 0.4716,
+      "cpp_speedup_over_python": 43.7,
+      "discrepancies": 0
+    },
+    {
+      "case": "parity_8_box",
+      "method": "decision-selective",
+      "steps": 708,
+      "certified": true,
+      "python_ms": 20.226,
+      "cpp_ms": 0.4792,
+      "cpp_speedup_over_python": 42.2,
+      "discrepancies": 0
+    },
+    {
+      "case": "parity_8_box",
+      "method": "dual-covers",
+      "steps": 708,
+      "certified": true,
+      "python_ms": 18.529,
+      "cpp_ms": 0.5613,
+      "cpp_speedup_over_python": 33.0,
+      "discrepancies": 0
+    },
+    {
+      "case": "parity_8_box",
+      "method": "direct-graph-regret",
+      "steps": 708,
+      "certified": true,
+      "python_ms": 25.417,
+      "cpp_ms": 0.5194,
+      "cpp_speedup_over_python": 48.9,
+      "discrepancies": 0
+    },
+    {
+      "case": "uct_funnel_64",
+      "method": "graph-eager",
+      "steps": 30000,
+      "certified": false,
+      "python_ms": 233.42,
+      "cpp_ms": 3.3308,
+      "cpp_speedup_over_python": 70.1,
+      "discrepancies": 0
+    },
+    {
+      "case": "uct_funnel_64",
+      "method": "protected-selective",
+      "steps": 30000,
+      "certified": false,
+      "python_ms": 234.777,
+      "cpp_ms": 2.2623,
+      "cpp_speedup_over_python": 103.8,
+      "discrepancies": 0
+    },
+    {
+      "case": "uct_funnel_64",
+      "method": "decision-selective",
+      "steps": 30000,
+      "certified": false,
+      "python_ms": 231.479,
+      "cpp_ms": 2.3035,
+      "cpp_speedup_over_python": 100.5,
+      "discrepancies": 0
+    },
+    {
+      "case": "uct_funnel_64",
+      "method": "dual-covers",
+      "steps": 30000,
+      "certified": false,
+      "python_ms": 220.953,
+      "cpp_ms": 2.0924,
+      "cpp_speedup_over_python": 105.6,
+      "discrepancies": 0
+    },
+    {
+      "case": "root_puct_64",
+      "method": "graph-eager",
+      "steps": 10534,
+      "certified": true,
+      "python_ms": 218.706,
+      "cpp_ms": 2.4304,
+      "cpp_speedup_over_python": 90.0,
+      "discrepancies": 0
+    },
+    {
+      "case": "root_puct_64",
+      "method": "protected-selective",
+      "steps": 10534,
+      "certified": true,
+      "python_ms": 251.818,
+      "cpp_ms": 2.6033,
+      "cpp_speedup_over_python": 96.7,
+      "discrepancies": 0
+    },
+    {
+      "case": "root_puct_64",
+      "method": "decision-selective",
+      "steps": 10534,
+      "certified": true,
+      "python_ms": 168.368,
+      "cpp_ms": 1.6518,
+      "cpp_speedup_over_python": 101.9,
+      "discrepancies": 0
+    },
+    {
+      "case": "root_puct_64",
+      "method": "dual-covers",
+      "steps": 10534,
+      "certified": true,
+      "python_ms": 139.175,
+      "cpp_ms": 1.1589,
+      "cpp_speedup_over_python": 120.1,
+      "discrepancies": 0
+    }
+  ]
+}

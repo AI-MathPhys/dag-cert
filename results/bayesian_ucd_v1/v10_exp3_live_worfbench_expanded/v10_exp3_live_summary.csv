@@ -1,0 +1,10 @@
+scope,method,runs,live_cert_rate,med_live_steps,mean_live_steps,med_live_tokens,mean_live_tokens,med_live_infer_s,med_cert_oracle_s,mean_unseen_test_f1,mean_unseen_test_regret
+ALL,indep_os,8,0.0,140.0,140.0,71372.0,71209.0,4075.44,0.0,0.46166,0.0
+ALL,cd_joint_calibrated,8,1.0,31.0,31.8,14842.0,16086.0,808.26,0.0265,0.46166,0.0
+ALL,cd_joint_hybrid,8,1.0,33.0,32.8,16772.0,17013.0,1086.65,0.0321,0.46166,0.0
+base_1000,indep_os,4,0.0,140.0,140.0,65046.0,65218.0,3941.34,0.0,0.43582,0.0
+base_1000,cd_joint_calibrated,4,1.0,29.0,28.5,13750.0,13044.0,743.87,0.0236,0.43582,0.0
+base_1000,cd_joint_hybrid,4,1.0,30.0,29.5,14262.0,14200.0,860.64,0.029,0.43582,0.0
+base_0000,indep_os,4,0.0,140.0,140.0,76717.0,77200.0,4211.28,0.0,0.4875,0.0
+base_0000,cd_joint_calibrated,4,1.0,35.0,35.0,18737.0,19127.0,921.61,0.0272,0.4875,0.0
+base_0000,cd_joint_hybrid,4,1.0,36.0,36.0,20085.0,19825.0,1356.21,0.0399,0.4875,0.0

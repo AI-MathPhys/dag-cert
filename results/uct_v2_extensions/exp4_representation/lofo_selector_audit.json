@@ -1,0 +1,70 @@
+{
+  "total_instances": 64,
+  "lofo_work_oracle_accuracy": 0.859375,
+  "lofo_median_time_ratio_to_oracle": 1.0,
+  "by_held_out_family": {
+    "catalog": {
+      "n_test": 8,
+      "chosen_params": {
+        "frag_threshold": 50.0,
+        "direct_max_actions": 4
+      },
+      "median_time_ratio_to_oracle": 1.0,
+      "median_work_ratio_to_oracle": 1.0
+    },
+    "common_core": {
+      "n_test": 12,
+      "chosen_params": {
+        "frag_threshold": 50.0,
+        "direct_max_actions": 4
+      },
+      "median_time_ratio_to_oracle": 1.0,
+      "median_work_ratio_to_oracle": 1.0
+    },
+    "contiguous_window": {
+      "n_test": 12,
+      "chosen_params": {
+        "frag_threshold": 50.0,
+        "direct_max_actions": 4
+      },
+      "median_time_ratio_to_oracle": 1.0,
+      "median_work_ratio_to_oracle": 1.0
+    },
+    "dominated_funnel": {
+      "n_test": 8,
+      "chosen_params": {
+        "frag_threshold": 50.0,
+        "direct_max_actions": 4
+      },
+      "median_time_ratio_to_oracle": 1.0,
+      "median_work_ratio_to_oracle": 1.0
+    },
+    "overlap_dag": {
+      "n_test": 4,
+      "chosen_params": {
+        "frag_threshold": 50.0,
+        "direct_max_actions": 4
+      },
+      "median_time_ratio_to_oracle": 1.0,
+      "median_work_ratio_to_oracle": 1.0
+    },
+    "parity_grid": {
+      "n_test": 12,
+      "chosen_params": {
+        "frag_threshold": 12.0,
+        "direct_max_actions": 4
+      },
+      "median_time_ratio_to_oracle": 1.0,
+      "median_work_ratio_to_oracle": 1.165214942334276
+    },
+    "samegame": {
+      "n_test": 8,
+      "chosen_params": {
+        "frag_threshold": 50.0,
+        "direct_max_actions": 4
+      },
+      "median_time_ratio_to_oracle": 1.0,
+      "median_work_ratio_to_oracle": 1.0
+    }
+  }
+}

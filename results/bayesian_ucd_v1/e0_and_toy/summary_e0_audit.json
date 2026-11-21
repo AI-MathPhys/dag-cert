@@ -1,0 +1,11 @@
+{
+  "total_instances": 200,
+  "max_err_colgen_vs_socp": 1.8890198384143356e-09,
+  "max_err_lazy_vs_socp": 1.8890198384143356e-09,
+  "max_err_afw_vs_socp": 0.0003695485145904305,
+  "max_err_primal_vs_socp": 9.397600483351809e-05,
+  "ordering_violations": 0,
+  "caratheodory_violations": 0,
+  "median_box_over_ellipsoid": 2.3511,
+  "max_duality_gap": 4.0536082863391325
+}

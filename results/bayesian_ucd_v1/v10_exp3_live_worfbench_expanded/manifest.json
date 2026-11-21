@@ -1,0 +1,16 @@
+{
+  "experiment": "v10_exp3_live_worfbench_expanded",
+  "smoke": false,
+  "elapsed_s": 4302.7,
+  "python": "3.12.14",
+  "files": {
+    "v10_exp3_live_runs.jsonl": {
+      "sha256": "b7a8340c94d64f6a7b01a5d8aeb715d510ab96aaf4bb538a3de1e3b717140584",
+      "bytes": 12442
+    },
+    "v10_exp3_live_summary.csv": {
+      "sha256": "57dd6ee4786ddcc0eb4053d0c2cff5624b51c432e35c2fd4634fc22c015a7d13",
+      "bytes": 913
+    }
+  }
+}

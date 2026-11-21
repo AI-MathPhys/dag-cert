@@ -1,0 +1,48 @@
+{
+  "experiment": "exp1_exact_regret",
+  "smoke": false,
+  "sizes": [
+    64,
+    256,
+    1024
+  ],
+  "overlaps": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    0.88,
+    1.0
+  ],
+  "gaps": [
+    0.42,
+    0.32
+  ],
+  "reward_modes": [
+    "deterministic",
+    "bernoulli"
+  ],
+  "trace_seeds": [
+    610001,
+    610002,
+    610003,
+    610004,
+    610005,
+    610006
+  ],
+  "wall_seeds": [
+    610001,
+    610002,
+    610003,
+    610004
+  ],
+  "trace_cap": 50000,
+  "wall_limit_s": 1.0,
+  "delta": 0.05,
+  "c_uct": 3.0,
+  "q_cert": 4,
+  "python": "3.12.14",
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "sha256_common_traces": "e9b13ad41960faf796f916158c4b7c19845128d339176586dfa6102228094a97",
+  "sha256_wall_runs": "4d472566666fbb651f3d6378535afad532f4e59c794f693ecb1054027cdf3360"
+}

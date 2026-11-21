@@ -1,0 +1,24 @@
+{
+  "experiment": "v8_exp1_calibrated_proteins",
+  "smoke": false,
+  "elapsed_s": 624.31,
+  "python": "3.12.14",
+  "files": {
+    "v8_exp1_protein_runs.jsonl": {
+      "sha256": "803fed5e6bce19364dd08c647b20b8d73f61746cad578990d463fd419801ec98",
+      "bytes": 2145088
+    },
+    "v8_exp1_protein_summary.csv": {
+      "sha256": "f1d96a745dc84484b30e17a4f78411d00fd515474cca6f44b638a2c712a8846f",
+      "bytes": 6523
+    },
+    "v8_exp1_controlled_runs.jsonl": {
+      "sha256": "5ce083fc1bd5b6d64866d103470cc62b7963409be3d9328173a9d233ae9944af",
+      "bytes": 9130783
+    },
+    "v8_exp1_controlled_summary.csv": {
+      "sha256": "e2426c9f9821b8ad5843bf29e08d49e307f7af2ffdbc4d9143b22efaa3bdc751",
+      "bytes": 6987
+    }
+  }
+}

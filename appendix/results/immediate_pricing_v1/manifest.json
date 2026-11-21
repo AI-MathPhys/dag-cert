@@ -1,0 +1,4049 @@
+{
+  "caps": [
+    102400000,
+    262144,
+    12.0
+  ],
+  "methods": [
+    "reference",
+    "immediate",
+    "threshold"
+  ],
+  "specs": [
+    {
+      "tag": "cohort",
+      "case": "wide-321101-1-0.05-constant",
+      "s": {
+        "family": "wide",
+        "seed": 321101,
+        "eps": 0.05,
+        "law": "constant",
+        "good": 1,
+        "cohort": "archive"
+      },
+      "tie": 321101,
+      "reps": 2,
+      "graph": "wide-321101-1-0.05-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321101-2-0.0125-constant-sharp",
+      "s": {
+        "family": "layout4",
+        "seed": 321101,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "constant",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321101,
+      "reps": 2,
+      "graph": "layout4-321101-2-0.0125-constant-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321101-2-0.0125-constant-shoulder",
+      "s": {
+        "family": "layout4",
+        "seed": 321101,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "constant",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321101,
+      "reps": 2,
+      "graph": "layout4-321101-2-0.0125-constant-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321101-2-0.016666666666666666-bernoulli-sharp",
+      "s": {
+        "family": "layout8",
+        "seed": 321101,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321101,
+      "reps": 2,
+      "graph": "layout8-321101-2-0.016666666666666666-bernoulli-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321101-2-0.016666666666666666-bernoulli-shoulder",
+      "s": {
+        "family": "layout8",
+        "seed": 321101,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321101,
+      "reps": 2,
+      "graph": "layout8-321101-2-0.016666666666666666-bernoulli-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "narrow-321101-2-0.01-constant",
+      "s": {
+        "family": "narrow",
+        "seed": 321101,
+        "eps": 0.01,
+        "law": "constant",
+        "good": 2,
+        "cohort": "archive"
+      },
+      "tie": 321101,
+      "reps": 2,
+      "graph": "narrow-321101-2-0.01-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-321101-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 321101,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "archive"
+      },
+      "tie": 321101,
+      "reps": 2,
+      "graph": "large-321101-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "samegame-321101-0.02",
+      "s": {
+        "family": "samegame",
+        "seed": 321101,
+        "eps": 0.02,
+        "board": [
+          [
+            4,
+            0,
+            3,
+            0,
+            2,
+            3,
+            0
+          ],
+          [
+            4
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            4
+          ],
+          [
+            0
+          ],
+          [
+            3,
+            0,
+            3
+          ],
+          [
+            3,
+            2,
+            0
+          ],
+          [
+            0,
+            4,
+            4
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            2,
+            3,
+            2,
+            1
+          ]
+        ],
+        "path": [
+          31,
+          30,
+          36,
+          6,
+          7,
+          9,
+          20,
+          9,
+          0,
+          7,
+          19,
+          0,
+          26,
+          7,
+          13,
+          5,
+          21,
+          25,
+          2,
+          22,
+          25,
+          23,
+          13,
+          13,
+          23,
+          3,
+          2,
+          3,
+          13,
+          7,
+          7,
+          11,
+          4,
+          3,
+          5,
+          7,
+          10,
+          1,
+          3,
+          7,
+          7,
+          1,
+          0,
+          4,
+          0,
+          4,
+          4,
+          1,
+          1,
+          5,
+          5,
+          1,
+          7,
+          0,
+          8,
+          1,
+          2,
+          6,
+          5,
+          3,
+          0
+        ],
+        "source": 17,
+        "h": 3,
+        "cohort": "archive"
+      },
+      "tie": 321101,
+      "reps": 2,
+      "graph": "samegame-321101-0.02"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321101-0.02-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321101,
+        "eps": 0.02,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321101,
+      "reps": 2,
+      "graph": "overlap-321101-0.02-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321101-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321101,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321101,
+      "reps": 2,
+      "graph": "overlap-321101-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "wide-321102-1-0.05-bernoulli",
+      "s": {
+        "family": "wide",
+        "seed": 321102,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "good": 1,
+        "cohort": "archive"
+      },
+      "tie": 321102,
+      "reps": 2,
+      "graph": "wide-321102-1-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321102-2-0.0125-bernoulli-sharp",
+      "s": {
+        "family": "layout4",
+        "seed": 321102,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321102,
+      "reps": 2,
+      "graph": "layout4-321102-2-0.0125-bernoulli-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321102-2-0.0125-bernoulli-shoulder",
+      "s": {
+        "family": "layout4",
+        "seed": 321102,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321102,
+      "reps": 2,
+      "graph": "layout4-321102-2-0.0125-bernoulli-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321102-2-0.016666666666666666-constant-sharp",
+      "s": {
+        "family": "layout8",
+        "seed": 321102,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "constant",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321102,
+      "reps": 2,
+      "graph": "layout8-321102-2-0.016666666666666666-constant-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321102-2-0.016666666666666666-constant-shoulder",
+      "s": {
+        "family": "layout8",
+        "seed": 321102,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "constant",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321102,
+      "reps": 2,
+      "graph": "layout8-321102-2-0.016666666666666666-constant-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "narrow-321102-2-0.01-constant",
+      "s": {
+        "family": "narrow",
+        "seed": 321102,
+        "eps": 0.01,
+        "law": "constant",
+        "good": 2,
+        "cohort": "archive"
+      },
+      "tie": 321102,
+      "reps": 2,
+      "graph": "narrow-321102-2-0.01-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-321102-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 321102,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "archive"
+      },
+      "tie": 321102,
+      "reps": 2,
+      "graph": "large-321102-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "samegame-321102-0.02",
+      "s": {
+        "family": "samegame",
+        "seed": 321102,
+        "eps": 0.02,
+        "board": [
+          [
+            4,
+            1,
+            3,
+            0,
+            1
+          ],
+          [
+            3,
+            4,
+            1,
+            2,
+            1,
+            2,
+            1,
+            2
+          ],
+          [
+            3,
+            2,
+            1,
+            3
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            1
+          ],
+          [
+            3,
+            4,
+            0,
+            4
+          ],
+          [
+            2,
+            1,
+            3
+          ]
+        ],
+        "path": [
+          32,
+          21,
+          12,
+          2,
+          26,
+          24,
+          1,
+          14,
+          31,
+          11,
+          24,
+          13,
+          21,
+          7,
+          13,
+          20,
+          11,
+          20,
+          1,
+          17,
+          9,
+          7,
+          2,
+          13,
+          12,
+          18,
+          8,
+          16,
+          8,
+          4,
+          9,
+          14,
+          14,
+          13,
+          14,
+          6,
+          7,
+          4,
+          13,
+          7,
+          5,
+          1,
+          10,
+          9,
+          1,
+          8,
+          6,
+          6,
+          2,
+          0,
+          0,
+          3,
+          0,
+          2,
+          3,
+          1,
+          3,
+          2,
+          3,
+          5,
+          2,
+          1,
+          3,
+          1,
+          1
+        ],
+        "source": 18,
+        "h": 3,
+        "cohort": "archive"
+      },
+      "tie": 321102,
+      "reps": 2,
+      "graph": "samegame-321102-0.02"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321102-0.02-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321102,
+        "eps": 0.02,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321102,
+      "reps": 2,
+      "graph": "overlap-321102-0.02-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321102-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321102,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321102,
+      "reps": 2,
+      "graph": "overlap-321102-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "wide-321103-1-0.05-constant",
+      "s": {
+        "family": "wide",
+        "seed": 321103,
+        "eps": 0.05,
+        "law": "constant",
+        "good": 1,
+        "cohort": "archive"
+      },
+      "tie": 321103,
+      "reps": 2,
+      "graph": "wide-321103-1-0.05-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321103-2-0.0125-constant-sharp",
+      "s": {
+        "family": "layout4",
+        "seed": 321103,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "constant",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321103,
+      "reps": 2,
+      "graph": "layout4-321103-2-0.0125-constant-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321103-2-0.0125-constant-shoulder",
+      "s": {
+        "family": "layout4",
+        "seed": 321103,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "constant",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321103,
+      "reps": 2,
+      "graph": "layout4-321103-2-0.0125-constant-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321103-2-0.016666666666666666-bernoulli-sharp",
+      "s": {
+        "family": "layout8",
+        "seed": 321103,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321103,
+      "reps": 2,
+      "graph": "layout8-321103-2-0.016666666666666666-bernoulli-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321103-2-0.016666666666666666-bernoulli-shoulder",
+      "s": {
+        "family": "layout8",
+        "seed": 321103,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321103,
+      "reps": 2,
+      "graph": "layout8-321103-2-0.016666666666666666-bernoulli-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "narrow-321103-2-0.01-constant",
+      "s": {
+        "family": "narrow",
+        "seed": 321103,
+        "eps": 0.01,
+        "law": "constant",
+        "good": 2,
+        "cohort": "archive"
+      },
+      "tie": 321103,
+      "reps": 2,
+      "graph": "narrow-321103-2-0.01-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-321103-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 321103,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "archive"
+      },
+      "tie": 321103,
+      "reps": 2,
+      "graph": "large-321103-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "samegame-321103-0.02",
+      "s": {
+        "family": "samegame",
+        "seed": 321103,
+        "eps": 0.02,
+        "board": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            3
+          ],
+          [
+            1,
+            0,
+            4,
+            3
+          ],
+          [
+            4
+          ],
+          [
+            0,
+            0,
+            3,
+            2,
+            1,
+            2
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            0
+          ],
+          [
+            4,
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            3,
+            0
+          ]
+        ],
+        "path": [
+          23,
+          10,
+          41,
+          37,
+          28,
+          1,
+          20,
+          8,
+          20,
+          31,
+          16,
+          25,
+          25,
+          4,
+          35,
+          29,
+          8,
+          18,
+          4,
+          24,
+          2,
+          2,
+          7,
+          4,
+          4,
+          15,
+          23,
+          3,
+          15,
+          8,
+          11,
+          20,
+          8,
+          7,
+          1,
+          12,
+          17,
+          1,
+          15,
+          3,
+          1,
+          11,
+          1,
+          9,
+          2,
+          11,
+          5,
+          8,
+          5,
+          1,
+          0,
+          4,
+          0,
+          4,
+          4,
+          1,
+          1,
+          2,
+          2,
+          1,
+          0,
+          4
+        ],
+        "source": 19,
+        "h": 3,
+        "cohort": "archive"
+      },
+      "tie": 321103,
+      "reps": 2,
+      "graph": "samegame-321103-0.02"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321103-0.02-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321103,
+        "eps": 0.02,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321103,
+      "reps": 2,
+      "graph": "overlap-321103-0.02-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321103-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321103,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321103,
+      "reps": 2,
+      "graph": "overlap-321103-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "wide-321104-1-0.05-bernoulli",
+      "s": {
+        "family": "wide",
+        "seed": 321104,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "good": 1,
+        "cohort": "archive"
+      },
+      "tie": 321104,
+      "reps": 2,
+      "graph": "wide-321104-1-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321104-2-0.0125-bernoulli-sharp",
+      "s": {
+        "family": "layout4",
+        "seed": 321104,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321104,
+      "reps": 2,
+      "graph": "layout4-321104-2-0.0125-bernoulli-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321104-2-0.0125-bernoulli-shoulder",
+      "s": {
+        "family": "layout4",
+        "seed": 321104,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321104,
+      "reps": 2,
+      "graph": "layout4-321104-2-0.0125-bernoulli-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321104-2-0.016666666666666666-constant-sharp",
+      "s": {
+        "family": "layout8",
+        "seed": 321104,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "constant",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321104,
+      "reps": 2,
+      "graph": "layout8-321104-2-0.016666666666666666-constant-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321104-2-0.016666666666666666-constant-shoulder",
+      "s": {
+        "family": "layout8",
+        "seed": 321104,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "constant",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321104,
+      "reps": 2,
+      "graph": "layout8-321104-2-0.016666666666666666-constant-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "narrow-321104-2-0.01-constant",
+      "s": {
+        "family": "narrow",
+        "seed": 321104,
+        "eps": 0.01,
+        "law": "constant",
+        "good": 2,
+        "cohort": "archive"
+      },
+      "tie": 321104,
+      "reps": 2,
+      "graph": "narrow-321104-2-0.01-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-321104-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 321104,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "archive"
+      },
+      "tie": 321104,
+      "reps": 2,
+      "graph": "large-321104-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "samegame-321104-0.02",
+      "s": {
+        "family": "samegame",
+        "seed": 321104,
+        "eps": 0.02,
+        "board": [
+          [
+            3,
+            4,
+            1,
+            3,
+            3,
+            1,
+            3
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            1
+          ],
+          [
+            4
+          ],
+          [
+            1,
+            2,
+            3,
+            3,
+            0,
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3
+          ],
+          [
+            2
+          ]
+        ],
+        "path": [
+          12,
+          19,
+          41,
+          18,
+          2,
+          19,
+          36,
+          31,
+          37,
+          14,
+          32,
+          32,
+          25,
+          4,
+          22,
+          30,
+          24,
+          3,
+          24,
+          1,
+          2,
+          27,
+          8,
+          26,
+          9,
+          24,
+          12,
+          23,
+          5,
+          3,
+          0,
+          16,
+          19,
+          8,
+          3,
+          4,
+          7,
+          3,
+          11,
+          0,
+          4,
+          1,
+          9,
+          10,
+          2,
+          4,
+          2,
+          3,
+          9,
+          6,
+          8,
+          2,
+          0,
+          5,
+          1,
+          4,
+          3,
+          1
+        ],
+        "source": 20,
+        "h": 3,
+        "cohort": "archive"
+      },
+      "tie": 321104,
+      "reps": 2,
+      "graph": "samegame-321104-0.02"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321104-0.02-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321104,
+        "eps": 0.02,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321104,
+      "reps": 2,
+      "graph": "overlap-321104-0.02-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321104-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321104,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321104,
+      "reps": 2,
+      "graph": "overlap-321104-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "wide-321105-1-0.05-constant",
+      "s": {
+        "family": "wide",
+        "seed": 321105,
+        "eps": 0.05,
+        "law": "constant",
+        "good": 1,
+        "cohort": "archive"
+      },
+      "tie": 321105,
+      "reps": 2,
+      "graph": "wide-321105-1-0.05-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321105-2-0.0125-constant-sharp",
+      "s": {
+        "family": "layout4",
+        "seed": 321105,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "constant",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321105,
+      "reps": 2,
+      "graph": "layout4-321105-2-0.0125-constant-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321105-2-0.0125-constant-shoulder",
+      "s": {
+        "family": "layout4",
+        "seed": 321105,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "constant",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321105,
+      "reps": 2,
+      "graph": "layout4-321105-2-0.0125-constant-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321105-2-0.016666666666666666-bernoulli-sharp",
+      "s": {
+        "family": "layout8",
+        "seed": 321105,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321105,
+      "reps": 2,
+      "graph": "layout8-321105-2-0.016666666666666666-bernoulli-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321105-2-0.016666666666666666-bernoulli-shoulder",
+      "s": {
+        "family": "layout8",
+        "seed": 321105,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321105,
+      "reps": 2,
+      "graph": "layout8-321105-2-0.016666666666666666-bernoulli-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "narrow-321105-2-0.01-constant",
+      "s": {
+        "family": "narrow",
+        "seed": 321105,
+        "eps": 0.01,
+        "law": "constant",
+        "good": 2,
+        "cohort": "archive"
+      },
+      "tie": 321105,
+      "reps": 2,
+      "graph": "narrow-321105-2-0.01-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-321105-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 321105,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "archive"
+      },
+      "tie": 321105,
+      "reps": 2,
+      "graph": "large-321105-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "samegame-321105-0.02",
+      "s": {
+        "family": "samegame",
+        "seed": 321105,
+        "eps": 0.02,
+        "board": [
+          [
+            1,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            1,
+            0,
+            3,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            1
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            1,
+            2,
+            1
+          ],
+          [
+            4,
+            4,
+            1,
+            4,
+            0
+          ],
+          [
+            2
+          ],
+          [
+            2,
+            3,
+            1,
+            3
+          ]
+        ],
+        "path": [
+          40,
+          3,
+          3,
+          17,
+          33,
+          25,
+          0,
+          26,
+          10,
+          5,
+          26,
+          33,
+          19,
+          32,
+          7,
+          12,
+          27,
+          8,
+          17,
+          15,
+          23,
+          20,
+          15,
+          23,
+          12,
+          18,
+          0,
+          23,
+          22,
+          17,
+          22,
+          19,
+          10,
+          3,
+          6,
+          7,
+          4,
+          2,
+          2,
+          8,
+          14,
+          13,
+          11,
+          8,
+          7,
+          12,
+          14,
+          13,
+          14,
+          4,
+          10,
+          13,
+          4,
+          6,
+          7,
+          13,
+          10,
+          9,
+          6,
+          11,
+          7,
+          6,
+          6,
+          3,
+          1,
+          2,
+          1,
+          3,
+          2,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "source": 1,
+        "h": 3,
+        "cohort": "archive"
+      },
+      "tie": 321105,
+      "reps": 2,
+      "graph": "samegame-321105-0.02"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321105-0.02-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321105,
+        "eps": 0.02,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321105,
+      "reps": 2,
+      "graph": "overlap-321105-0.02-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321105-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321105,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321105,
+      "reps": 2,
+      "graph": "overlap-321105-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "wide-321106-1-0.05-bernoulli",
+      "s": {
+        "family": "wide",
+        "seed": 321106,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "good": 1,
+        "cohort": "archive"
+      },
+      "tie": 321106,
+      "reps": 2,
+      "graph": "wide-321106-1-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321106-2-0.0125-bernoulli-sharp",
+      "s": {
+        "family": "layout4",
+        "seed": 321106,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321106,
+      "reps": 2,
+      "graph": "layout4-321106-2-0.0125-bernoulli-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321106-2-0.0125-bernoulli-shoulder",
+      "s": {
+        "family": "layout4",
+        "seed": 321106,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321106,
+      "reps": 2,
+      "graph": "layout4-321106-2-0.0125-bernoulli-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321106-2-0.016666666666666666-constant-sharp",
+      "s": {
+        "family": "layout8",
+        "seed": 321106,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "constant",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321106,
+      "reps": 2,
+      "graph": "layout8-321106-2-0.016666666666666666-constant-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321106-2-0.016666666666666666-constant-shoulder",
+      "s": {
+        "family": "layout8",
+        "seed": 321106,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "constant",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321106,
+      "reps": 2,
+      "graph": "layout8-321106-2-0.016666666666666666-constant-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "narrow-321106-2-0.01-constant",
+      "s": {
+        "family": "narrow",
+        "seed": 321106,
+        "eps": 0.01,
+        "law": "constant",
+        "good": 2,
+        "cohort": "archive"
+      },
+      "tie": 321106,
+      "reps": 2,
+      "graph": "narrow-321106-2-0.01-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-321106-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 321106,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "archive"
+      },
+      "tie": 321106,
+      "reps": 2,
+      "graph": "large-321106-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "samegame-321106-0.02",
+      "s": {
+        "family": "samegame",
+        "seed": 321106,
+        "eps": 0.02,
+        "board": [
+          [
+            1,
+            4,
+            3,
+            4,
+            2,
+            4
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3
+          ],
+          [
+            3
+          ],
+          [
+            3
+          ],
+          [
+            1,
+            2,
+            2,
+            1,
+            2
+          ],
+          [
+            2,
+            0,
+            2
+          ],
+          [
+            1,
+            4,
+            2,
+            1,
+            3
+          ],
+          [
+            1,
+            0,
+            3,
+            0
+          ]
+        ],
+        "path": [
+          12,
+          11,
+          6,
+          27,
+          18,
+          36,
+          27,
+          28,
+          39,
+          17,
+          14,
+          14,
+          16,
+          11,
+          16,
+          28,
+          29,
+          34,
+          6,
+          10,
+          14,
+          0,
+          20,
+          13,
+          2,
+          24,
+          26,
+          5,
+          8,
+          19,
+          21,
+          3,
+          16,
+          6,
+          9,
+          2,
+          17,
+          11,
+          19,
+          3,
+          17,
+          7,
+          14,
+          10,
+          13,
+          5,
+          10,
+          0,
+          8,
+          1,
+          9,
+          3,
+          10,
+          11,
+          7,
+          7,
+          9,
+          2,
+          1,
+          4,
+          5,
+          2,
+          4,
+          1,
+          4,
+          1,
+          3,
+          1,
+          3,
+          2,
+          0
+        ],
+        "source": 2,
+        "h": 3,
+        "cohort": "archive"
+      },
+      "tie": 321106,
+      "reps": 2,
+      "graph": "samegame-321106-0.02"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321106-0.02-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321106,
+        "eps": 0.02,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321106,
+      "reps": 2,
+      "graph": "overlap-321106-0.02-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321106-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321106,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321106,
+      "reps": 2,
+      "graph": "overlap-321106-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "wide-321107-1-0.05-constant",
+      "s": {
+        "family": "wide",
+        "seed": 321107,
+        "eps": 0.05,
+        "law": "constant",
+        "good": 1,
+        "cohort": "archive"
+      },
+      "tie": 321107,
+      "reps": 2,
+      "graph": "wide-321107-1-0.05-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321107-2-0.0125-constant-sharp",
+      "s": {
+        "family": "layout4",
+        "seed": 321107,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "constant",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321107,
+      "reps": 2,
+      "graph": "layout4-321107-2-0.0125-constant-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321107-2-0.0125-constant-shoulder",
+      "s": {
+        "family": "layout4",
+        "seed": 321107,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "constant",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321107,
+      "reps": 2,
+      "graph": "layout4-321107-2-0.0125-constant-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321107-2-0.016666666666666666-bernoulli-sharp",
+      "s": {
+        "family": "layout8",
+        "seed": 321107,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321107,
+      "reps": 2,
+      "graph": "layout8-321107-2-0.016666666666666666-bernoulli-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321107-2-0.016666666666666666-bernoulli-shoulder",
+      "s": {
+        "family": "layout8",
+        "seed": 321107,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321107,
+      "reps": 2,
+      "graph": "layout8-321107-2-0.016666666666666666-bernoulli-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "narrow-321107-2-0.01-constant",
+      "s": {
+        "family": "narrow",
+        "seed": 321107,
+        "eps": 0.01,
+        "law": "constant",
+        "good": 2,
+        "cohort": "archive"
+      },
+      "tie": 321107,
+      "reps": 2,
+      "graph": "narrow-321107-2-0.01-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-321107-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 321107,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "archive"
+      },
+      "tie": 321107,
+      "reps": 2,
+      "graph": "large-321107-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "samegame-321107-0.02",
+      "s": {
+        "family": "samegame",
+        "seed": 321107,
+        "eps": 0.02,
+        "board": [
+          [
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0,
+            4,
+            0
+          ],
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            0,
+            4,
+            2,
+            4
+          ],
+          [
+            2,
+            0,
+            2,
+            0,
+            3,
+            2
+          ]
+        ],
+        "path": [
+          14,
+          37,
+          5,
+          40,
+          39,
+          10,
+          10,
+          17,
+          1,
+          23,
+          7,
+          13,
+          18,
+          19,
+          14,
+          25,
+          4,
+          7,
+          26,
+          17,
+          11,
+          14,
+          6,
+          3,
+          6,
+          14,
+          8,
+          18,
+          17,
+          10,
+          4,
+          9,
+          3,
+          13,
+          3,
+          2,
+          5,
+          3,
+          1,
+          14,
+          1,
+          10,
+          3,
+          9,
+          4,
+          3,
+          11,
+          7,
+          6,
+          5,
+          6,
+          6,
+          6,
+          1,
+          5,
+          1,
+          0,
+          5,
+          4,
+          1,
+          0,
+          4,
+          2,
+          0
+        ],
+        "source": 3,
+        "h": 3,
+        "cohort": "archive"
+      },
+      "tie": 321107,
+      "reps": 2,
+      "graph": "samegame-321107-0.02"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321107-0.02-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321107,
+        "eps": 0.02,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321107,
+      "reps": 2,
+      "graph": "overlap-321107-0.02-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321107-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321107,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321107,
+      "reps": 2,
+      "graph": "overlap-321107-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "wide-321108-1-0.05-bernoulli",
+      "s": {
+        "family": "wide",
+        "seed": 321108,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "good": 1,
+        "cohort": "archive"
+      },
+      "tie": 321108,
+      "reps": 2,
+      "graph": "wide-321108-1-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321108-2-0.0125-bernoulli-sharp",
+      "s": {
+        "family": "layout4",
+        "seed": 321108,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321108,
+      "reps": 2,
+      "graph": "layout4-321108-2-0.0125-bernoulli-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-321108-2-0.0125-bernoulli-shoulder",
+      "s": {
+        "family": "layout4",
+        "seed": 321108,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321108,
+      "reps": 2,
+      "graph": "layout4-321108-2-0.0125-bernoulli-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321108-2-0.016666666666666666-constant-sharp",
+      "s": {
+        "family": "layout8",
+        "seed": 321108,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "constant",
+        "good": 2,
+        "profile": "sharp",
+        "cohort": "archive"
+      },
+      "tie": 321108,
+      "reps": 2,
+      "graph": "layout8-321108-2-0.016666666666666666-constant-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-321108-2-0.016666666666666666-constant-shoulder",
+      "s": {
+        "family": "layout8",
+        "seed": 321108,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "constant",
+        "good": 2,
+        "profile": "shoulder",
+        "cohort": "archive"
+      },
+      "tie": 321108,
+      "reps": 2,
+      "graph": "layout8-321108-2-0.016666666666666666-constant-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "narrow-321108-2-0.01-constant",
+      "s": {
+        "family": "narrow",
+        "seed": 321108,
+        "eps": 0.01,
+        "law": "constant",
+        "good": 2,
+        "cohort": "archive"
+      },
+      "tie": 321108,
+      "reps": 2,
+      "graph": "narrow-321108-2-0.01-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-321108-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 321108,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "archive"
+      },
+      "tie": 321108,
+      "reps": 2,
+      "graph": "large-321108-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "samegame-321108-0.02",
+      "s": {
+        "family": "samegame",
+        "seed": 321108,
+        "eps": 0.02,
+        "board": [
+          [
+            1,
+            4
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            3,
+            0,
+            0,
+            0,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            1,
+            2,
+            0
+          ]
+        ],
+        "path": [
+          3,
+          4,
+          15,
+          36,
+          16,
+          36,
+          25,
+          1,
+          6,
+          32,
+          5,
+          34,
+          0,
+          12,
+          22,
+          7,
+          19,
+          0,
+          6,
+          19,
+          4,
+          10,
+          20,
+          23,
+          15,
+          19,
+          5,
+          20,
+          23,
+          10,
+          5,
+          6,
+          1,
+          1,
+          16,
+          9,
+          21,
+          3,
+          16,
+          18,
+          17,
+          16,
+          20,
+          5,
+          14,
+          13,
+          6,
+          13,
+          5,
+          16,
+          1,
+          9,
+          0,
+          12,
+          14,
+          13,
+          8,
+          5,
+          4,
+          0,
+          5,
+          5,
+          0,
+          5,
+          4,
+          2,
+          0
+        ],
+        "source": 4,
+        "h": 3,
+        "cohort": "archive"
+      },
+      "tie": 321108,
+      "reps": 2,
+      "graph": "samegame-321108-0.02"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321108-0.02-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321108,
+        "eps": 0.02,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321108,
+      "reps": 2,
+      "graph": "overlap-321108-0.02-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-321108-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 321108,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "archive"
+      },
+      "tie": 321108,
+      "reps": 2,
+      "graph": "overlap-321108-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-337101-2-0.0125-constant-sharp",
+      "s": {
+        "family": "layout4",
+        "seed": 337101,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "good": 2,
+        "cohort": "fresh"
+      },
+      "tie": 337101,
+      "reps": 2,
+      "graph": "layout4-337101-2-0.0125-constant-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-337101-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 337101,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "fresh"
+      },
+      "tie": 337101,
+      "reps": 2,
+      "graph": "large-337101-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-337101-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 337101,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "fresh"
+      },
+      "tie": 337101,
+      "reps": 2,
+      "graph": "overlap-337101-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-337102-2-0.016666666666666666-constant-sharp",
+      "s": {
+        "family": "layout8",
+        "seed": 337102,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "constant",
+        "profile": "sharp",
+        "good": 2,
+        "cohort": "fresh"
+      },
+      "tie": 337102,
+      "reps": 2,
+      "graph": "layout8-337102-2-0.016666666666666666-constant-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-337102-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 337102,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "fresh"
+      },
+      "tie": 337102,
+      "reps": 2,
+      "graph": "large-337102-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-337102-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 337102,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "fresh"
+      },
+      "tie": 337102,
+      "reps": 2,
+      "graph": "overlap-337102-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-337103-2-0.0125-bernoulli-sharp",
+      "s": {
+        "family": "layout4",
+        "seed": 337103,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "good": 2,
+        "cohort": "fresh"
+      },
+      "tie": 337103,
+      "reps": 2,
+      "graph": "layout4-337103-2-0.0125-bernoulli-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-337103-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 337103,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "fresh"
+      },
+      "tie": 337103,
+      "reps": 2,
+      "graph": "large-337103-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-337103-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 337103,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "fresh"
+      },
+      "tie": 337103,
+      "reps": 2,
+      "graph": "overlap-337103-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-337104-2-0.016666666666666666-bernoulli-sharp",
+      "s": {
+        "family": "layout8",
+        "seed": 337104,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "good": 2,
+        "cohort": "fresh"
+      },
+      "tie": 337104,
+      "reps": 2,
+      "graph": "layout8-337104-2-0.016666666666666666-bernoulli-sharp"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-337104-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 337104,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "fresh"
+      },
+      "tie": 337104,
+      "reps": 2,
+      "graph": "large-337104-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-337104-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 337104,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "fresh"
+      },
+      "tie": 337104,
+      "reps": 2,
+      "graph": "overlap-337104-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-337105-2-0.0125-constant-shoulder",
+      "s": {
+        "family": "layout4",
+        "seed": 337105,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "good": 2,
+        "cohort": "fresh"
+      },
+      "tie": 337105,
+      "reps": 2,
+      "graph": "layout4-337105-2-0.0125-constant-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-337105-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 337105,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "fresh"
+      },
+      "tie": 337105,
+      "reps": 2,
+      "graph": "large-337105-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-337105-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 337105,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "fresh"
+      },
+      "tie": 337105,
+      "reps": 2,
+      "graph": "overlap-337105-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-337106-2-0.016666666666666666-constant-shoulder",
+      "s": {
+        "family": "layout8",
+        "seed": 337106,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "constant",
+        "profile": "shoulder",
+        "good": 2,
+        "cohort": "fresh"
+      },
+      "tie": 337106,
+      "reps": 2,
+      "graph": "layout8-337106-2-0.016666666666666666-constant-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-337106-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 337106,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "fresh"
+      },
+      "tie": 337106,
+      "reps": 2,
+      "graph": "large-337106-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-337106-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 337106,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "fresh"
+      },
+      "tie": 337106,
+      "reps": 2,
+      "graph": "overlap-337106-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout4-337107-2-0.0125-bernoulli-shoulder",
+      "s": {
+        "family": "layout4",
+        "seed": 337107,
+        "M": 192,
+        "A": 4,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "good": 2,
+        "cohort": "fresh"
+      },
+      "tie": 337107,
+      "reps": 2,
+      "graph": "layout4-337107-2-0.0125-bernoulli-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-337107-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 337107,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "fresh"
+      },
+      "tie": 337107,
+      "reps": 2,
+      "graph": "large-337107-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-337107-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 337107,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "fresh"
+      },
+      "tie": 337107,
+      "reps": 2,
+      "graph": "overlap-337107-0.0125-constant"
+    },
+    {
+      "tag": "cohort",
+      "case": "layout8-337108-2-0.016666666666666666-bernoulli-shoulder",
+      "s": {
+        "family": "layout8",
+        "seed": 337108,
+        "M": 128,
+        "A": 8,
+        "eps": 0.016666666666666666,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "good": 2,
+        "cohort": "fresh"
+      },
+      "tie": 337108,
+      "reps": 2,
+      "graph": "layout8-337108-2-0.016666666666666666-bernoulli-shoulder"
+    },
+    {
+      "tag": "cohort",
+      "case": "large-337108-0.05-bernoulli",
+      "s": {
+        "family": "large",
+        "seed": 337108,
+        "eps": 0.05,
+        "law": "bernoulli",
+        "cohort": "fresh"
+      },
+      "tie": 337108,
+      "reps": 2,
+      "graph": "large-337108-0.05-bernoulli"
+    },
+    {
+      "tag": "cohort",
+      "case": "overlap-337108-0.0125-constant",
+      "s": {
+        "family": "overlap",
+        "seed": 337108,
+        "eps": 0.0125,
+        "law": "constant",
+        "cohort": "fresh"
+      },
+      "tie": 337108,
+      "reps": 2,
+      "graph": "overlap-337108-0.0125-constant"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355101",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355101,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355102",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355102,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355103",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355103,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355104",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355104,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355105",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355105,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355106",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355106,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355107",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355107,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355108",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355108,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355109",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355109,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355110",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355110,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355111",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355111,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355112",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355112,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355113",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355113,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355114",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355114,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355115",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355115,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-0-355116",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 355001,
+        "cohort": "distribution"
+      },
+      "tie": 355116,
+      "reps": 1,
+      "graph": "fresh-0"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355101",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355101,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355102",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355102,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355103",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355103,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355104",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355104,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355105",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355105,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355106",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355106,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355107",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355107,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355108",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355108,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355109",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355109,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355110",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355110,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355111",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355111,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355112",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355112,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355113",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355113,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355114",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355114,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355115",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355115,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-1-355116",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "sharp",
+        "seed": 355002,
+        "cohort": "distribution"
+      },
+      "tie": 355116,
+      "reps": 1,
+      "graph": "fresh-1"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355101",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355101,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355102",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355102,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355103",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355103,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355104",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355104,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355105",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355105,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355106",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355106,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355107",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355107,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355108",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355108,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355109",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355109,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355110",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355110,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355111",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355111,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355112",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355112,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355113",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355113,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355114",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355114,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355115",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355115,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-2-355116",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "shoulder",
+        "seed": 355003,
+        "cohort": "distribution"
+      },
+      "tie": 355116,
+      "reps": 1,
+      "graph": "fresh-2"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355101",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355101,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355102",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355102,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355103",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355103,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355104",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355104,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355105",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355105,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355106",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355106,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355107",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355107,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355108",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355108,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355109",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355109,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355110",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355110,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355111",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355111,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355112",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355112,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355113",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355113,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355114",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355114,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355115",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355115,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "fresh",
+      "case": "fresh-3-355116",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "bernoulli",
+        "profile": "shoulder",
+        "seed": 355004,
+        "cohort": "distribution"
+      },
+      "tie": 355116,
+      "reps": 1,
+      "graph": "fresh-3"
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-192-378001",
+      "case": "confirm-192-378001-378101",
+      "s": {
+        "family": "layout4",
+        "M": 192,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378001,
+        "cohort": "confirmation"
+      },
+      "tie": 378101,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-192-378001",
+      "case": "confirm-192-378001-378102",
+      "s": {
+        "family": "layout4",
+        "M": 192,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378001,
+        "cohort": "confirmation"
+      },
+      "tie": 378102,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-192-378001",
+      "case": "confirm-192-378001-378103",
+      "s": {
+        "family": "layout4",
+        "M": 192,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378001,
+        "cohort": "confirmation"
+      },
+      "tie": 378103,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-192-378001",
+      "case": "confirm-192-378001-378104",
+      "s": {
+        "family": "layout4",
+        "M": 192,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378001,
+        "cohort": "confirmation"
+      },
+      "tie": 378104,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-224-378002",
+      "case": "confirm-224-378002-378101",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378002,
+        "cohort": "confirmation"
+      },
+      "tie": 378101,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-224-378002",
+      "case": "confirm-224-378002-378102",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378002,
+        "cohort": "confirmation"
+      },
+      "tie": 378102,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-224-378002",
+      "case": "confirm-224-378002-378103",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378002,
+        "cohort": "confirmation"
+      },
+      "tie": 378103,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-224-378002",
+      "case": "confirm-224-378002-378104",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378002,
+        "cohort": "confirmation"
+      },
+      "tie": 378104,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-224-378003",
+      "case": "confirm-224-378003-378101",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378003,
+        "cohort": "confirmation"
+      },
+      "tie": 378101,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-224-378003",
+      "case": "confirm-224-378003-378102",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378003,
+        "cohort": "confirmation"
+      },
+      "tie": 378102,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-224-378003",
+      "case": "confirm-224-378003-378103",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378003,
+        "cohort": "confirmation"
+      },
+      "tie": 378103,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-224-378003",
+      "case": "confirm-224-378003-378104",
+      "s": {
+        "family": "layout4",
+        "M": 224,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378003,
+        "cohort": "confirmation"
+      },
+      "tie": 378104,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-256-378004",
+      "case": "confirm-256-378004-378101",
+      "s": {
+        "family": "layout4",
+        "M": 256,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378004,
+        "cohort": "confirmation"
+      },
+      "tie": 378101,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-256-378004",
+      "case": "confirm-256-378004-378102",
+      "s": {
+        "family": "layout4",
+        "M": 256,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378004,
+        "cohort": "confirmation"
+      },
+      "tie": 378102,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-256-378004",
+      "case": "confirm-256-378004-378103",
+      "s": {
+        "family": "layout4",
+        "M": 256,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378004,
+        "cohort": "confirmation"
+      },
+      "tie": 378103,
+      "reps": 2
+    },
+    {
+      "tag": "confirmation",
+      "graph": "confirm-256-378004",
+      "case": "confirm-256-378004-378104",
+      "s": {
+        "family": "layout4",
+        "M": 256,
+        "A": 4,
+        "good": 2,
+        "eps": 0.0125,
+        "law": "constant",
+        "profile": "sharp",
+        "seed": 378004,
+        "cohort": "confirmation"
+      },
+      "tie": 378104,
+      "reps": 2
+    }
+  ],
+  "repetitions": 2,
+  "order_seed": 378877,
+  "python": "3.13.12",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "sources": {
+    "paper/immediate_pricing.py": "037d847dc7f9a1294abf089e4e7ea4f9013f7b093bcea5efd3c5103c1470c926",
+    "paper/immediate_pricing_benchmark.py": "73c7fbaf44b630e102400a7553c284208ce9daed08a8c7d083e4426b892ee809",
+    "paper/immediate_pricing_protocol.txt": "76182213d7b466554defcc3fbba65269ad972eeafa4213dc23a16a5057c6a16c",
+    "paper/decision_price.py": "4d585273514583139f6499249b0496619c8c2ae63fdc5478da71707cbe8ee487",
+    "paper/batched_repair.py": "c0513ef85bcf2e01c0f5bc9acc61f706294396717e02ed66736b0caf599f72ed",
+    "paper/repair_policy_clock.py": "9bff49df8c5732a1d29e0f1b53729a684b5fba4f2cae9609e7e05203a0c0d37a"
+  }
+}

@@ -1,0 +1,57 @@
+Frozen protocol for partial admission and early stopping. Only previous seeds
+151xxx and 162xxx are development data. The 173101--173108 master seeds may
+be used only after this protocol, the solver, runner and tests are frozen.
+
+The statistical interface is unchanged: omit only keys strictly below the
+achieved anchor, keep all remaining keys, use the same joint confidence event.
+Keep the same pilot fund R/8, one attempt, hard cap B=min(2R,floor(P/3)),
+monitor price12, fixed overhead24 and retained FIFO accounting. No graph or
+family name, true mean, oracle future or post-hoc performance enters a solver.
+
+Compare original memoized Range-32, previous unrestricted Clear/Frontier-32
+(old_clear32), previous Guarded, new Partial, and two fixed ablations.
+full_price has the same partial execution, paid pilots and hard credit but
+uses the previous full-classification budget test. plain_abort keeps new
+admission and initial deferrals but disables midtrial parking and salvaging.
+The full method forecasts the cost of retaining up to four expensive leaves
+and of clearing the rest. It admits if the remaining estimated cost fits
+both the unchanged hard limit and the forecast of future warm-miss savings.
+The pilot charge is 68M+96. During a block review, a newly expensive pending
+terminal can take a spare slot, and a progress/hard veto can seal a complete
+frontier of at most 12 members. All calculations, review work, forecast
+failure, commit and any terminal disposal are charged. Seal costs beyond B
+pay actual publications. The rollback guarantee pertains to declined and
+abandoned trials, with a separate sufficient comparison for successful ones.
+
+Evaluation: 11 fixed settings, eight fresh master seeds, two work prices
+1 and64 on each input, six methods = 1056 cold-start executions over 88
+graph/reward inputs. The eight earlier settings get fresh seeds. Add large
+fragmented unions with nominal background inclusion probability .25 or .75
+(previously .5) and a shoulder case with eight additional background means
+uniform in [.49,.64]. These three use independent construction offsets
++21000,+31000,+41000. Canonical lattice topology repeats across seeds;
+thinned and scrambled lattices use randomized graph and reward landscapes.
+Prices reuse reward tapes and the default observation cap is65536. Settings
+use epsilon/delta/K (.1,.05,160) or (.05,.01,64000). Work cap102.4M;
+equal-work checkpoints .1,.4,1.6,6.4,25.6,102.4M. Include all capped cases.
+One shuffled sequential timing per execution. No tests, included TeX edits,
+heavy reports, or explicit compiler calls during timing. Ground truth, graph
+generation and audit hashes are outside timing; one timing is descriptive.
+
+Primary fragmented criteria: paired geometric work ratio below one versus
+BOTH Range and Guarded on large canonical fragmented cases and on all four
+large fragmented settings pooled, without a reduction in final completions.
+Among large canonical pairs where old_clear32 wins but Guarded does not,
+count recoveries and require at least half if this set is nonempty.
+Report all additional wins/losses and complete-work ratios by size, family
+and price; report both ablations and the unrestricted comparator. Do not
+pool unfinished endpoints into cost-to-solution ratios.
+Lattice preservation: no fewer completions than Range at each fixed budget
+on the pooled four lattice settings, pooled completed-pair work <=1.02
+times Range and <=1.01 times Guarded. Report maximum lattice ratio and
+all launches. The eight master seeds, reused across settings and prices,
+are the replication blocks; report descriptive across-seed variation.
+Audit rollback transcript and the exact identity against original Range
+for every comparable noncommitting prefix. Report actual early stops,
+parks and salvages even if zero; separate the effect of the initial price
+from the early rule. No retuning on these inputs.

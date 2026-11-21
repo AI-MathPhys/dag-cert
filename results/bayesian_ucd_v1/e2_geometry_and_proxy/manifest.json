@@ -1,0 +1,12 @@
+{
+  "suite": "v7_e2_geometry_and_proxy",
+  "smoke": false,
+  "python": "3.12.14",
+  "elapsed_s": 332.57,
+  "hull_runs": 1300,
+  "proxy_runs": 480,
+  "multianswer_runs": 80,
+  "sha256_hull": "07a7e748b0d89f4065b51c0bca0939e54973cb223300d9c2447e17d88f77ff6c",
+  "sha256_proxy": "3c8374ec654130fbf6d339daed848d36fbc8514939fc6acf6da2a049576fdf59",
+  "sha256_multianswer": "d4bb546fc68a0159062230853b000a8732b4cd7fdcb4cb997c66d76657e13184"
+}

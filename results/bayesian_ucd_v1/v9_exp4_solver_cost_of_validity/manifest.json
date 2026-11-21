@@ -1,0 +1,20 @@
+{
+  "suite": "v9_exp4_solver_cost_of_validity",
+  "smoke": false,
+  "total_rows": 1488,
+  "wall_s": 1409.9,
+  "files": {
+    "v9_exp4_runs.jsonl": {
+      "bytes": 510508,
+      "sha256": "b77fdc790a1e1ca36cbede6aadce343a4531232d8cca254cf8c4135758d89278"
+    },
+    "v9_exp4_summary.csv": {
+      "bytes": 10480,
+      "sha256": "ea4acee0e36f17218d1c4c1548f81af6e40c16ac867f823d8bf8d30c72bfec28"
+    },
+    "v9_exp4_breakeven.csv": {
+      "bytes": 1744,
+      "sha256": "f5c3da205203893676a7c7efe4f8c61afc51925c744924fd52128def5e989681"
+    }
+  }
+}

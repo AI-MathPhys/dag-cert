@@ -1,0 +1,105 @@
+{
+  "A": {
+    "audit": "A_conic_regret_socp",
+    "instances": 200,
+    "spd_cases": 160,
+    "singular_cases": 40,
+    "cone_tip_cases": 50,
+    "max_spd_abs_diff": 4.299086827641574e-07,
+    "max_singular_conservative_gap": 0.030869059971953786,
+    "min_signed_soundness_margin": -1.5237411332691408e-10,
+    "soundness_violations": 0,
+    "caratheodory_violations": 0,
+    "passed": true,
+    "elapsed_s": 3.628
+  },
+  "B": {
+    "audit": "B_characteristic_rate_qp",
+    "dags_tested": 100,
+    "total_primal_qps_checked": 648,
+    "max_qp_dual_diff": 6.882407368458132e-06,
+    "max_rate_dom_violation": 0.0,
+    "dom_failures": 0,
+    "passed": true,
+    "elapsed_s": 93.078
+  },
+  "C1": {
+    "audit": "C1_v34_profiled_oracles",
+    "random_polyhedra_checked": 500,
+    "bimodal_nulls_checked": 200,
+    "total_checked": 700,
+    "cubic_lb_violations": 0,
+    "py_bnb_lb_violations": 0,
+    "cpp_bnb_lb_violations": 0,
+    "uncertified_local_slsqp_violations": 183,
+    "max_50digit_eval_diff": 7.105427357601002e-15,
+    "max_cpp_py_upper_diff": 51.120607854769304,
+    "passed": true,
+    "elapsed_s": 177.177
+  },
+  "C2": {
+    "audit": "C2_supermartingale_null_mc",
+    "total_draws": 100000,
+    "profiles": [
+      {
+        "profile": "d2_homoscedastic_1x",
+        "draws": 20000,
+        "mean_F": 0.51835,
+        "se_F": 0.00031,
+        "ci95_hi_F": 0.51895,
+        "max_solver_diff_50": 1.1011268841176758e-09,
+        "ok": true
+      },
+      {
+        "profile": "d2_hetero_4x",
+        "draws": 20000,
+        "mean_F": 0.50151,
+        "se_F": 3e-05,
+        "ci95_hi_F": 0.50158,
+        "max_solver_diff_50": 5.18400433691113e-10,
+        "ok": true
+      },
+      {
+        "profile": "d2_hetero_16x",
+        "draws": 20000,
+        "mean_F": 0.5,
+        "se_F": 0.0,
+        "ci95_hi_F": 0.5,
+        "max_solver_diff_50": 2.6585412213689374e-10,
+        "ok": true
+      },
+      {
+        "profile": "d2_hetero_50x",
+        "draws": 20000,
+        "mean_F": 0.5,
+        "se_F": 0.0,
+        "ci95_hi_F": 0.5,
+        "max_solver_diff_50": 1.6530351046317726e-10,
+        "ok": true
+      },
+      {
+        "profile": "d3_hetero_10x",
+        "draws": 20000,
+        "mean_F": 0.5,
+        "se_F": 0.0,
+        "ci95_hi_F": 0.5,
+        "max_solver_diff_50": 1.8858825612255714e-10,
+        "ok": true
+      }
+    ],
+    "max_mean_F": 0.51835,
+    "passed": true,
+    "elapsed_s": 0.065
+  },
+  "D": {
+    "audit": "D_charged_dual_covers",
+    "dags_tested": 100,
+    "total_steps_checked": 20000,
+    "max_regret_diff": 0.0,
+    "action_mismatches": 0,
+    "witness_mismatches": 0,
+    "passed": true,
+    "elapsed_s": 2.808
+  },
+  "all_passed": true
+}

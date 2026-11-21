@@ -1,0 +1,14 @@
+{
+  "tally": {
+    "valid_certificates": 1600,
+    "exact_replay_bills": 640,
+    "archived_eager_bills": 640,
+    "paired_outcomes": 832
+  },
+  "max_regret": 0.0,
+  "distinct_topologies": {
+    "archive": 56,
+    "fresh": 24
+  },
+  "topology_overlap": 0
+}

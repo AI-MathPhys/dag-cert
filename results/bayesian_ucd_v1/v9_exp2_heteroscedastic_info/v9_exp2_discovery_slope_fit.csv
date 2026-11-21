@@ -1,0 +1,13 @@
+profile,method,c_star_unknown,theoretical_slope_1_over_Cstar,empirical_slope,slope_ratio_to_limit,empirical_discovery_intercept_D,ratio_at_smallest_delta,smallest_delta
+ext_het_fav_025_400,indep_student_os,0.024572,40.7,31649.71,777.697,-112344.2,800.3562,1e-08
+ext_het_fav_025_400,known_sigma_tracker,0.024572,40.7,45.34,1.114,327.3,1.5485,1e-08
+ext_het_fav_025_400,v34_gated,0.024572,40.7,77.76,1.911,2708.6,5.5273,1e-08
+ext_het_fav_025_400,v34_vanilla,0.024572,40.7,89.14,2.19,2047.5,4.9168,1e-08
+mod_het_050_200,indep_student_os,0.075213,13.3,32896.89,2474.274,-145882.0,2449.8539,1e-08
+mod_het_050_200,known_sigma_tracker,0.075213,13.3,13.41,1.008,90.9,1.384,1e-08
+mod_het_050_200,v34_gated,0.075213,13.3,31.1,2.339,595.6,4.7556,1e-08
+mod_het_050_200,v34_vanilla,0.075213,13.3,34.13,2.567,358.8,4.0058,1e-08
+proxy_d3_m4_het,indep_student_os,0.035112,28.48,623.47,21.891,10144.6,52.9204,1e-05
+proxy_d3_m4_het,known_sigma_tracker,0.035112,28.48,43.22,1.517,403.0,2.7265,1e-05
+proxy_d3_m4_het,v34_gated,0.035112,28.48,100.47,3.528,3244.4,13.4415,1e-05
+proxy_d3_m4_het,v34_vanilla,0.035112,28.48,101.33,3.558,3108.2,13.0024,1e-05
