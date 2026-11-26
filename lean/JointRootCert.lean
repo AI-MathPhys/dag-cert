@@ -24,3 +24,7 @@ import JointRootCert.Assembly
 import JointRootCert.EmpiricalBernstein
 import JointRootCert.ChiSquare
 import JointRootCert.SelfNormalized
+import JointRootCert.Completions
+import JointRootCert.Completions2
+import JointRootCert.Completions3
+import JointRootCert.Completions4
