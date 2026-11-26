@@ -33,3 +33,5 @@ import JointRootCert.Discovery
 import JointRootCert.GaussianStopped
 import JointRootCert.CostModel
 import JointRootCert.CostEngines
+import JointRootCert.UnknownVarianceBatch
+import JointRootCert.UnknownVarianceRate
