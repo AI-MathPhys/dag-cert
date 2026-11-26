@@ -35,3 +35,5 @@ import JointRootCert.CostModel
 import JointRootCert.CostEngines
 import JointRootCert.UnknownVarianceBatch
 import JointRootCert.UnknownVarianceRate
+import JointRootCert.GaussianFinite
+import JointRootCert.GaussianUpper
