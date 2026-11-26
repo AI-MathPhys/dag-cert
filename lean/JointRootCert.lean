@@ -10,3 +10,11 @@ import JointRootCert.ActiveWidth
 import JointRootCert.Potential
 import JointRootCert.CDJoint
 import JointRootCert.ActiveBounds
+import JointRootCert.Restart
+import JointRootCert.Coverage
+import JointRootCert.Representation
+import JointRootCert.PassiveRetirement
+import JointRootCert.RootPUCT
+import JointRootCert.RecursivePUCT
+import JointRootCert.BernoulliInfo
+import JointRootCert.UnknownVariance

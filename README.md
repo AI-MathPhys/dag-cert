@@ -9,7 +9,7 @@ Installable Python library (`dagcert`), full experimental suite (`experiment/`),
 
 - **Manuscript:** [`manuscript/Joint_cert_manuscript.pdf`](manuscript/Joint_cert_manuscript.pdf) (LaTeX source: [`manuscript/joint_cert_manuscript.tex`](manuscript/joint_cert_manuscript.tex))
 - **Artifact-to-paper map:** [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) maps every table (Tables 1–69) and figure (Figures 1–15) to its archived logs and reproduction command — **100% coverage with zero missing experiments**.
-- **Formal mathematics:** [`lean/`](lean/) contains Lean 4 proofs of 10 of the paper's 62 numbered results, including both main-text theorems; see [`lean/README.md`](lean/README.md) for the status of each.
+- **Formal mathematics:** [`lean/`](lean/) contains a Lean 4 formalization of the paper's 62 numbered results (28 proved, 25 partly proved, 9 open), including both main-text theorems; see [`lean/README.md`](lean/README.md) for the status of each.
 
 <p align="center">
   <img src="figures/fig1_concept_overview.png" width="94%" alt="Shared outcomes change what can invalidate a root decision"/>
@@ -222,16 +222,9 @@ Pass `--out-dir build/rebuilt_data` to rebuild alongside the bundled files for c
 
 ## Lean 4 Formalizations (`lean/`)
 
-The [`lean/`](lean/) directory holds Lean 4 + Mathlib proofs of 10 of the paper's 62 numbered results, with no `sorry` and no added axioms: both main-text theorems, the exact regret geometry of Appendix A, and Appendix B except the restart bound. [`lean/README.md`](lean/README.md) gives the status of every result and states what each formal statement assumes.
+The [`lean/`](lean/) directory holds a Lean 4 + Mathlib formalization of the paper's numbered results, with no `sorry` and no added axioms. Of the 62 results, 28 are proved, 25 are partly proved and 9 are open. [`lean/README.md`](lean/README.md) gives the status of every result, the Lean theorem names, and exactly what each formal statement assumes.
 
-- [`Basic.lean`](lean/JointRootCert/Basic.lean), [`JointSet.lean`](lean/JointRootCert/JointSet.lean) — decision model and joint-set reduction (§2.1, Lemma `lem:bay-reduction`).
-- [`Rectangular.lean`](lean/JointRootCert/Rectangular.lean) — exact rectangular shared-support certificate and anytime-valid commitment (Theorem `thm:shared-regret`, Corollary `cor:shared-regret-pac`).
-- [`Minimax.lean`](lean/JointRootCert/Minimax.lean), [`Ellipsoid.lean`](lean/JointRootCert/Ellipsoid.lean), [`Sparse.lean`](lean/JointRootCert/Sparse.lean) — exact joint ellipsoidal certificate with rank(L)+1 sparse witnesses, via Hahn–Banach separation and Carathéodory (Theorem `thm:bay-main-dual`).
-- [`FeatureHull.lean`](lean/JointRootCert/FeatureHull.lean) — feature-hull dominance (Theorem `thm:t2-hull`).
-- [`Acquisition.lean`](lean/JointRootCert/Acquisition.lean) — contrast variance-reduction score (`eq:main-contrast-acquisition`).
-- [`ActiveWidth.lean`](lean/JointRootCert/ActiveWidth.lean) — width lemmas for exact-regret and optimistic-separation sampling (Lemmas `lem:active-width`, `lem:active-os-width`).
-- [`ActiveBounds.lean`](lean/JointRootCert/ActiveBounds.lean) — confidence-width inversion, Safeguarded-LCB width and the counting argument behind the active sample bounds (Lemma `lem:active-inversion`, Theorem `thm:active-er`).
-- [`Potential.lean`](lean/JointRootCert/Potential.lean), [`CDJoint.lean`](lean/JointRootCert/CDJoint.lean) — finite-sample cost of safeguarded CD-Joint (Theorem `thm:t4-finite-sample`), proved as a width lemma, a one-step bound and the cumulative cost bound.
+Proved in full or in modular form: both main-text theorems (exact joint ellipsoidal certificate with sparse witnesses; finite-sample cost of CD-Joint), all of Appendix A, the active-sampling bounds of Appendix B, the scalar information projection and tied-star lower bound, the root-PUCT and recursive-PUCT count, coverage and certification-horizon theorems, and trajectory coupling across circuit representations. The partly proved results are missing a small set of probabilistic tools that Mathlib does not have, or a formal cost model for running-time claims.
 
 Build with `cd lean && lake exe cache get && lake build` (Lean toolchain pinned in [`lean/lean-toolchain`](lean/lean-toolchain)).
 
