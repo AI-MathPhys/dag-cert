@@ -151,7 +151,7 @@ All experiments rely directly on the installed `dagcert` package and are organiz
 - [`experiment/simulated/`](experiment/simulated/) — Section 3.1 + Appendices G, J, L (27 suites + `passive_uct/` v1 archive)
 - [`experiment/protein_engineering/`](experiment/protein_engineering/) — Section 3.2 + Appendix H (10 GB1 & TmTrpB suites)
 - [`experiment/agentic_workflows/`](experiment/agentic_workflows/) — Section 3.3 + Appendix I (WorFBench offline & live Qwen3-0.6B suites)
-- [`experiment/plots/`](experiment/plots/) — Manuscript supplementary figures (`figures/supp_*.pdf`) and detailed suite figures
+- [`experiment/plots/`](experiment/plots/) — All manuscript data figures (Figures 2–15: `figures/fig*.pdf`, `figures/supp_*.pdf`) in one shared style, plus detailed suite figures
 
 ### Fast Verification (~2 minutes, CPU only, offline)
 
@@ -165,7 +165,7 @@ python experiment/run_all.py verify
 # 3. Run all 88 unit, parity, library-API, and independent-oracle tests
 python experiment/run_all.py test
 
-# 4. Regenerate all 7 manuscript supplementary PDF figures (`figures/supp_*.pdf`)
+# 4. Regenerate all 14 manuscript data figures (Figures 2-15: `figures/fig*.pdf`, `figures/supp_*.pdf`)
 python experiment/run_all.py figures
 ```
 
@@ -256,11 +256,11 @@ dagcert/
 │   ├── simulated/                   # §3.1 + App. G, J, L (27 suites + passive_uct/ v1 archive)
 │   ├── protein_engineering/         # §3.2 + App. H (10 GB1 & TmTrpB suites)
 │   ├── agentic_workflows/           # §3.3 + App. I (WorFBench offline & live Qwen3-0.6B suites)
-│   └── plots/                       # Generates all 7 `figures/supp_*.pdf` + detailed suite plots
+│   └── plots/                       # Generates manuscript Figures 2-15 + detailed suite plots
 ├── examples/                        # Standalone library quickstart & domain demos
 ├── tests/                           # 88 unit, parity, library-API & oracle tests (v1--v14)
 ├── results/                         # SHA-256-verified run archives, CSV summaries & manifests
-├── figures/                         # README overview PNG + all 7 `supp_*.pdf` manuscript figures
+├── figures/                         # README overview PNG + manuscript Figures 2-15 (vector PDF)
 ├── scripts/fetch_data.py            # Offline verifier & upstream data/model rebuild utility
 ├── lean/                            # Lean 4 + Mathlib formal proofs (status in lean/README.md)
 ├── manuscript/                      # Paper PDF & LaTeX source

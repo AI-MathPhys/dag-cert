@@ -28,7 +28,7 @@ python -m pip install -e ".[all]"
 python scripts/fetch_data.py --check     # Verify bundled datasets, HF cache, and C++17 compiler
 python experiment/run_all.py verify      # SHA-256 check across passive-UCT v1 (31 files) + all 41 suites
 python experiment/run_all.py test        # Run all 88 pytest unit, parity, API & oracle tests
-python experiment/run_all.py figures     # Regenerate all 7 manuscript `figures/supp_*.pdf` files
+python experiment/run_all.py figures     # Regenerate all 14 manuscript data figures (Figures 2-15)
 ```
 
 ---
@@ -119,21 +119,25 @@ Dataset builders: `experiment/agentic_workflows/build_worfbench_llm_matrix.py`, 
 
 ## 3. Manuscript Figures Map (`figures/` & `experiment/plots/`)
 
-Main-text Figures 1–3 and Appendix Figures 4–8 are rendered natively via TikZ/PGFPlots inside `manuscript/joint_cert_manuscript.tex` directly from the archived summary numbers; all **seven** external vector PDFs (`figures/supp_*.pdf`) included by `manuscript/joint_cert_manuscript.tex` are generated directly from the SHA-256-verified CSVs by `python experiment/run_all.py figures`:
+Figure 1 (concept overview) is drawn in TikZ inside `manuscript/joint_cert_manuscript.tex`. Every data figure (Figures 2–15) is a vector PDF generated at its printed size, in one shared style (`experiment/plots/paper_style.py`), directly from the SHA-256-verified archives by `python experiment/run_all.py figures` (`experiment/plots/plot_manuscript_figures.py`):
 
-| Manuscript Figure | File in `figures/` | Backing Suites | Plotter (`experiment/plots/`) |
-|---|---|---|---|
-| **Fig. 1** (Concept overview) | `fig1_concept_overview.png` (README banner) / TikZ in LaTeX | Analytic example (`examples/quickstart_cd_joint.py`) | — |
-| **Fig. 2** (Overlap & proxy mechanisms) | TikZ in LaTeX | `exp1`, `e0` | `plot_v2_extensions.py`, `plot_v7_bayesian_ucd.py` |
-| **Fig. 3** (Protein 3-regime comparison) | TikZ in LaTeX | `v14`, `v13` | `plot_v14_protein_credible_ellipsoid.py`, `plot_v13_protein_bed_vs_kg.py` |
-| **Figs. 4–8** (App. G plots) | TikZ in LaTeX (detailed PDFs via `--all-suites`) | `v12`, `exp1`, `v8_3`, `exp8`, `exp10` | `plot_v12_bed_vs_bo.py`, `plot_v8_unified_figures.py`, `plot_v4_icml_baselines.py` |
-| **Fig. 9** (App. H.3) | `figures/supp_protein_credibility_audit.pdf` | `v14` | `plot_supp_manuscript_figures.py` |
-| **Fig. 10** (App. I) | `figures/supp_live_workflow_validation.pdf` | `v11_2` | `plot_supp_manuscript_figures.py` |
-| **Fig. 11** (App. J.1) | `figures/supp_information_tracking.pdf` | `v8_2` | `plot_supp_manuscript_figures.py` |
-| **Fig. 12** (App. J.2) | `figures/supp_protein_calibration_robustness.pdf` | `v8_1` | `plot_supp_manuscript_figures.py` |
-| **Fig. 13** (App. J.3) | `figures/supp_eprocess_safety_and_compute.pdf` | `v9_3`, `v9_1` | `plot_supp_manuscript_figures.py` |
-| **Fig. 14** (App. J.3) | `figures/supp_sparse_variance_tracking.pdf` | `v9_1`, `v9_2` | `plot_supp_manuscript_figures.py` |
-| **Fig. 15** (App. L.5) | `figures/supp_native_solver_and_workflows.pdf` | `v10_1`, `v10_2`, `v10_3` | `plot_supp_manuscript_figures.py` |
+| Manuscript Figure | File in `figures/` | Backing Suites |
+|---|---|---|
+| **Fig. 1** (Concept overview) | `fig1_concept_overview.png` (README banner) / TikZ in LaTeX | Analytic example (`examples/quickstart_cd_joint.py`) |
+| **Fig. 2** (Overlap & proxy mechanisms) | `fig2_decision_relevant_information.pdf` | `exp1`, `e0` |
+| **Fig. 3** (Protein stopping regimes) | `fig3_protein_stopping_regimes.pdf` | `v14`, `v13` |
+| **Fig. 4** (App. G.1) | `fig4_acquisition_and_latency.pdf` | `v12` |
+| **Fig. 5** (App. G.2) | `fig5_overlap_mechanism.pdf` | `exp1`, `exp8` |
+| **Fig. 6** (App. G.3) | `fig6_correlation_factorial.pdf` | `v8_3` |
+| **Fig. 7** (App. G.4) | `fig7_overlap_crossover.pdf` | `exp8` |
+| **Fig. 8** (App. G.4) | `fig8_inside_witness.pdf` | `exp11` |
+| **Fig. 9** (App. H.3) | `supp_protein_credibility_audit.pdf` | `v14` |
+| **Fig. 10** (App. I) | `supp_live_workflow_validation.pdf` | `v11_2` |
+| **Fig. 11** (App. J.1) | `supp_information_tracking.pdf` | `v8_2` |
+| **Fig. 12** (App. J.2) | `supp_protein_calibration_robustness.pdf` | `v8_1` |
+| **Fig. 13** (App. J.3) | `supp_eprocess_safety_and_compute.pdf` | `v9_3`, `v9_1` |
+| **Fig. 14** (App. J.3) | `supp_sparse_variance_tracking.pdf` | `v9_1`, `v9_2` |
+| **Fig. 15** (App. L.5) | `supp_native_solver_and_workflows.pdf` | `v10_1`, `v10_2`, `v10_3` |
 
 Pass `--all-suites` to `python experiment/run_all.py figures --all-suites` to also generate every detailed per-suite diagnostic figure into `figures/detailed/`.
 

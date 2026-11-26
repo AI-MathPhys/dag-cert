@@ -393,8 +393,8 @@ def cmd_summaries(args: argparse.Namespace) -> None:
 def cmd_figures(args: argparse.Namespace) -> None:
     out_dir = Path(args.out) if args.out else (ROOT / "figures")
     out_dir.mkdir(parents=True, exist_ok=True)
-    # 1. Exact 7 manuscript supplementary PDFs (`figures/supp_*.pdf`)
-    _run_py(["experiment/plots/plot_supp_manuscript_figures.py", "--out-dir", str(out_dir)])
+    # 1. All 14 manuscript data figures (Figures 2-15: `figures/fig*.pdf` and `figures/supp_*.pdf`)
+    _run_py(["experiment/plots/plot_manuscript_figures.py", "--out-dir", str(out_dir)])
     # 2. Full detailed suite figures into results/bayesian_ucd_v1/figures (or custom out_dir)
     if args.all_suites:
         suite_out = out_dir / "detailed"

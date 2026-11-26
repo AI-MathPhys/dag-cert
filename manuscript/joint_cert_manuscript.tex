@@ -1,5 +1,5 @@
 % ICLR 2027 anonymous review submission. Compile with pdflatex twice.
-% The .sty files and seven supplementary PDF figures ship in the source archive.
+% The .sty files and the fourteen figure PDFs (figures/) ship in the source archive.
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -725,35 +725,8 @@ that remain (Figure~\ref{fig:main-mechanism}).
 
 \begin{figure}[t]
 \centering
-\begin{minipage}[t]{.49\linewidth}
-\centering{\footnotesize\textbf{(a) Shared support changes stopping}}\par\vspace{1pt}
-\begin{tikzpicture}
-\begin{axis}[width=\linewidth,height=3.35cm,
- xlabel={Root-support overlap},ylabel={Exact / marginal queries},
- xmin=0,xmax=.91,ymin=0,ymax=1.1,xtick={0,.5,.88},
- ytick={0,.5,1},tick label style={font=\scriptsize},
- label style={font=\scriptsize},
- grid=major,grid style={gray!15}]
-\addplot+[teal,very thick,mark=*]
- coordinates {(0,1)(.25,1)(.50,.465)(.75,.107)(.88,.054)};
-\end{axis}
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[t]{.49\linewidth}
-\centering{\footnotesize\textbf{(b) A low-value proxy is informative}}\par\vspace{1pt}
-\begin{tikzpicture}
-\begin{axis}[width=\linewidth,height=3.35cm,ybar,bar width=12pt,
- symbolic x coords={Direct,IDS,CD},xtick=data,
- ylabel={Queries to proxy (\%)},ymin=0,ymax=100,
- ytick={0,50,100},tick label style={font=\scriptsize},
- label style={font=\scriptsize},
- grid=major,grid style={gray!15},enlarge x limits=.25]
-\addplot+[draw=navy,fill=teal!75]
- coordinates {(Direct,.6)(IDS,21.0)(CD,76.8)};
-\end{axis}
-\end{tikzpicture}
-\end{minipage}
-\vspace{-7pt}
+\includegraphics{figures/fig2_decision_relevant_information.pdf}
+\vspace{-20pt}
 \caption{\textbf{Two mechanisms of decision-relevant information.}
 \textbf{(a)} Exact versus marginal stopping on identical passive
 TA-UCT Bernoulli traces, $M=256$
@@ -807,56 +780,11 @@ under the shared working Gaussian model.
 
 \begin{figure}[t]
 \centering
-\begin{minipage}[t]{.32\linewidth}
-\centering{\footnotesize\textbf{(a) Joint credible ellipsoid}}\par\vspace{1pt}
-\begin{tikzpicture}
-\begin{axis}[width=\linewidth,height=3.45cm,ybar,bar width=3.9pt,
- symbolic x coords={GB1,TrpB},xtick=data,xlabel={},
- ylabel={Capped assays (k)},ymin=0,ymax=28,ytick={0,10,20},
- tick label style={font=\scriptsize},label style={font=\scriptsize},
- grid=major,grid style={gray!15},enlarge x limits=.36]
-\addplot+[draw=navy,fill=navy!70] coordinates {(GB1,25)(TrpB,9.337)};
-\addplot+[draw=orange!80!black,fill=orange!65] coordinates {(GB1,19.450)(TrpB,4.122)};
-\addplot+[draw=teal,fill=teal!70] coordinates {(GB1,17.678)(TrpB,3.629)};
-\end{axis}
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[t]{.32\linewidth}
-\centering{\footnotesize\textbf{(b) Direct posterior-risk stop}}\par\vspace{1pt}
-\begin{tikzpicture}
-\begin{axis}[width=\linewidth,height=3.45cm,ybar,bar width=3.9pt,
- symbolic x coords={GB1,TrpB},xtick=data,xlabel={},
- ylabel={Capped assays},ymin=0,ymax=275,ytick={0,100,200},
- tick label style={font=\scriptsize},label style={font=\scriptsize},
- grid=major,grid style={gray!15},enlarge x limits=.36]
-\addplot+[draw=navy,fill=navy!70] coordinates {(GB1,130)(TrpB,63)};
-\addplot+[draw=orange!80!black,fill=orange!65] coordinates {(GB1,223)(TrpB,84)};
-\addplot+[draw=teal,fill=teal!70] coordinates {(GB1,240)(TrpB,92)};
-\end{axis}
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[t]{.32\linewidth}
-\centering{\footnotesize\textbf{(c) Distribution-free stop}}\par\vspace{1pt}
-\begin{tikzpicture}
-\begin{axis}[width=\linewidth,height=3.45cm,ybar,bar width=3.9pt,
- symbolic x coords={GB1,TrpB},xtick=data,xlabel={},
- ylabel={Certified by 25k (\%)},ymin=0,ymax=112,ytick={0,50,100},
- tick label style={font=\scriptsize},label style={font=\scriptsize},
- grid=major,grid style={gray!15},enlarge x limits=.36]
-\addplot+[draw=navy,fill=navy!70] coordinates {(GB1,65.5)(TrpB,85.7)};
-\addplot+[draw=orange!80!black,fill=orange!65] coordinates {(GB1,0)(TrpB,0)};
-\addplot+[draw=teal,fill=teal!70] coordinates {(GB1,0)(TrpB,0)};
-\end{axis}
-\end{tikzpicture}
-\end{minipage}
-\par\vspace{2pt}
-{\footnotesize
-\textcolor{navy}{\rule{7pt}{6pt}}\, KG\qquad
-\textcolor{orange!85!black}{\rule{7pt}{6pt}} GP-OS\qquad
-\textcolor{teal}{\rule{7pt}{6pt}} CD-Joint}\par\vspace{-7pt}
+\includegraphics{figures/fig3_protein_stopping_regimes.pdf}
+\vspace{-20pt}
 \caption{\textbf{Acquisition efficiency depends on the stopping criterion.}
 GB1 ($n=200$) and TmTrpB ($n=210$), $\varepsilon=.015$,
-$\delta=.05$, $25$k cap.
+$\delta=.05$, $25$k cap; bars show $95\%$ intervals.
 \textbf{(a)} Joint Gaussian credible-ellipsoid stopping.
 \textbf{(b)} Direct working-posterior risk on frozen acquisition
 trajectories.
@@ -5298,41 +5226,9 @@ At each step all policies see the same posterior terminal mean vector $m_t$ and 
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}
-\begin{axis}[
-  name=bedprimary,width=.46\linewidth,height=3.65cm,
-  ybar,bar width=5pt,
-  symbolic x coords={A,B,C,D},xtick=data,
-  ymin=0,ymax=7200,ytick={0,2000,4000,6000},
-  ylabel={Restricted mean evaluations},
-  xlabel={Overlap/correlation condition},
-  tick label style={font=\scriptsize},label style={font=\scriptsize},
-  yticklabel style={/pgf/number format/fixed,/pgf/number format/1000 sep=},
-  legend style={font=\tiny,draw=none,fill=none,at={(0.03,0.99)},anchor=north west},
-  grid=major,grid style={gray!15},enlarge x limits=.20]
-\addplot+[draw=navy,fill=navy!65] coordinates {(A,6315)(B,6257)(C,3763)(D,3888)};
-\addlegendentry{KG}
-\addplot+[draw=teal,fill=teal!75] coordinates {(A,2926)(B,2841)(C,2128)(D,1539)};
-\addlegendentry{CD-Joint}
-\end{axis}
-\begin{axis}[
-  at={(bedprimary.east)},anchor=west,xshift=0.96cm,
-  width=.44\linewidth,height=3.65cm,
-  xmin=0,xmax=10,ymin=0,ymax=55,
-  xlabel={Evaluation latency (ms)},
-  ylabel={Approx. total time (s)},
-  xtick={0,2.6,5,10},ytick={0,20,40},
-  tick label style={font=\scriptsize},label style={font=\scriptsize},
-  legend style={font=\tiny,draw=none,fill=none,at={(0.97,0.98)},anchor=north east},
-  grid=major,grid style={gray!15}]
-\addplot+[navy,thick,mark=none] coordinates {(0,1.2185)(1,6.2745)(2.6,14.3641)(3,16.3865)(5,26.4985)(10,51.7785)};
-\addlegendentry{KG}
-\addplot+[teal,thick,mark=none] coordinates {(0,8.2106)(1,10.5686)(2.6,14.3414)(3,15.2846)(5,20.0006)(10,31.7906)};
-\addlegendentry{CD-Joint}
-\end{axis}
-\end{tikzpicture}
-\vspace{-8pt}
-\caption{\textbf{Acquisition efficiency and evaluation-cost crossover.} \textbf{Left:} matched Gaussian $M=64,K=8$ factorial; both policies use the same posterior and credible-ellipsoid stopping rule, with censored trials charged $12{,}000$ evaluations. Conditions A--D vary support overlap and covariance correlation; condition-level estimates appear in Table~\ref{tab:main-bed-vs-bo}, with bootstrap intervals in Appendix~\ref{app:v12-bed}. \textbf{Right:} derived cost model for the pooled cohort, $\widehat T_p(c)=\bar\tau_p(c+\bar t_{\mathrm{acq},p})$, using the \emph{reported} restricted means and per-step acquisition times (not a new wall-clock measurement). CD-Joint becomes cheaper above approximately $2.6$ ms per evaluation in this model; posterior maintenance, certificate checks and implementation overhead are omitted.}
+\includegraphics{figures/fig4_acquisition_and_latency.pdf}
+\vspace{-12pt}
+\caption{\textbf{Acquisition efficiency and evaluation-cost crossover.} \textbf{(a)} Matched Gaussian $M=64,K=8$ factorial; both policies use the same posterior and credible-ellipsoid stopping rule, with censored trials charged $12{,}000$ evaluations. Conditions A--D vary support overlap and covariance correlation; condition-level estimates appear in Table~\ref{tab:main-bed-vs-bo}, and error bars show the $95\%$ bootstrap intervals of Appendix~\ref{app:v12-bed}. \textbf{(b)} Derived cost model for the pooled cohort, $\widehat T_p(c)=\bar\tau_p(c+\bar t_{\mathrm{acq},p})$, using the \emph{reported} restricted means and per-step acquisition times (not a new wall-clock measurement). CD-Joint becomes cheaper above approximately $2.6$ ms per evaluation in this model; posterior maintenance, certificate checks and implementation overhead are omitted.}
 \label{fig:main-bed-vs-bo}
 \end{figure}
 
@@ -5432,30 +5328,9 @@ Identical ($64\text{--}1024$) & $1.00$ & $1.00 / 0.00$ & $\mathbf{0.000}$ & $100
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}
-\begin{axis}[
- name=overlapratio,width=.48\linewidth,height=3.8cm,
- xlabel={Support overlap $\rho$},ylabel={Exact / marginal observations},
- xmin=-.03,xmax=.91,ymin=0,ymax=1.08,
- xtick={0,.25,.5,.75,.88},ytick={0,.25,.5,.75,1},
- tick label style={font=\scriptsize},label style={font=\scriptsize},
- grid=major,grid style={gray!15}]
-\addplot+[navy,very thick,mark=*,mark size=2pt] coordinates {(0,1)(.25,1)(.5,.465)(.75,.107)(.88,.054)};
-\end{axis}
-\begin{axis}[
- at={(overlapratio.east)},anchor=west,xshift=1.35cm,
- width=.48\linewidth,height=3.8cm,
- xlabel={Support overlap $\rho$},ylabel={ER observations},
- xmin=-.03,xmax=.91,ymin=0,ymax=13500,
- xtick={0,.25,.5,.75,.88},ytick={0,4000,8000,12000},
- tick label style={font=\scriptsize},label style={font=\scriptsize},
- yticklabel style={/pgf/number format/fixed,/pgf/number format/1000 sep=},
- grid=major,grid style={gray!15}]
-\addplot+[teal,very thick,mark=square*,mark size=2pt] coordinates {(0,12201)(.25,9201)(.5,6304)(.75,3328)(.88,1862)};
-\end{axis}
-\end{tikzpicture}
-\vspace{-8pt}
-\caption{\textbf{Effect of action-support overlap at $M=256$.} Left: exact-versus-marginal \emph{passive} Bernoulli stopping on paired TA-UCT observations (smaller is better). Right: absolute sample count for the active exact-regret sampler ER in the Hoeffding cohort; these are a different experimental condition and are not numerically interchangeable with the left panel (Tables~\ref{tab:exact-regret-overlap}, \ref{tab:app-external-baselines}).}
+\includegraphics{figures/fig5_overlap_mechanism.pdf}
+\vspace{-12pt}
+\caption{\textbf{Effect of action-support overlap at $M=256$.} \textbf{(a)} Exact-versus-marginal \emph{passive} Bernoulli stopping on paired TA-UCT observations (smaller is better; the band spans the two gap settings). \textbf{(b)} Median absolute sample count, with interquartile range, for the active exact-regret sampler ER in the Hoeffding cohort; these are a different experimental condition and are not numerically interchangeable with panel (a) (Tables~\ref{tab:exact-regret-overlap}, \ref{tab:app-external-baselines}).}
 \label{fig:main-overlap-mechanism}
 \end{figure}
 Here we isolate gains from structural overlap and test them against zero-containment natural DAGs and alternative witness-allocation policies.
@@ -5594,27 +5469,9 @@ $\xi=0$, $\omega=.75, \rho=.9$ (both) & $5{,}817$ & $1{,}193$ & $2{,}280$ & $1{,
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}
-\begin{axis}[
- xbar,width=.88\linewidth,height=3.7cm,
- xmin=0,xmax=7100,
- xlabel={Median evaluations (lower is better)},
- symbolic y coords={CD-Joint,Correlated GP OS,Diagonal Gaussian OS,Empirical Bernstein OS},
- ytick=data,
- yticklabel style={font=\scriptsize},xticklabel style={font=\scriptsize},
- xlabel style={font=\small},
- nodes near coords,
- every node near coord/.append style={font=\scriptsize},
- bar width=7.5pt,
- enlarge y limits=.19,
- axis x line*=bottom,axis y line*=left,
- grid=major,grid style={gray!15}]
-\addplot+[draw=navy,fill=navy!68] coordinates
- {(1380,CD-Joint)(1485,Correlated GP OS)(1650,Diagonal Gaussian OS)(6232,Empirical Bernstein OS)};
-\end{axis}
-\end{tikzpicture}
-\vspace{-8pt}
-\caption{\textbf{Comparison of correlation models and acquisition policies.} Controlled $M=64$, $K=8$, $\xi=0$ zero-containment factorial medians from Table~\ref{tab:app-v8-phase}. The differences between bounded empirical-Bernstein inference, diagonal Gaussian inference, correlated-GP inference, and CD-Joint are \emph{mechanistic ablations with different model assumptions}; only the final correlated comparison isolates acquisition after the common correlated model.}
+\includegraphics{figures/fig6_correlation_factorial.pdf}
+\vspace{-12pt}
+\caption{\textbf{Comparison of correlation models and acquisition policies.} Controlled $M=64$, $K=8$, $\xi=0$ zero-containment factorial medians from Table~\ref{tab:app-v8-phase}, with interquartile ranges over the $256$ pooled runs. The differences between bounded empirical-Bernstein inference, diagonal Gaussian inference, correlated-GP inference, and CD-Joint are \emph{mechanistic ablations with different model assumptions}; only the final correlated comparison isolates acquisition after the common correlated model.}
 \label{fig:main-correlation-factorial}
 \end{figure}
 
@@ -5708,23 +5565,8 @@ Window $256$ (Hoeff.)  & $0.50$ & $507.9 / 687.1$   & $845.4 / 1000^*$  & $\math
 
 \begin{figure}[!htbp]
 \centering
-\begin{tikzpicture}
-\begin{axis}[width=.78\columnwidth,height=3.9cm,
- xlabel={Support overlap $\rho$},ylabel={Cold time (ms)},
- ymode=log,xmin=-.025,xmax=.91,ymin=40,ymax=1450,
- xtick={0,.25,.5,.75,.88},ytick={50,100,300,1000},
- tick label style={font=\scriptsize},label style={font=\small},
- legend style={font=\scriptsize,at={(.02,.03)},anchor=south west,draw=none,fill=white},
- grid=major,grid style={gray!15}]
-\addplot+[navy,thick,mark=*] coordinates {(0,334.2)(.25,296.9)(.5,226.5)(.75,109.9)(.88,61.5)};
-\addlegendentry{Exact-Regret-DAG-LUCB}
-\addplot+[orange!85!black,thick,mark=square*] coordinates {(0,182.3)(.25,645.5)};
-\addlegendentry{LUCB-micro (marginal)}
-\addplot+[orange!85!black,only marks,mark=triangle,mark size=3pt] coordinates {(.5,1000)(.75,1000)(.88,1000)};
-\addlegendentry{Censored baseline cohorts}
-\addplot+[gray,densely dashed,no marks,forget plot] coordinates {(0,1000)(.88,1000)};
-\end{axis}
-\end{tikzpicture}
+\includegraphics{figures/fig7_overlap_crossover.pdf}
+\vspace{-12pt}
 \caption{\textbf{The overlap crossover.} Recorded medians for the $M=256$ Hoeffding cohort. Hollow triangles identify baseline cohorts with capped runs, rather than completed $1000$-ms certification times. Table~\ref{tab:app-external-baselines} compares all samplers and stopping rules.}
 \label{fig:statistical-performance}
 \end{figure}
@@ -5733,18 +5575,8 @@ Window $256$ (Hoeff.)  & $0.50$ & $507.9 / 687.1$   & $845.4 / 1000^*$  & $\math
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}
-\begin{axis}[width=.8\textwidth,height=5.1cm,ybar,bar width=10pt,
- symbolic x coords={Decoy16,Window64,Hetero256,TiedStar},xtick=data,
- ymin=0,ymax=116,ylabel={Certified trials (\%)},
- legend style={at={(.5,1.02)},anchor=south,legend columns=2,draw=none},
- ymajorgrids,grid style={gray!15},enlarge x limits=.16]
-\addplot[fill=navy!75,draw=navy] coordinates {(Decoy16,100)(Window64,100)(Hetero256,33.3)(TiedStar,100)};
-\addplot[fill=teal!65,draw=teal] coordinates {(Decoy16,100)(Window64,100)(Hetero256,100)(TiedStar,50)};
-\addplot[fill=orange!65,draw=orange!90!black] coordinates {(Decoy16,100)(Window64,100)(Hetero256,33.3)(TiedStar,100)};
-\legend{UCB-inside,Safeguarded-LCB,Optimistic-Separation}
-\end{axis}
-\end{tikzpicture}
+\includegraphics{figures/fig8_inside_witness.pdf}
+\vspace{-12pt}
 \caption{\textbf{Inside-witness robustness.} Certification rates reported in Tables~\ref{tab:app-hybrid-and-star} and~\ref{tab:app-star-eps}. The first three tasks use the synthetic diagnostic budgets; TiedStar uses exact $\varepsilon=0$ and its separate $50{,}000$-observation cap. The safeguard resolves the broad-support and decoy regimes but is not uniformly best on exact tied-star certification.}
 \label{fig:inside-witness}
 \end{figure}
@@ -5882,9 +5714,9 @@ We evaluate five stopping configurations across the three priority policies (\te
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.99\linewidth]{figures/supp_protein_credibility_audit.pdf}
-\vspace{-8pt}
-\caption{\textbf{Corrected joint-ellipsoid audit on measured protein landscapes.} (a--b) Restricted mean simulated assays under the $\sqrt{\chi^2_{M-1,.95}}$ joint contrast ellipsoid ($25$k cap), with acquisition policies using the same relevant radius. (c) Empirical simultaneous coverage of the true mean contrast vector at the stopping time for each policy; all bars remain below the nominal $95\%$ reference. Replotted from Table~\ref{tab:app-v14-protein-credible}. Actual root-decision outcomes, direct-risk stopping, and formal distribution-free controls appear in that table and Figure~\ref{fig:main-protein-bed-vs-kg}.}
+\includegraphics{figures/supp_protein_credibility_audit.pdf}
+\vspace{-12pt}
+\caption{\textbf{Corrected joint-ellipsoid audit on measured protein landscapes.} (a--b) Restricted mean simulated assays under the $\sqrt{\chi^2_{M-1,.95}}$ joint contrast ellipsoid ($25$k cap), with acquisition policies using the same relevant radius; error bars are $95\%$ bootstrap intervals and labels give the certification rate. (c) Empirical simultaneous coverage of the true mean contrast vector at the stopping time for each policy; all bars remain below the nominal $95\%$ reference. Replotted from Table~\ref{tab:app-v14-protein-credible}. Actual root-decision outcomes, direct-risk stopping, and formal distribution-free controls appear in that table and Figure~\ref{fig:main-protein-bed-vs-kg}.}
 \label{fig:app-v14-protein-credible}
 \end{figure}
 
@@ -6227,7 +6059,7 @@ Optimistic-Separation & $6{,}677.5$ & $100\%$ & $14{,}030$\\
 GP-Root-Info + Exact & $145$ & $\mathbf{100\%}$ & $\mathbf{13{,}688}$\\
 \bottomrule
 \end{tabular}
-\vspace{-4pt}
+\vspace{-8pt}
 \end{table}
 
 \begin{table}[!htbp]
@@ -6369,9 +6201,9 @@ The $36$-campaign four-domain fresh uncached replication uses local \texttt{Qwen
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\linewidth]{figures/supp_live_workflow_validation.pdf}
-\vspace{-8pt}
-\caption{\textbf{Live agentic-workflow evaluation with fresh uncached Qwen3-0.6B inference.} Across $36$ campaigns and four domains: (a) certifications by the $60$-evaluation cap, (b) median actual fresh inference tokens, and (c) held-out-task $F_1$ for formal DF-OS, GP-guided acquisition with DF stopping, and empirically calibrated EB+LOO stopping. Replotted from Table~\ref{tab:app-v11-live36}; only the first two methods have the stated distribution-free stopping regime.}
+\includegraphics{figures/supp_live_workflow_validation.pdf}
+\vspace{-12pt}
+\caption{\textbf{Live agentic-workflow evaluation with fresh uncached Qwen3-0.6B inference.} Across $36$ campaigns and four domains: (a) certifications by the $60$-evaluation cap with $95\%$ Clopper--Pearson intervals, (b) median actual fresh inference tokens with interquartile ranges, and (c) held-out-task $F_1$ for formal DF-OS, GP-guided acquisition with DF stopping, and empirically calibrated EB+LOO stopping. Replotted from Table~\ref{tab:app-v11-live36}; only the first two methods have the stated distribution-free stopping regime.}
 \label{fig:app-v11}
 \end{figure}
 
@@ -6463,9 +6295,9 @@ Multi-Answer Ties ($48$ reps) & Med.\ evals (easy act.\ \%) & $\mathbf{40.0}$ ($
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.99\linewidth]{figures/supp_information_tracking.pdf}
-\vspace{-10pt}
-\caption{\textbf{Information-efficient likelihood tracking compared with practical contrast acquisition.} (a) Proxy DAG normalized observation counts versus the characteristic-time bound at four confidence levels. (b) Observed median evaluations on medium Gaussian DAGs. (c) Multiple-correct-answer cohort, with independent OS capped at $3{,}500$ evaluations. All values are replotted from Table~\ref{tab:app-v8-tracking}; these likelihood-certified trackers are distinct from CD-Joint.}
+\includegraphics{figures/supp_information_tracking.pdf}
+\vspace{-12pt}
+\caption{\textbf{Information-efficient likelihood tracking compared with practical contrast acquisition.} (a) Proxy DAG normalized observation counts versus the characteristic-time bound at four confidence levels. (b) Observed median evaluations on medium Gaussian DAGs. (c) Multiple-correct-answer cohort (medians and interquartile ranges), with independent OS capped at $3{,}500$ evaluations (hollow marker). All values are replotted from Table~\ref{tab:app-v8-tracking}; these likelihood-certified trackers are distinct from CD-Joint.}
 \label{fig:info-tracking}\label{fig:joint-phase}
 \end{figure}
 
@@ -6530,8 +6362,8 @@ C4: Residual $\xi$ & $\xi=0 / .02 / .04 / .08$ & \textsc{Safe Hybrid} & $100\tim
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.99\linewidth]{figures/supp_protein_calibration_robustness.pdf}
-\vspace{-10pt}
+\includegraphics{figures/supp_protein_calibration_robustness.pdf}
+\vspace{-12pt}
 \caption{\textbf{Model-based speed and statistical robustness are distinct.} (a) Median retrospective protein assays using formal DF-OS versus calibrated empirical-Bayes (EB+LOO) stopping. (b) Observed incorrect-certification percentages under a rough true kernel and smoother assumed GP. (c) Completion rates of robust ellipsoidal and safe-hybrid policies across the bounded-residual $\xi$ frontier at $\varepsilon=.030$. Replotted from Tables~\ref{tab:app-v8-proteins} and~\ref{tab:app-v8-calib}; model-based gains do not establish formal coverage on measured proteins.}
 \label{fig:real-world-calib}
 \end{figure}
@@ -6542,8 +6374,8 @@ Tables~\ref{tab:app-v9-ablation}--\ref{tab:app-v9-validity} and Figure~\ref{fig:
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\linewidth]{figures/supp_eprocess_safety_and_compute.pdf}
-\vspace{-8pt}
+\includegraphics{figures/supp_eprocess_safety_and_compute.pdf}
+\vspace{-12pt}
 \caption{\textbf{Why predictable wealth and action-local tests matter.} (a) Null-boundary false-certificate percentages with legally preserved skipped wealth versus the invalid wealth-reset ablation ($n=500$). (b) Null-component solves in the hard-initial-action switch cohort ($K=8$), dense versus action-local intersection--union testing. (c) Total compute on a general $d=4,K=32$ case, dense versus sparse likelihood tracking. Values are reported in Tables~\ref{tab:app-v9-switching} and~\ref{tab:app-v9-ablation}; the reset policy is deliberately invalid.}
 \label{fig:app-v9-safety}
 \end{figure}
@@ -6718,8 +6550,8 @@ Table~\ref{tab:app-v9-validity} clarifies the practical operating regime of cert
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.99\linewidth]{figures/supp_sparse_variance_tracking.pdf}
-\vspace{-10pt}
+\includegraphics{figures/supp_sparse_variance_tracking.pdf}
+\vspace{-12pt}
 \caption{\textbf{Unknown-variance action-local evidence and heteroscedastic robustness.} (a) Recorded cold computation on the $K=64$ rank-two ablation: dense versus sparse action-local likelihood tracking. (b) Actual error rates across four true Gaussian noise-variance stress cases for a nominal fixed-variance acquisition/stop and the unknown-variance sparse likelihood test. Replotted from Tables~\ref{tab:app-v9-ablation} and~\ref{tab:app-v9-hetero}; the formal e-process guarantee requires the stated Gaussian and numerical contracts.}
 \label{fig:v9-v34}
 \end{figure}
@@ -6803,7 +6635,7 @@ TmTrpB, $n=210$ & $16{,}313$ & $16{,}810$ & $\mathbf{4{,}410}$\\
 Live Qwen3, $n=36$ & $0/36$ cert. at cap & $0/36$ cert. at cap & $\mathbf{36/36}$ cert.\\
 \bottomrule
 \end{tabular}
-\vspace{-4pt}
+\vspace{-8pt}
 \end{table}
 These studies evaluate initial-action decisions on measured protein landscapes and agentic workflows. Protein evaluations are retrospective simulated assays; workflow results include cached evaluations and separate uncached live executions. The tables distinguish outcome discovery, formal certification, and model-based stopping, and retain the corresponding observation and token budgets.
 
@@ -7546,9 +7378,9 @@ The numerical and cross-application evaluation comprises three campaigns: (i) na
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\linewidth]{figures/supp_native_solver_and_workflows.pdf}
-\vspace{-8pt}
-\caption{\textbf{Native global-solver costs and downstream applications.} (a) Recorded Python and compiled C++17 median wall time for three paired globally verified branch-and-bound configurations. (b) Median simulated assay count on the fixed-feature projected GB1 task (Student-$t$ reference exceeds the $40$k cap). (c) Fresh tokens in the separate eight-campaign Qwen3-0.6B experiment, with DF-OS capped and calibrated EB+LOO completing. Sources: Tables~\ref{tab:app-v10-cpp}, \ref{tab:app-v10-real-v34}, and~\ref{tab:app-v10-live}.}
+\includegraphics{figures/supp_native_solver_and_workflows.pdf}
+\vspace{-12pt}
+\caption{\textbf{Native global-solver costs and downstream applications.} (a) Recorded Python and compiled C++17 median wall time for the four paired globally verified branch-and-bound configurations. (b) Median simulated assay count on the fixed-feature projected GB1 task (hollow markers: the median run reached its evaluation cap, $40$k for the Student-$t$ reference and $12$k for EB+LOO). (c) Fresh tokens in the separate eight-campaign Qwen3-0.6B experiment, with DF-OS capped and calibrated EB+LOO completing. Sources: Tables~\ref{tab:app-v10-cpp}, \ref{tab:app-v10-real-v34}, and~\ref{tab:app-v10-live}.}
 \label{fig:app-v10}
 \end{figure}
 
