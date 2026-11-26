@@ -1,230 +1,232 @@
-# Shared-Support and Bayesian Certification in Monte Carlo Search Graphs (`dag-cert`)
+# Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs (`joint-root-cert`)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](requirements-full.txt)
-[![Manuscript](https://img.shields.io/badge/Manuscript-PDF-red.svg)](manuscript/DAG_Cert_manuscript.pdf)
+[![Manuscript](https://img.shields.io/badge/Manuscript-PDF-red.svg)](manuscript/Joint_cert_manuscript.pdf)
 
-Official research codebase, datasets, independent numerical-oracle audits, and end-to-end reproduction suite for **Shared-Support and Bayesian Certification in Search Graphs** ([Manuscript PDF](manuscript/DAG_Cert_manuscript.pdf)).
+Research code, bundled datasets, archived run logs, and reproduction commands for **Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs**.
+
+- **Manuscript:** [`manuscript/Joint_cert_manuscript.pdf`](manuscript/Joint_cert_manuscript.pdf) (LaTeX source: [`manuscript/joint_cert_manuscript.tex`](manuscript/joint_cert_manuscript.tex))
+- **Artifact-to-paper map:** [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) lists, table by table, which archived logs and which command back each result.
+- **Coverage:** most of the paper is covered by archived, checksummed logs. A few results are not in this repository yet; see [Coverage and known gaps](#coverage-and-known-gaps) before relying on it for the headline comparison.
 
 <p align="center">
-  <img src="figures/fig1_concept_overview.png" width="94%" alt="Shared-Support and Bayesian Root-Action Certification in Search DAGs"/>
+  <img src="figures/fig1_concept_overview.png" width="94%" alt="Shared outcomes change what can invalidate a root decision"/>
 </p>
 
-- **Manuscript (compiled PDF):** [`manuscript/DAG_Cert_manuscript.pdf`](manuscript/DAG_Cert_manuscript.pdf)
-- **Zero workstation dependencies:** all paths are repository-relative, all compact benchmark matrices (`dag_mcts/data/`, 1.7 MB) are bundled for immediate offline CPU reproduction, and [`scripts/fetch_data.py`](scripts/fetch_data.py) downloads and rebuilds every external upstream dataset and Hugging Face model from public sources on any machine.
+*Shared outcomes change what can invalidate a root decision (the idea of Figure 1 in the paper): a terminal that the chosen action can still reach cannot count against it, so only excluded outcomes matter.*
 
 ---
 
-## What This Work Does
+## What the Paper Does
 
-In Monte Carlo graph search, combinatorial experimental design (e.g., protein mutagenesis), and multi-stage LLM workflow tuning, an agent must commit to an initial root action $a \in \mathcal{A}$ in a finite DAG where distinct root actions can lead to **overlapping sets of terminal outcomes** (and where terminal rewards may be **correlated** or observed under **unknown heterogeneous noise**).
+In sequential decision-making, an initial action can be optimal without its best continuation being known. Many search spaces are directed acyclic graphs: different action sequences reach the same outcome, so root actions have **overlapping sets of continuations**, and evidence about outcomes is often **correlated**.
 
-Standard best-arm identification and conventional Bayesian optimization either waste evaluations trying to identify a unique winning *terminal leaf* or rely on conservative marginal intervals that ignore shared downstream outcomes. This work unifies the statistical and computational foundations of **root-action certification** around one structural principle:
+The paper introduces **Joint Root Certification**: certify that a root action $a$ keeps access to an $\varepsilon$-optimal outcome.
 
-> **One Invalidating Alternative.** Action $a$ is strictly $\varepsilon$-optimal at confidence $1-\delta$ if and only if no single outcome outside $a$'s reachable support can exceed every continuation reachable from $a$ by more than $\varepsilon$ inside the active confidence set.
+> A commitment can be invalidated only by an *excluded* outcome that beats *every retained continuation* by more than $\varepsilon$ under the *same* plausible environment.
 
-### Core Contributions Implemented in This Repository
+Marginal action-value comparisons evaluate competing actions under different plausible environments and keep an unnecessary gap on shared outcomes. The paper derives an exact sparse ellipsoidal minimax representation of this decision regret, shows that greedily sampling the active contrast can stall, and introduces **CD-Joint**, a safeguarded Bayesian experimental-design policy with finite-sample cost guarantees under fixed-feature models.
 
-1. **Exact Shared-Support Root Certification & Trajectory-Coupled Certification (TCC)** (`dag_mcts/v2_monitors.py`, `dag_mcts/v5_hybrid_and_os.py`):
-   - Cancels uncertainty on shared downstream outcomes, achieving up to **18.4× fewer evaluations** than marginal-interval certification in overlapping DAGs.
-   - Separates *optimization* from *decision certification*: standard GP acquisitions (`GP-UCB`, `GP-Thompson`) find an $\varepsilon$-optimal GB1 protein variant in ~50 assays yet certify **0%** within a 45k cap, whereas root-aware witness refinement certifies **100%**.
-   - Provides $O(\log M)$-update **Dual Witness Covers** (`DualWitnessCovers`), parameter-free **Optimistic Separation (`OS`)**, protected/decision-selective retirement, and native `-O3` C++17 micro-kernels (`dag_mcts/_cpp_kernels.cpp`).
+### Where the main ideas live in the code
 
-2. **Correlation-Aware Conic Regret & Information-Optimal Tracking** (`dag_mcts/v7_bayesian_ucd.py`, `dag_mcts/v8_unified_experiments.py`):
-   - Computes exact worst-case regret over ellipsoidal confidence sets via **simplicial Carathéodory column generation** ($|\operatorname{supp}(p^*)| \le d+1$) with lazy challenger pruning and provably sound amortized schedules (**10–140 µs** break-even vs. independent `OS`).
-   - Implements **Regularized Decision-Aware Information Tracking**, approaching the sharp characteristic-time rate $I_*(\theta)^{-1}\log(1/\delta)$ (**2.0×–2.6×** fewer samples than heuristic contrast-directed sampling on proxy/tied graphs).
-   - Explicitly separates **formal distribution-free (`DF`)**, **valid bounded-residual ($|b|\le\xi$)**, and **empirically calibrated model-based (`Calibrated EB+LOO`)** stopping rules, verified by coupled-stream ablations and pointwise vs. decision-level coverage diagnostics.
+| Paper concept | Implementation |
+|---|---|
+| All-MAX search DAG, terminal reward streams | [`dag_mcts/graph.py`](dag_mcts/graph.py) |
+| Exact shared-support (rectangular) root regret, Hoeffding and empirical-Bernstein boxes | [`dag_mcts/v2_monitors.py`](dag_mcts/v2_monitors.py), [`dag_mcts/retired_bounds.py`](dag_mcts/retired_bounds.py) |
+| Active exact-regret sampling, witness covers, Optimistic Separation (OS) | [`dag_mcts/v3_extensions.py`](dag_mcts/v3_extensions.py), [`dag_mcts/v5_hybrid_and_os.py`](dag_mcts/v5_hybrid_and_os.py) |
+| Ellipsoidal conic regret, lazy column generation, characteristic-time solver | [`dag_mcts/v7_bayesian_ucd.py`](dag_mcts/v7_bayesian_ucd.py) |
+| CD-Joint (contrast-directed joint acquisition), calibrated EB+LOO GP stopping, bounded-residual ellipsoids, information tracking | [`dag_mcts/v8_unified_experiments.py`](dag_mcts/v8_unified_experiments.py) |
+| GP surrogate and BO acquisitions (GP-UCB, EI, Thompson, Root-Info) | [`dag_mcts/v6_bayesian_opt.py`](dag_mcts/v6_bayesian_opt.py) |
+| Unknown-variance Gaussian tracking and certified branch-and-bound | [`dag_mcts/v9_v34_tracker.py`](dag_mcts/v9_v34_tracker.py), [`dag_mcts/_cpp_v34_bnb.cpp`](dag_mcts/_cpp_v34_bnb.cpp) |
+| Passive UCT/PUCT certification and graph maintenance kernels | [`dag_mcts/search.py`](dag_mcts/search.py), [`dag_mcts/puct.py`](dag_mcts/puct.py), [`dag_mcts/_cpp_kernels.cpp`](dag_mcts/_cpp_kernels.cpp) |
+| GB1, TmTrpB and WorFBench problem interfaces | [`dag_mcts/v6_real_world.py`](dag_mcts/v6_real_world.py) |
 
-3. **Unknown Heterogeneous Gaussian Variances (V34 Adaptive Tracker)** (`dag_mcts/v9_v34_tracker.py`, `dag_mcts/_cpp_v34_bnb.cpp`):
-   - Combines **sparse four-power global design refreshes** ($\mathcal{S}=\{1,4,16,64,\dots\}$) with **action-local predictably skipped evidence**, cutting component-null solves **68.7×** and wall time **50.4×** at $K=64$ while preserving the discovery-plus-rate bound $D_s + (1+s)C_*^{-1}\log(1/\delta)$.
-   - Ships a native `-O3 -std=c++17` outward-certified Branch-and-Bound + Dual-QP solver (**31×–82×** faster than Python; certifies $d=6, K=16$ in `577 ms` and scales to $d=8$ in `2.7 s`), avoiding the **183/200** local-SLSQP violations on bimodal Behrens–Fisher nulls.
+### Results in the paper that this repository's archives reproduce
 
-4. **Zero-Shared-Code Independent Numerical-Oracle Verification** (`paper/exp_v11_3_independent_oracle_audit.py`):
-   - Independently audits every core solver against direct `CVXPY` SOCPs/QPs, `SciPy differential_evolution` + dense boundary grids + 50-digit `decimal` arithmetic, 100,000-draw null-boundary supermartingale checks, and brute-force DAG dynamic programming (**5/5 PASS**, zero soundness or coverage violations).
-
-### Headline Empirical Summary
-
-| Regime / Benchmark | Method & Validity Tier | Key Result |
+| Paper location | Result | Archive |
 |---|---|---|
-| Controlled overlap DAGs | `Exact-Regret OS` *(Formal DF)* vs. marginal | Up to **18.4×** fewer observations, 0 errors |
-| Raw GB1 ($n=200$) & TmTrpB ($n=210$) proteins | `OS` *(Formal DF)* / `Rob. .005` *(Valid $\|b\|\le\xi$)* / `EB+LOO` *(Model-based)* | `13.9k`/`16.3k` (`100%`) $\to$ `10.6k`/`15.4k` $\to$ **`2.9k`/`4.4k`** (**3.7×–4.8×**, 0/410 err; strict DF confirmation: 0.90×–0.97×) |
-| Projected heteroscedastic GB1 ($n=160$) | `V34-Full (C++)` *(Exact linear Gauss.)* vs. `Student-t OS` | **287** vs. `40,000*` median assays (**>139×**, 0/160 err); honest raw-landscape misspecification boundary (`40%` V34 err vs. `0/160` `EB+LOO`) |
-| Uncached live `Qwen3-0.6B` WorFBench (36 campaigns, 4 domains, cap 60) | `OS` & `EB+DF` *(Formal DF)* vs. `Calibrated EB+LOO` *(Model-based)* | `0/36` (`0%`) vs. **`36/36` (`100%`, 9/9 per domain)** in **24.0** evals / **14.3k** fresh tokens (`0.002%` conic compute, untouched $D_{\mathrm{test}}$ reg. `0.0126`) |
-| Independent Oracle Audit (`v11_3`) | Zero-shared-code reference solvers | **5/5 PASS**: `0/200` SOCP, `0/100` QP, `0/700` B&B, `0/5` MC supermartingale, `0/20,000` DP mismatches |
+| §3.1, Fig. 2a, Table 10 | Exact outside-support stopping needs $0.054\times$ the observations of marginal stopping at $M=256$, overlap $.88$ ($18.4\times$) | `results/uct_v2_extensions/exp1_exact_regret/` |
+| §3.1, Fig. 2b, Table 11 | CD-Joint puts $76.8\%$ of queries on a low-valued proxy vs. $0.6\%$ for direct-witness sampling | `results/bayesian_ucd_v1/e0_and_toy/` |
+| §3.1, Table 13 | Proxy-alignment and cost sweep, up to $48.5\times$ lower median cost | `results/bayesian_ucd_v1/v8_exp3_factorial_phase/` |
+| §3.2, Table 27 | Empirical-Bayes protein study: terminal-wise coverage $91.5\%$ / $82.9\%$, root-regret-bound coverage $100\%$ over 410 campaigns | `results/bayesian_ucd_v1/v11_exp1_protein_validity_ablation/` |
+| §3.3, Table 5 (offline), Table 35 | WorFBench offline: OS certifies $100\%$ in $1{,}937$ median evaluations | `results/uct_v4_icml_baselines/exp12_real_world/`, `exp13_real_world_validation/` |
+| §3.3, Table 5 (live), Table 37, Fig. 10 | 36 fresh uncached Qwen3-0.6B campaigns: DF stopping $0/36$, EB+LOO $36/36$ in a median of $24$ evaluations | `results/bayesian_ucd_v1/v11_exp2_live_worfbench_36campaigns/` |
+| App. L, Table 69 | Independent numerical-oracle audit, 5/5 pass | `results/bayesian_ucd_v1/v11_exp3_independent_oracle_audit/` |
 
 ---
 
-## Quickstart (Any Machine)
+## Coverage and Known Gaps
 
-Tested on **Python 3.12 / 3.13** (Linux & macOS; pure-Python paths also run on Windows).
+The archives here cover Tables 1, 5, 10–13, 15–23, 27–58 and 60–69 and Figures 2, 5–8 and 10–15 of the paper. The following are **not in this repository yet**:
 
-### 1. Clone and install dependencies
+| Paper content | Location in paper | Status |
+|---|---|---|
+| Matched-model acquisition benchmark: CD-Joint vs. correlated knowledge gradient, GP-OS, GP-UCB, Thompson, EI and Bayesian root-risk VOI under one Gaussian posterior and one stopping rule ($15{,}280$ runs). This is the headline $2.14\times$ result, the $1.65\times$ anytime-valid confirmation, and the $2.6$ ms latency crossover. | §3.1, Table 3; App. G.1, Tables 7–9, Fig. 4; Table 14; Table 59 | No code and no logs. No correlated-KG or root-risk-VOI implementation exists in `dag_mcts/`. |
+| Matched protein acquisition benchmark on GB1 and TmTrpB ($12{,}300$ runs), including the joint-ellipsoid, direct posterior-risk and distribution-free regimes | §3.2, Fig. 3, Table 4; App. H.2 and H.4, Tables 25–26 | No code and no logs. |
+| Rank-corrected credible ellipsoid ($\sqrt{\chi^2_{M-1,.95}}$) and coverage audit | §3.2; App. H.3, Table 24, Fig. 9 | No code and no logs. |
+| Lean formalizations | AI Use and Reproducibility statements, supplementary introduction (`lean/`) | Directory absent. |
+| Supplementary figure files `figures/supp_*.pdf` (Figs. 9–15) | App. H–L | The plotting scripts here write earlier layouts under different file names from the same archived data (Figs. 10–15); Fig. 9 has no data here. The LaTeX source therefore does not compile from this repository alone. |
+
+The Reproducibility Statement in the current PDF still points to `github.com/AI-MathPhys/dag-cert`; this repository is `github.com/AI-MathPhys/joint-root-cert`.
+
+---
+
+## Quickstart
+
+Tested on Python 3.12 / 3.13 (Linux and macOS; the pure-Python paths also run on Windows).
+
+### 1. Clone and install
 
 ```bash
-git clone https://github.com/AI-MathPhys/dag-cert.git
-cd dag-cert
+git clone https://github.com/AI-MathPhys/joint-root-cert.git
+cd joint-root-cert
 
 python3 -m venv .venv
 source .venv/bin/activate   # Windows PowerShell: .\.venv\Scripts\Activate.ps1
 
-# Core + all v1--v11 CPU experiments, figures, tests, data fetchers, and CVXPY audits:
 python -m pip install -r requirements-full.txt
 ```
 
 Optional extras:
-- **Live uncached `Qwen3-0.6B` LLM workflows (`v8_5`, `v10_3`, `v11_2`)**:
-  ```bash
-  python -m pip install -r requirements-live-llm.txt
-  ```
-- **Native `-O3` C++17 kernels** (`exp7`, SameGame playouts, and V34 B&B in `v9`/`v10`/`v11_3`): requires `g++` or `clang++` (auto-detected via `$CXX`, `g++`, or `clang++`; e.g. `sudo apt install g++` on Ubuntu/Debian or `xcode-select --install` on macOS).
-- **Minimal frozen v1 CI environment only**: `python -m pip install -r requirements.lock` (preserved byte-identical for `reproduce.py verify`).
 
-### 2. Verify installation, data integrity, and unit tests (~1 min)
+- **Live uncached Qwen3-0.6B workflows** (`v8_5`, `v10_3`, `v11_2`): `python -m pip install -r requirements-live-llm.txt`
+- **Native C++17 kernels** (`exp7`, SameGame playouts, branch-and-bound in `v9`/`v10`/`v11_3`): a `g++` or `clang++` on the path (or `$CXX`).
+- **Minimal frozen environment** for `reproduce.py verify` only: `python -m pip install -r requirements.lock`
+
+### 2. Verify archives and run the tests (about a minute)
 
 ```bash
-# Check bundled datasets, optional HF cache, and C++17 compiler:
+# Bundled datasets, optional Hugging Face cache, C++17 compiler:
 python scripts/fetch_data.py --check
 
-# Verify SHA-256 manifests across ALL archived experiments (v1--v11):
+# SHA-256 manifests of every archived experiment:
 python -B reproduce.py verify
 python -B reproduce_extensions.py verify
 python -B reproduce_bayesian_ucd.py verify
 
-# Run ALL 72 unit tests (23 v1 + 25 v2--v6 + 24 v7--v11):
+# 72 unit tests (23 frozen UCT + 25 extension + 24 Bayesian/unknown-variance):
 python -B reproduce_extensions.py test
 python -B reproduce_bayesian_ucd.py test
 
-# Run a minimal 4-method coupled certification demo:
+# Minimal coupled certification demo:
 python -B examples/certify.py
 ```
 
 ---
 
-## Fetching & Rebuilding External Data (`scripts/fetch_data.py`)
-
-To make reproduction fast and offline-friendly, the four compact preprocessed `.npz` archives (`dag_mcts/data/`, 1.7 MB total) and the 20-board SameGame set (`appendix/data/samegame/StandardTestset.txt`) are already included in Git (no Git LFS required).
-
-Anyone can **freshly download every upstream public dataset and model** and rebuild the local archives from scratch using [`scripts/fetch_data.py`](scripts/fetch_data.py):
-
-| Dataset / Asset | Upstream Public Source | Bundled File | Rebuild Command |
-|---|---|---|---|
-| **GB1** (149,361 4-site variants, Wu et al., eLife 2016) | [FLIP GitHub](https://github.com/J-SNACKKB/FLIP) (`four_mutations_full_data.csv.zip`) | `dag_mcts/data/gb1_wu2016_measured.npz` | `python scripts/fetch_data.py --proteins` |
-| **TmTrpB** (159,129 4-site variants, Johnston et al., PNAS 2024) | [Zenodo 15203754](https://zenodo.org/records/15203754) (Arnold Lab SSMuLA) | `dag_mcts/data/trpb_johnston2024_measured.npz` | `python scripts/fetch_data.py --proteins` |
-| **WorFBench** raw trajectories (4 domains) | [zjunlp/WorfBench](https://github.com/zjunlp/WorfBench) (`gold_traj/*/graph_eval.json`) | Auto-cached to `dag_mcts/data/worfbench_raw/` | `python scripts/fetch_data.py --worfbench-tasks` |
-| **Qwen3-0.6B** & **Qwen3-Embedding-0.6B** | Hugging Face Hub (`Qwen/Qwen3-0.6B`, `Qwen/Qwen3-Embedding-0.6B`) | Local HF cache (`~/.cache/huggingface`) | `python scripts/fetch_data.py --models` |
-| **WorFBench** 81×64 & 81×32 scored matrices | Generated from raw WorFBench + Qwen3-0.6B | `dag_mcts/data/worfbench_qwen3_*.npz` | `python scripts/fetch_data.py --rebuild-worfbench` |
-
-Common fetch workflows:
-
-```bash
-# 1. Inspect bundled archives, raw caches, HF models, and C++17 compiler:
-python scripts/fetch_data.py --check
-
-# 2. Download raw GB1 & TmTrpB archives and rebuild .npz into an isolated directory to compare:
-python scripts/fetch_data.py --proteins --out-dir build/rebuilt_data
-
-# 3. Download raw GB1, TmTrpB, all 4 WorFBench domains, AND pre-cache Qwen3-0.6B models from HF:
-python scripts/fetch_data.py --all
-
-# 4. (Optional, slow on CPU) Regenerate the 81x64 and 81x32 WorFBench Qwen3 score matrices from scratch:
-python scripts/fetch_data.py --rebuild-worfbench
-```
-
-> **Note on offline execution:** By default, live LLM scripts auto-download `Qwen/Qwen3-0.6B` and `Qwen/Qwen3-Embedding-0.6B` on first use and reuse the Hugging Face cache thereafter. Set `HF_HUB_OFFLINE=1` after running `python scripts/fetch_data.py --worfbench-tasks --models` to enforce strictly air-gapped execution.
-
----
-
 ## Reproducing the Paper
 
-The codebase provides three top-level reproduction CLIs covering every result in the manuscript without overwriting frozen archives during verification or smoke testing:
+Three command-line entry points cover the archived experiments. None of them overwrites `results/` during verification or smoke runs.
 
-1. **`reproduce.py`** — Frozen v1 UCT archive (1,920 runs, 3.83M rollout-boundary replay, historical appendix).
-2. **`reproduce_extensions.py`** — v2–v6 independent-terminal, PUCT, Empirical Bernstein, active `DAG-LUCB`, C++17 micro-kernels, external structured-BAI baselines, SameGame, and Bayesian optimization suites (`exp1`–`exp15`).
-3. **`reproduce_bayesian_ucd.py`** — v7–v11 correlation-aware Bayesian certification (`e0`–`e6`), unified validation (`v8_1`–`v8_6`), unknown-variance V33/V34 (`v9_1`–`v9_4`), native C++17 B&B & real heteroscedastic bridge (`v10_1`–`v10_3`), and pre-submission audits (`v11_1`–`v11_3`).
+| Entry point | Suites | Scope |
+|---|---|---|
+| [`reproduce.py`](reproduce.py) | frozen UCT archive | Passive TA-UCT certification, selective pruning, strong-compiler timing and memory (1,920 runs; 3,826,797 rollout boundaries replayed) |
+| [`reproduce_extensions.py`](reproduce_extensions.py) | `exp1`–`exp15` | Exact regret vs. marginal stopping, PUCT, SameGame, empirical Bernstein, active exact-regret sampling, C++ kernels, structured pure-exploration baselines, inside-witness ablations, GB1 / TmTrpB / WorFBench distribution-free studies, GP Bayesian optimization |
+| [`reproduce_bayesian_ucd.py`](reproduce_bayesian_ucd.py) | `e0`–`e6`, `v8_1`–`v8_6`, `v9_1`–`v9_4`, `v10_1`–`v10_3`, `v11_1`–`v11_3` | Correlated conic regret and CD-Joint, calibration and misspecification, information tracking, unknown-variance tracking, native branch-and-bound, live LLM replication, independent oracle audit |
 
-### Fast Verification, Summaries & Figures (Minutes, CPU-Only)
+### Fast paths (minutes, CPU only)
 
 ```bash
-# 1. Full v1 quickcheck (checksums, 23 tests, tables, UCT + historical figures -> build/):
+# Frozen UCT archive: checksums, tests, tables and figures into build/
 python -B reproduce.py quickcheck
 
-# 2. Regenerate ALL summary CSVs from archived JSONL logs:
+# Regenerate all summary CSVs from archived JSONL logs
 python -B reproduce_extensions.py summaries
 python -B reproduce_bayesian_ucd.py summaries
 
-# 3. Regenerate ALL publication PDF figures (into build/figures or results/*/figures):
+# Regenerate figures from archived data
 python -B reproduce_extensions.py figures --out build/figures_ext
 python -B reproduce_bayesian_ucd.py figures --out build/figures_bayesian
 
-# 4. Run fast smoke tests across individual suites (writes safely to OS tempdir, never clobbers results/):
+# Smoke-run individual suites (writes to the OS temp directory)
 python -B reproduce.py benchmark --smoke --out build/smoke-v1
 python -B reproduce_extensions.py benchmark --smoke --only exp11
 python -B reproduce_bayesian_ucd.py benchmark --smoke --only v11_3
-python -B reproduce_bayesian_ucd.py benchmark --smoke --only v11_1
 ```
 
-### Mapping Paper Sections, Tables & Figures to Exact Experiment Commands
+### Paper section to suite
 
-| Paper Section / Artifact | Suite Key | Command to Re-run From Scratch | Typical Hardware & Notes |
+Table and figure numbers refer to the compiled manuscript PDF. The full table-by-table list is in [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md).
+
+| Paper section | Tables / figures | Suite keys | Re-run command |
 |---|---|---|---|
-| **Sec. 2–3, Fig. 1–2**: Exact regret, PUCT, SameGame, Emp. Bernstein, active `DAG-LUCB`, C++17 kernels, external baselines (`LUCB-micro`, `UGapE-MCTS`, `VarDE-DAG`), `OS`, BO | `exp1`–`exp15` | `python -B reproduce_extensions.py benchmark` (or `--only exp11`) | Multi-core CPU + `g++`/`clang++` |
-| **Sec. 3.1, App. O**: Correlation-aware conic regret, phase diagram, proxy/hull geometry, initial protein/WorFBench, scaling | `e0`–`e6` | `python -B reproduce_bayesian_ucd.py benchmark --only e1` (for each of `e0`..`e6`) | CPU (`cvxpy` required for `e0`/`e2`) |
-| **Sec. 3.1, Fig. 3–4, App. O**: Calibrated proteins + rough-GP cure + $(\xi,\varepsilon)$ frontier (`v8_1`), Info-Tracking vs. `CD-Joint` (`v8_2`), deconfounded $4\times 4\times 3$ factorial (`v8_3`), amortized conic break-even (`v8_4`), hard SameGame (`v8_6`) | `v8_1`–`v8_4`, `v8_6` | `python -B reproduce_bayesian_ucd.py benchmark --only v8_2` | Multi-core CPU (auto-scales `--workers`) |
-| **Sec. 3.1–3.2, Fig. 3, App. P**: Unknown-variance V34 vs. V33 sparse refresh (`v9_1`), heteroscedastic efficiency (`v9_2`), switching/IUT/Behrens–Fisher safety (`v9_3`), certified B&B cost (`v9_4`) | `v9_1`–`v9_4` | `python -B reproduce_bayesian_ucd.py benchmark --only v9_1` | Multi-core CPU + `g++`/`clang++` |
-| **Sec. 3.2, Table 2, App. Q**: Native C++17 B&B scaling to $d=8$ (`v10_1`) & real heteroscedastic GB1/WorFBench bridge (`v10_2`) | `v10_1`, `v10_2` | `python -B reproduce_bayesian_ucd.py benchmark --only v10_1` | Multi-core CPU + `g++`/`clang++` |
-| **Sec. 3.1, Table 2, App. R (Table 52, Fig. 9a–b)**: P0 real-data validity ablation & coupled-stream replay (GB1 $n=200$, TmTrpB $n=210$) | `v11_1` | `python -B reproduce_bayesian_ucd.py benchmark --only v11_1` | Multi-core CPU (~20 min on 16 cores) |
-| **Sec. 3.1, Table 2, App. R (Table 53, Fig. 9c)**: P1 36-campaign 4-domain uncached live `Qwen3-0.6B` WorFBench replication (also `v8_5`, `v10_3`) | `v11_2` (`v8_5`, `v10_3`) | `python -B reproduce_bayesian_ucd.py benchmark --only v11_2` | Requires `requirements-live-llm.txt`; supports `--smoke`, `--max-concurrent`, `--threads-per-worker`, and automatic checkpoint resume |
-| **App. R (Table 54)**: P2 Zero-shared-code independent numerical-oracle verification audit (`5/5 PASS`) | `v11_3` | `python -B reproduce_bayesian_ucd.py benchmark --only v11_3` | Single/multi-core CPU (~4.5 min full, ~15 s `--smoke`); requires `cvxpy` + `g++`/`clang++` |
-| **v1 UCT Trajectory Replay** (3,826,797 rollout boundaries) | `v1` | `python -B reproduce.py replay --study all --out build/replay-01` | CPU-only, exact decision & work replay |
+| §2.3 conic certificate cost; App. L.1 | Tables 1, 57, 58 | `e6`, `v8_4` | `python -B reproduce_bayesian_ucd.py benchmark --only e6` |
+| §3.1 structural vs. statistical information; App. G.2–G.3 | Fig. 2, Tables 10–13, 15, Figs. 5–6 | `exp1`, `e0`, `e1`, `v8_3` | `python -B reproduce_extensions.py benchmark --only exp1` |
+| App. G.4–G.5 independent-observation baselines, witness ablations, natural DAGs | Tables 16–23, Figs. 7–8 | `exp5`, `exp6`, `exp8`–`exp11`, `v8_6` | `python -B reproduce_extensions.py benchmark --only exp8` |
+| §3.2 calibration and external validity; App. H.5 | Tables 27–28 | `v11_1`, `v8_1` | `python -B reproduce_bayesian_ucd.py benchmark --only v11_1` |
+| App. H.6 extended GB1 / TmTrpB comparisons | Tables 29–34 | `exp12`–`exp14`, `e3` | `python -B reproduce_extensions.py benchmark --only exp12` |
+| §3.3 agentic workflows; App. I | Table 5, Tables 35–39, Fig. 10 | `exp12`, `exp13`, `v8_5`, `v10_3`, `v11_2` | `python -B reproduce_bayesian_ucd.py benchmark --only v11_2` (needs `requirements-live-llm.txt`) |
+| App. J.1–J.2 information tracking, calibration, bounded residuals | Tables 40–42, Figs. 11–12 | `v8_2`, `e5`, `v8_1` | `python -B reproduce_bayesian_ucd.py benchmark --only v8_2` |
+| App. J.3–J.4 unknown variance, heteroscedastic bridge, cross-application validity | Tables 43–50, Figs. 13–14 | `v9_1`–`v9_4`, `v10_2`, `v11_1`, `exp12` | `python -B reproduce_bayesian_ucd.py benchmark --only v9_1` |
+| App. J.5 passive UCT / PUCT / SameGame | Tables 51–56 | frozen UCT archive, `exp2`, `exp3` | `python -B reproduce.py replay --study all --out build/replay-01` |
+| App. L.2–L.4 native kernels, compiler and memory protocols, representation selection | Tables 60–67 | `exp7`, frozen UCT archive, `exp2`–`exp4` | `python -B reproduce_extensions.py benchmark --only exp7` |
+| App. L.5–L.6 native branch-and-bound, independent oracle audit | Tables 68–69, Fig. 15 | `v10_1`, `v11_3` | `python -B reproduce_bayesian_ucd.py benchmark --only v11_3` |
+| §3.1 matched-model acquisition; §3.2 matched protein acquisition | Tables 3–4, 7–9, 14, 24–26, 59; Figs. 3–4, 9 | none | not in this repository (see [Coverage and known gaps](#coverage-and-known-gaps)) |
 
-> **Tip for running a custom output directory:** Individual experiment scripts under `paper/exp_v8_*.py` through `paper/exp_v11_*.py` all accept `--out-dir <path>`, `--smoke`, `--summarize-only`, and `--workers <N>` (defaulting automatically to your machine's CPU count), so you can re-run any experiment into `build/...` without modifying the archived `results/` manifests.
+Individual scripts under `paper/exp_v8_*.py` through `paper/exp_v11_*.py` accept `--out-dir <path>`, `--smoke`, `--summarize-only` and `--workers <N>`, so any experiment can be re-run into `build/` without touching the archived manifests.
+
+---
+
+## External Data (`scripts/fetch_data.py`)
+
+The four compact preprocessed `.npz` archives in `dag_mcts/data/` (1.7 MB) and the 20-board SameGame set are in Git, so verification, tests and CPU experiments run offline. Every upstream source can be downloaded and rebuilt:
+
+| Dataset / asset | Upstream source | Bundled file | Rebuild command |
+|---|---|---|---|
+| GB1 (149,361 four-site variants; Wu et al. 2016) | [FLIP](https://github.com/J-SNACKKB/FLIP) | `dag_mcts/data/gb1_wu2016_measured.npz` | `python scripts/fetch_data.py --proteins` |
+| TmTrpB (159,129 four-site variants; Johnston et al. 2024) | [Zenodo 15203754](https://zenodo.org/records/15203754) | `dag_mcts/data/trpb_johnston2024_measured.npz` | `python scripts/fetch_data.py --proteins` |
+| WorFBench raw trajectories (4 domains) | [zjunlp/WorfBench](https://github.com/zjunlp/WorfBench) | cached to `dag_mcts/data/worfbench_raw/` | `python scripts/fetch_data.py --worfbench-tasks` |
+| Qwen3-0.6B and Qwen3-Embedding-0.6B | Hugging Face Hub | local Hugging Face cache | `python scripts/fetch_data.py --models` |
+| WorFBench 81×64 and 81×32 score matrices | generated from the two rows above | `dag_mcts/data/worfbench_qwen3_*.npz` | `python scripts/fetch_data.py --rebuild-worfbench` |
+
+Use `--out-dir build/rebuilt_data` to rebuild next to the bundled files and compare, and `--all` to fetch everything. Set `HF_HUB_OFFLINE=1` after fetching the tasks and models to run the live suites without network access.
 
 ---
 
 ## Repository Structure
 
 ```text
-graph-search-certification/
-├── dag_mcts/                       # Core library (Python + native C++17 kernels + bundled data)
+joint-root-cert/
+├── manuscript/                     # Paper PDF and LaTeX source
+├── dag_mcts/                       # Core library (Python, native C++17 kernels, bundled data)
 │   ├── graph.py                    # Finite all-MAX DAG and terminal reward streams
-│   ├── retired_bounds.py           # Canonical confidence intervals & strict retirement
-│   ├── v2_monitors.py              # Hoeffding & Emp. Bernstein boxes, charged dual covers, exact regret
-│   ├── v3_extensions.py            # Active Exact-Regret-DAG-LUCB & C++17 ctypes bridge
-│   ├── v4_baselines.py             # LUCB-micro, UGapE-MCTS, VarDE-DAG, SameGame & routing benchmarks
-│   ├── v5_hybrid_and_os.py         # O(log M) DualWitnessCovers, Safeguarded-LCB, Optimistic Separation
-│   ├── v6_real_world.py            # Flat-LUCB controls, GB1, TmTrpB, and WorFBench problem interfaces
-│   ├── v6_bayesian_opt.py          # Woodbury GP surrogate, GP-UCB/EI/TS/Root-Info, RKHS ellipsoids
-│   ├── v7_bayesian_ucd.py          # Exact SOCP conic regret, Carathéodory colgen, T5 rate solver
-│   ├── v8_unified_experiments.py   # Calibrated EB+LOO GP, bounded-residual hybrid, Info-Tracking
-│   ├── v9_v34_tracker.py           # Unknown-variance V33/V34 tracker, rank-2 cubic & C++17 B&B bridge
-│   ├── _cpp_kernels.cpp            # Native -O3 C++17 DAG maintenance kernels
-│   ├── _cpp_samegame.cpp           # Native -O3 C++17 SameGame playout kernel
-│   ├── _cpp_v34_bnb.cpp            # Native -O3 C++17 outward-certified B&B + Dual-QP solver
-│   └── data/                       # Bundled compact benchmark .npz files (1.7 MB total)
-├── scripts/
-│   └── fetch_data.py               # Portable CLI to check, download, & rebuild all external data/models
-├── paper/                          # Experiment runners (exp_*.py), dataset builders, & figure plotters
-├── tests/                          # 72 unit, parity, theoretical, and oracle tests (test_*.py)
-├── examples/
-│   └── certify.py                  # Minimal self-contained 4-method certification example
-├── results/                        # SHA-256-verified archived logs, CSV summaries, & manifests (v1--v11)
-├── appendix/                       # Isolated historical pricing/controller archive (see REPRODUCIBILITY.md)
-├── reproduce.py                    # Frozen v1 UCT archive verifier, replayer, & timing CLI
-├── reproduce_extensions.py         # v2--v6 verification, testing, plotting, & benchmark CLI
-├── reproduce_bayesian_ucd.py       # v7--v11 verification, testing, plotting, & benchmark CLI
-├── requirements-full.txt           # Full CPU dependencies (v1--v11 experiments, figures, CVXPY audits)
-├── requirements-live-llm.txt       # Optional PyTorch/Transformers extras for live Qwen3-0.6B suites
-├── requirements.txt / .lock        # Frozen minimal v1 CI dependencies (hashed by artifact_manifest.json)
-├── REPRODUCIBILITY.md              # Detailed archival verification contracts & v1--v11 artifact map
-└── VALIDATION.md                   # Frozen v1 protocol notes
+│   ├── retired_bounds.py           # Confidence intervals and strict retirement
+│   ├── v2_monitors.py              # Hoeffding and empirical-Bernstein boxes, exact regret
+│   ├── v3_extensions.py            # Active Exact-Regret-DAG-LUCB, C++17 ctypes bridge
+│   ├── v4_baselines.py             # LUCB-micro, UGapE-MCTS, VarDE-DAG, SameGame, routing
+│   ├── v5_hybrid_and_os.py         # DualWitnessCovers, Safeguarded-LCB, Optimistic Separation
+│   ├── v6_real_world.py            # GB1, TmTrpB and WorFBench problems, Flat-LUCB controls
+│   ├── v6_bayesian_opt.py          # GP surrogate, GP-UCB / EI / TS / Root-Info
+│   ├── v7_bayesian_ucd.py          # Conic regret, column generation, characteristic time
+│   ├── v8_unified_experiments.py   # CD-Joint, calibrated EB+LOO GP, information tracking
+│   ├── v9_v34_tracker.py           # Unknown-variance tracker, branch-and-bound bridge
+│   ├── _cpp_*.cpp                  # Native maintenance, SameGame and branch-and-bound kernels
+│   └── data/                       # Bundled benchmark .npz files
+├── paper/                          # Experiment runners (exp_*.py), dataset builders, plotters
+├── results/                        # Archived, SHA-256-verified logs, summaries and manifests
+├── reference/tables/               # Generated LaTeX tables for the passive UCT study
+├── tests/                          # 72 unit, parity and oracle tests
+├── examples/certify.py             # Minimal certification example
+├── scripts/fetch_data.py           # Check, download and rebuild external data and models
+├── appendix/                       # Separate earlier pricing/controller archive (not cited by this paper)
+├── reproduce.py                    # Frozen UCT archive: verify, replay, tables, figures
+├── reproduce_extensions.py         # exp1–exp15: verify, test, summaries, figures, benchmark
+├── reproduce_bayesian_ucd.py       # e0–e6, v8–v11: verify, test, summaries, figures, benchmark
+├── requirements-full.txt           # Full CPU dependencies
+├── requirements-live-llm.txt       # Optional PyTorch / Transformers extras for live suites
+├── requirements.txt / .lock        # Frozen minimal environment (hashed by artifact_manifest.json)
+├── artifact_manifest.json          # Checksums of the frozen UCT archive
+├── REPRODUCIBILITY.md              # Table-by-table artifact map and verification contracts
+└── VALIDATION.md                   # Protocol notes for the frozen UCT archive
 ```
+
+The `vN` prefixes in module and suite names are development stages of the codebase, not paper sections; the tables above and `REPRODUCIBILITY.md` give the correspondence.
 
 ---
 
-## Interpretation & Statistical Scope
+## Interpretation and Statistical Scope
 
-- **Validity tiers are explicit and never conflated:** `[0, 1]`-bounded Empirical Bernstein / Hoeffding intervals are formally distribution-free (`Formal DF`); `Student-t OS` and `V34` rely on Gaussian linear-feature assumptions; bounded-residual `Rob.` / `Hybrid` require a misspecification bound $|b|\le\xi$; and `Calibrated EB+LOO` is **empirically calibrated / model-based (not formally distribution-free)** unless confirmed by a formal DF certificate (see Table 1 and Appendix R of the paper).
-- **Protein experiments** use retrospective simulated noisy assay replicates on experimentally measured combinatorial landscapes (Wu et al. 2016 GB1; Johnston et al. 2024 TmTrpB); **live LLM experiments** execute fresh uncached `Qwen3-0.6B` + `Qwen3-Embedding-0.6B` forward passes on strictly disjoint unseen WorFBench task pools.
-- **Timing reproducibility:** Wall-clock timings and wall-capped completion counts naturally depend on host CPU hardware; statistical trajectories, exact operation counts, and SHA-256 verification manifests are deterministic across machines.
-
-See [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) for the complete artifact-to-manuscript verification map and historical appendix instructions.
+- **Validity depends on the stopping model.** Bounded-observation Hoeffding and empirical-Bernstein boxes are distribution-free; fixed-feature and Gaussian confidence sequences rely on their model; bounded-residual ellipsoids require a misspecification bound $|b|\le\xi$; calibrated EB+LOO stopping is model-based and does not inherit distribution-free validity (Table 2 and App. C of the paper).
+- **Protein experiments** simulate noisy assays against published GB1 and TmTrpB fitness measurements; no new wet-lab experiments were run. **Live workflow experiments** run fresh uncached Qwen3-0.6B inference on task pools disjoint from calibration.
+- **Timing.** Wall-clock times and wall-capped completion counts depend on the host; statistical trajectories, operation counts and SHA-256 manifests are deterministic.

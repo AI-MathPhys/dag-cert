@@ -1,60 +1,94 @@
-# Reproduction Scope & Verification Contracts
+# Reproduction Scope and Verification Contracts
 
-This document maps every claim, table, and figure in **Shared-Support and Bayesian Certification in Search Graphs** ([`manuscript/DAG_Cert_manuscript.pdf`](manuscript/DAG_Cert_manuscript.pdf)) to its reproducible inputs, checksummed logs, and verification commands.
+This document maps the tables and figures of **Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs** ([`manuscript/Joint_cert_manuscript.pdf`](manuscript/Joint_cert_manuscript.pdf)) to archived logs and commands. Table and figure numbers are those of the compiled PDF; appendix letters are A–L (G synthetic experiments, H proteins, I workflows, J extended validation, K algorithms, L computational performance).
 
-## 1. Environment & Data Independence
+## 1. Environment and Data
 
-- All source and data paths are strictly repository-relative; no external workstation paths, private caches, or `fuse` mounts are used.
-- Compact preprocessed benchmark archives (`dag_mcts/data/`, 1.7 MB) and SameGame boards (`appendix/data/samegame/StandardTestset.txt`) are bundled in Git so all offline verification, unit tests, and CPU experiments work out of the box.
-- Every upstream public dataset and model (FLIP GB1, Zenodo 15203754 TmTrpB, `zjunlp/WorfBench` 4-domain gold trajectories, `Qwen/Qwen3-0.6B`, and `Qwen/Qwen3-Embedding-0.6B`) can be downloaded and rebuilt from scratch on any machine via `python scripts/fetch_data.py`.
-- Frozen v1 dependency files (`requirements.txt`, `requirements.lock`) and `reproduce.py` remain byte-identical to `artifact_manifest.json` (source provenance commit `58fbd2e86031a2d90b289e10d232335f80132772`). Use `requirements-full.txt` for all v1–v11 CPU suites and `requirements-live-llm.txt` for optional uncached live `Qwen3-0.6B` runs.
+- All source and data paths are repository-relative.
+- Compact benchmark archives (`dag_mcts/data/`, 1.7 MB) and SameGame boards (`appendix/data/samegame/StandardTestset.txt`) are bundled in Git, so verification, unit tests and CPU experiments run offline.
+- Every upstream dataset and model (FLIP GB1, Zenodo 15203754 TmTrpB, `zjunlp/WorfBench` gold trajectories, `Qwen/Qwen3-0.6B`, `Qwen/Qwen3-Embedding-0.6B`) can be downloaded and rebuilt with `python scripts/fetch_data.py`.
+- `requirements.txt`, `requirements.lock` and `reproduce.py` are hashed by `artifact_manifest.json` and must stay byte-identical (source provenance in `provenance.json`). Use `requirements-full.txt` for all CPU suites and `requirements-live-llm.txt` for the live Qwen3-0.6B runs.
 
-## 2. Complete Artifact-to-Manuscript Map
+## 2. Results Not Covered by This Repository
 
-### Correlation-Aware, Unknown-Variance V34, C++17 B&B, Live LLM & Pre-Submission Audit Suites (`reproduce_bayesian_ucd.py`)
-
-| Manuscript Evidence | Archived Inputs (`results/bayesian_ucd_v1/`) | Verification & Reproduction |
+| Paper content | Tables / figures | Missing |
 |---|---|---|
-| Core conic regret, overlap × correlation phase, hull/proxy geometry, initial proteins & WorFBench, scaling (`E0`–`E6`, App. O) | `e0_and_toy/` .. `e6_scaling/` | `reproduce_bayesian_ucd.py verify`, `benchmark --only e0`..`e6` |
-| Calibrated proteins, 500-rep rough-GP cure & $(\xi,\varepsilon)$ frontier (Fig. 4, App. O) | `v8_exp1_calibrated_proteins/` | `benchmark --only v8_1` |
-| Decision-aware Info-Tracking vs. `CD-Joint` & exact $T_*^\varepsilon$ verification (Fig. 3, App. O) | `v8_exp2_info_tracking/` | `benchmark --only v8_2` |
-| Deconfounded $4\times 4\times 3$ overlap × correlation × mismatch factorial & proxy sweep (App. O) | `v8_exp3_factorial_phase/` | `benchmark --only v8_3` |
-| Amortized conic update schedules ($M\le 4096$) & wall-clock break-even frontier (Fig. 3, App. O) | `v8_exp4_compute_breakeven/` | `benchmark --only v8_4` |
-| 3-way disjoint WorFBench offline generalization ($n=200$) & initial live `Qwen3-0.6B` proof-of-concept (Table 2, App. O) | `v8_exp5_fresh_worfbench_live/` | `benchmark --only v8_5` |
-| Hard-regime adaptive sampling on 20 mid-game SameGame boards & Tied-Star (App. O) | `v8_exp6_adaptive_samegame/` | `benchmark --only v8_6` |
-| Unknown-variance V34 vs. V33 sparse four-power refresh & action-local evidence ($K\le 64$, Fig. 3, App. P) | `v9_exp1_v34_vs_v33_dag/` | `benchmark --only v9_1` |
-| Heteroscedastic Gaussian information efficiency ($\delta\in[10^{-8},.10]$, App. P) | `v9_exp2_heteroscedastic_info/` | `benchmark --only v9_2` |
-| Multi-answer switching, IUT vs. Bonferroni, null wealth & Behrens–Fisher global audit (App. P) | `v9_exp3_switching_and_safety/` | `benchmark --only v9_3` |
-| Certified global B&B solver cost of validity ($d\in\{2,4,6\}$, App. P) | `v9_exp4_solver_cost_of_validity/` | `benchmark --only v9_4` |
-| Native `-O3` C++17 outward-certified B&B scaling up to $d=8$ (App. Q, Fig. 8a) | `v10_exp1_cpp_v34_scaling/` | `benchmark --only v10_1` |
-| Real heteroscedastic GB1 (Wu et al. shot noise) & WorFBench V34 bridge + raw misspec. audit (Table 2, App. Q, Table 50) | `v10_exp2_real_heteroscedastic_v34/` | `benchmark --only v10_2` |
-| Expanded 8-campaign (24-run) live `Qwen3-0.6B` ToolAlpaca cohort (App. Q, Table 51) | `v10_exp3_live_worfbench_expanded/` | `benchmark --only v10_3` |
-| **P0**: Real-data certificate-validity ablation & coupled-stream replay on raw GB1 ($200$) & TmTrpB ($210$) (Table 2, App. R, Table 52, Fig. 9a–b) | `v11_exp1_protein_validity_ablation/` | `benchmark --only v11_1` |
-| **P1**: 36-campaign 4-domain fresh uncached live `Qwen3-0.6B` WorFBench replication (Table 2, App. R, Table 53, Fig. 9c) | `v11_exp2_live_worfbench_36campaigns/` | `benchmark --only v11_2` |
-| **P2**: Zero-shared-code independent numerical-oracle verification audit (`5/5 PASS`, App. R, Table 54) | `v11_exp3_independent_oracle_audit/` | `benchmark --only v11_3` |
+| Matched-model acquisition benchmark (CD-Joint vs. correlated KG, GP-OS, GP-UCB, TS, EI, Bayesian root-risk VOI; $15{,}280$ runs), including the cost-sensitive proxy benchmark and the derived latency crossover | Tables 3, 7, 8, 9, 14, 59; Fig. 4 | code and logs |
+| Matched protein acquisition benchmark on GB1 and TmTrpB ($12{,}300$ runs), regimes A and B, direct posterior-risk stopping | Table 4, Fig. 3, Tables 25, 26 | code and logs |
+| Rank-corrected joint credible ellipsoid and coverage audit | Table 24, Fig. 9 | code and logs |
+| Lean formalizations (`lean/`) | AI Use and Reproducibility statements | directory |
+| Supplementary figure files `figures/supp_*.pdf` | Figs. 9–15 | the plotters here write earlier layouts under other names; data for Figs. 10–15 is archived |
 
-### Independent-Terminal, Active `DAG-LUCB`, External Baselines & BO Suites (`reproduce_extensions.py`)
+Tables 2 and 6 are conceptual (validity regimes) and need no data.
 
-| Manuscript Evidence | Archived Inputs | Verification & Reproduction |
+## 3. Artifact-to-Manuscript Map
+
+### Correlated, unknown-variance, native-solver, live-LLM and audit suites (`reproduce_bayesian_ucd.py`)
+
+Archives are under `results/bayesian_ucd_v1/`. Re-run any row with `python -B reproduce_bayesian_ucd.py benchmark --only <key>`.
+
+| Key | Manuscript evidence | Archive |
 |---|---|---|
-| Exact shared-support regret, PUCT transfer, deeper SameGame, representation selector (`exp1`–`exp4`) | `results/uct_v2_extensions/` | `reproduce_extensions.py verify`, `benchmark --only exp1`..`exp4` |
-| Empirical Bernstein, active `Exact-Regret-DAG-LUCB`, native C++17 kernel parity (`exp5`–`exp7`) | `results/uct_v3_strengthening/` | `benchmark --only exp5`..`exp7` |
-| External BAI baselines (`LUCB-micro`, `UGapE-MCTS`, `VarDE-DAG`), mid-game SameGame, inside-witness, `DualWitnessCovers`/`OS`, GB1/TmTrpB/WorFBench, GP BO & RKHS ellipsoids (`exp8`–`exp15`) | `results/uct_v4_icml_baselines/` | `benchmark --only exp8`..`exp15` |
+| `e0` | Off-witness proxy benchmark (Fig. 2b, Table 11) | `e0_and_toy/` |
+| `e1` | $4\times4$ overlap × correlation phase diagram (Table 12) | `e1_phase_diagram/` |
+| `e2` | Feature-hull, proxy and multi-answer geometry checks (supports App. A.4; no table) | `e2_geometry_and_proxy/` |
+| `e3` | GB1 stratum breakdown and 21-template TmTrpB (Table 34) | `e3_proteins/` |
+| `e4` | Initial correlated WorFBench study (superseded by `v8_5`; no table) | `e4_worfbench/` |
+| `e5` | Calibration and misspecification grid (Table 41) | `e5_calibration/` |
+| `e6` | Conic solver scaling (Tables 1, 57) | `e6_scaling/` |
+| `v8_1` | Calibrated protein certification (Table 28); calibration cure and $(\xi,\varepsilon)$ frontier (Table 42, Fig. 12) | `v8_exp1_calibrated_proteins/` |
+| `v8_2` | Information tracking vs. CD-Joint (Table 40, Fig. 11) | `v8_exp2_info_tracking/` |
+| `v8_3` | Proxy alignment × cost sweep (Table 13); deconfounded overlap × correlation × mismatch factorial (Table 15, Fig. 6) | `v8_exp3_factorial_phase/` |
+| `v8_4` | Amortized conic update schedules and break-even latency (Table 58) | `v8_exp4_compute_breakeven/` |
+| `v8_5` | WorFBench unseen-task generalization and first live run (Table 39) | `v8_exp5_fresh_worfbench_live/` |
+| `v8_6` | Hard-regime adaptive sampling on SameGame, Tied-Star, Decoy, Hetero (Table 22) | `v8_exp6_adaptive_samegame/` |
+| `v9_1` | Square vs. sparse refresh × all-action vs. action-local evidence (Table 43, Fig. 14a) | `v9_exp1_v34_vs_v33_dag/` |
+| `v9_2` | Unknown heteroscedastic variance efficiency (Table 44) | `v9_exp2_heteroscedastic_info/` |
+| `v9_3` | Multi-answer switching, intersection–union budgeting, null-boundary safety (Table 45, Fig. 13) | `v9_exp3_switching_and_safety/` |
+| `v9_4` | Cost of certified global validity (Table 46) | `v9_exp4_solver_cost_of_validity/` |
+| `v10_1` | Native C++17 branch-and-bound scaling (Table 68, Fig. 15a) | `v10_exp1_cpp_v34_scaling/` |
+| `v10_2` | Heteroscedastic bridge on GB1 and WorFBench (Table 47, Figs. 14b, 15b) | `v10_exp2_real_heteroscedastic_v34/` |
+| `v10_3` | Eight-campaign live Qwen3-0.6B cohort (Table 38, Fig. 15c) | `v10_exp3_live_worfbench_expanded/` |
+| `v11_1` | Protein certificate-validity factorial and coupled-stream replay (Table 27; inputs to Tables 49–50; §3.2 coverage figures) | `v11_exp1_protein_validity_ablation/` |
+| `v11_2` | 36-campaign live Qwen3-0.6B replication (Table 5 live rows, Table 37, Fig. 10) | `v11_exp2_live_worfbench_36campaigns/` |
+| `v11_3` | Independent numerical-oracle audit (Table 69) | `v11_exp3_independent_oracle_audit/` |
 
-### Frozen v1 UCT Archive & Historical Appendix (`reproduce.py`)
+### Independent-observation, baseline and application suites (`reproduce_extensions.py`)
 
-| Manuscript Evidence | Inputs | Reproduction |
+Re-run any row with `python -B reproduce_extensions.py benchmark --only <key>`.
+
+| Key | Manuscript evidence | Archive |
 |---|---|---|
-| Original on-policy certification and regret | `results/uct_backup_v1/runs.jsonl` | `reproduce.py summaries`, `replay --study backup` |
-| Fixed-accuracy gap follow-up | `results/uct_backup_v1/gap-study/` | Same commands |
-| Strong shared compiler, noisy overlapping supports, SameGame and controls | `results/uct_frontier_v1/` | `summaries`, `replay --study frontier` |
-| Initial/cumulative frontier work and retirement | `results/uct_frontier_v1/mechanism.jsonl` | `reproduce.py mechanism` |
-| Peak Python allocated memory | `results/uct_frontier_v1/memory.jsonl` | `reproduce.py memory` (host-dependent) |
-| Three UCT figure PDFs & five UCT tables | Primary and frontier summary CSVs | `reproduce.py figures`, `reproduce.py tables` |
-| Historical pricing figures & ancestor-repair/batching summaries | `appendix/results/` | `reproduce.py figures --appendix`, `reproduce.py appendix-check --out build/appendix-01` |
+| `exp1` | Exact vs. marginal stopping across overlap (Fig. 2a, Table 10, Fig. 5) | `results/uct_v2_extensions/exp1_exact_regret/` |
+| `exp2` | Root-PUCT and noisy recursive PUCT (Tables 55, 64) | `results/uct_v2_extensions/exp2_puct/` |
+| `exp3` | SameGame lookahead (Tables 56, 65) | `results/uct_v2_extensions/exp3_samegame/` |
+| `exp4` | Representation comparison and selector (Tables 66, 67) | `results/uct_v2_extensions/exp4_representation/` |
+| `exp5` | Hoeffding vs. empirical-Bernstein boxes (Table 16) | `results/uct_v3_strengthening/exp5_emp_bernstein/` |
+| `exp6` | Active witness allocation (Table 17) | `results/uct_v3_strengthening/exp6_dag_lucb/` |
+| `exp7` | Native maintenance kernels (Tables 60, 61) | `results/uct_v3_strengthening/exp7_cpp_kernels/` |
+| `exp8` | Structured pure-exploration baselines, $2\times2$ sampler × certificate (Table 18, Fig. 7) | `results/uct_v4_icml_baselines/exp8_external_baselines/` |
+| `exp9` | Containment-stratified SameGame and routing DAGs (Table 23) | `results/uct_v4_icml_baselines/exp9_samegame_midgame/` |
+| `exp10` | Inside-witness selection ablation (Table 19, Fig. 8) | `results/uct_v4_icml_baselines/exp10_inside_witness/` |
+| `exp11` | DualWitnessCovers hybrid and tied-star family (Tables 20, 21) | `results/uct_v4_icml_baselines/exp11_hybrid_and_os/` |
+| `exp12` | GB1 templates and panel sweep; WorFBench factorial (Tables 29, 30, 35, 48; Table 5 offline rows) | `results/uct_v4_icml_baselines/exp12_real_world/` |
+| `exp13` | GB1 noise models, TmTrpB, WorFBench overlap sweep and first live audit (Tables 31, 36) | `results/uct_v4_icml_baselines/exp13_real_world_validation/` |
+| `exp14` | Bayesian optimization vs. exact-regret sampling on GB1 (Tables 32, 33) | `results/uct_v4_icml_baselines/exp14_gb1_bayesian_opt/` |
+| `exp15` | BO correlation and misspecification study (archived; not tabulated in this paper) | `results/uct_v4_icml_baselines/exp15_bo_correlation_and_misspec/` |
 
-## 3. Verification & Safety Guarantees
+### Frozen passive-UCT archive (`reproduce.py`)
 
-- **Non-destructive verification and smoke runs:** `verify`, `test`, `quickcheck`, `appendix-check`, and `benchmark --smoke` write only to `build/` or the OS temporary directory (`--smoke-dir`) and never modify archived manifests under `results/`.
-- **Exact deterministic replay vs. hardware-dependent timings:** Full v1 replay checks **3,826,797** rollout boundaries against independent full-DP checks. On a new machine, fresh runs preserve seeds, method ordering, accuracy, confidence, and evaluation caps; wall-clock seconds, memory usage, and wall-capped completion rates depend on host hardware and should not be compared as paired wall-time measurements against archived runs.
-- **Historical pricing archive (`appendix/`):** Isolated from the main UCT/DAG-certification evidence; first run `python -B reproduce.py appendix-check --out build/appendix-01` and execute any additional historical commands from `build/appendix-01/` (see `appendix/ORIGINAL_REPLAY_README.txt`).
+| Manuscript evidence | Inputs | Reproduction |
+|---|---|---|
+| Coupled UCT certification and anytime regret (Tables 52–54) | `results/uct_backup_v1/runs.jsonl` | `reproduce.py summaries`, `replay --study backup` |
+| Stopping-horizon intervention (Table 51) | `results/uct_backup_v1/gap-study/` | same commands |
+| Strong-compiler timing (Table 62) | `results/uct_frontier_v1/` | `summaries`, `replay --study frontier` |
+| Frontier work and retirement | `results/uct_frontier_v1/mechanism.jsonl` | `reproduce.py mechanism` |
+| Peak Python memory (Table 63) | `results/uct_frontier_v1/memory.jsonl` | `reproduce.py memory` (host-dependent) |
+| Generated LaTeX tables | `reference/tables/` | `reproduce.py tables` |
+
+The `appendix/` directory is a separate earlier pricing/controller archive. It is not cited by this paper; `reproduce.py appendix-check --out build/appendix-01` verifies it (see `appendix/ORIGINAL_REPLAY_README.txt`).
+
+## 4. Verification Guarantees
+
+- **Non-destructive.** `verify`, `test`, `quickcheck`, `appendix-check` and `benchmark --smoke` write only to `build/` or the OS temporary directory and never modify `results/`.
+- **Deterministic replay vs. host-dependent timing.** The frozen replay checks 3,826,797 rollout boundaries against independent full dynamic-programming checks. Fresh runs preserve seeds, method order, accuracy, confidence and evaluation caps; wall-clock seconds, memory and wall-capped completion rates depend on the host and should not be compared pairwise with archived runs.
