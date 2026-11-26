@@ -85,3 +85,4 @@ import JointRootCert.LiteralE4
 import JointRootCert.LiteralD2e
 import JointRootCert.LiteralK6
 import JointRootCert.LiteralABC3
+import JointRootCert.LiteralK9
