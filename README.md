@@ -9,7 +9,7 @@ Installable Python library (`dagcert`), full experimental suite (`experiment/`),
 
 - **Manuscript:** [`manuscript/Joint_cert_manuscript.pdf`](manuscript/Joint_cert_manuscript.pdf) (LaTeX source: [`manuscript/joint_cert_manuscript.tex`](manuscript/joint_cert_manuscript.tex))
 - **Artifact-to-paper map:** [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) maps every table (Tables 1–69) and figure (Figures 1–15) to its archived logs and reproduction command — **100% coverage with zero missing experiments**.
-- **Formal mathematics:** [`lean/`](lean/) contains Lean 4 proofs of 8 of the paper's 62 numbered results, including both main-text theorems; see [`lean/README.md`](lean/README.md) for the status of each.
+- **Formal mathematics:** [`lean/`](lean/) contains Lean 4 proofs of 10 of the paper's 62 numbered results, including both main-text theorems; see [`lean/README.md`](lean/README.md) for the status of each.
 
 <p align="center">
   <img src="figures/fig1_concept_overview.png" width="94%" alt="Shared outcomes change what can invalidate a root decision"/>
@@ -222,7 +222,7 @@ Pass `--out-dir build/rebuilt_data` to rebuild alongside the bundled files for c
 
 ## Lean 4 Formalizations (`lean/`)
 
-The [`lean/`](lean/) directory holds Lean 4 + Mathlib proofs of 8 of the paper's 62 numbered results, with no `sorry` and no added axioms: both main-text theorems, the exact regret geometry of Appendix A, and two Appendix B lemmas. [`lean/README.md`](lean/README.md) gives the status of every result and states what each formal statement assumes.
+The [`lean/`](lean/) directory holds Lean 4 + Mathlib proofs of 10 of the paper's 62 numbered results, with no `sorry` and no added axioms: both main-text theorems, the exact regret geometry of Appendix A, and Appendix B except the restart bound. [`lean/README.md`](lean/README.md) gives the status of every result and states what each formal statement assumes.
 
 - [`Basic.lean`](lean/JointRootCert/Basic.lean), [`JointSet.lean`](lean/JointRootCert/JointSet.lean) — decision model and joint-set reduction (§2.1, Lemma `lem:bay-reduction`).
 - [`Rectangular.lean`](lean/JointRootCert/Rectangular.lean) — exact rectangular shared-support certificate and anytime-valid commitment (Theorem `thm:shared-regret`, Corollary `cor:shared-regret-pac`).
@@ -230,6 +230,7 @@ The [`lean/`](lean/) directory holds Lean 4 + Mathlib proofs of 8 of the paper's
 - [`FeatureHull.lean`](lean/JointRootCert/FeatureHull.lean) — feature-hull dominance (Theorem `thm:t2-hull`).
 - [`Acquisition.lean`](lean/JointRootCert/Acquisition.lean) — contrast variance-reduction score (`eq:main-contrast-acquisition`).
 - [`ActiveWidth.lean`](lean/JointRootCert/ActiveWidth.lean) — width lemmas for exact-regret and optimistic-separation sampling (Lemmas `lem:active-width`, `lem:active-os-width`).
+- [`ActiveBounds.lean`](lean/JointRootCert/ActiveBounds.lean) — confidence-width inversion, Safeguarded-LCB width and the counting argument behind the active sample bounds (Lemma `lem:active-inversion`, Theorem `thm:active-er`).
 - [`Potential.lean`](lean/JointRootCert/Potential.lean), [`CDJoint.lean`](lean/JointRootCert/CDJoint.lean) — finite-sample cost of safeguarded CD-Joint (Theorem `thm:t4-finite-sample`), proved as a width lemma, a one-step bound and the cumulative cost bound.
 
 Build with `cd lean && lake exe cache get && lake build` (Lean toolchain pinned in [`lean/lean-toolchain`](lean/lean-toolchain)).

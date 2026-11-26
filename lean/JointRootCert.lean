@@ -9,3 +9,4 @@ import JointRootCert.Acquisition
 import JointRootCert.ActiveWidth
 import JointRootCert.Potential
 import JointRootCert.CDJoint
+import JointRootCert.ActiveBounds

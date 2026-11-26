@@ -2,7 +2,7 @@
 
 Machine-checked proofs, against [Mathlib](https://github.com/leanprover-community/mathlib4), of results from **Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs** ([manuscript](../manuscript/Joint_cert_manuscript.pdf)).
 
-**Status: 8 of the 62 numbered results are proved, 1 is partly proved, 53 are open.** Everything in this directory compiles with no `sorry` and no added axioms (the proved theorems depend only on `propext`, `Classical.choice` and `Quot.sound`). The proved part is both main-text theorems, the exact regret geometry of Appendix A, and the per-step lemmas of the active samplers in Appendix B. The CD-Joint cost theorem is proved as separate lemmas rather than as one statement about a formal model of the algorithm; its row in the table says exactly what is assumed.
+**Status: 10 of the 62 numbered results are proved and 52 are open.** The goal is all 62. Everything in this directory compiles with no `sorry` and no added axioms (the proved theorems depend only on `propext`, `Classical.choice` and `Quot.sound`). The proved part is both main-text theorems, all of Appendix A, and Appendix B except the restart bound. Two theorems (CD-Joint cost, active sample bounds) are proved as separate lemmas rather than as one statement about a formal model of the algorithm; their rows in the table say exactly what is assumed.
 
 ## Build
 
@@ -29,6 +29,7 @@ Toolchain `leanprover/lean4:v4.36.0`, Mathlib `v4.36.0` (pinned in `lake-manifes
 | `JointRootCert/ActiveWidth.lean` | Width charged to the selected terminal for exact-regret and optimistic-separation sampling |
 | `JointRootCert/Potential.lean` | Coercive design matrices: the V⁻¹ quadratic form, Cauchy-Schwarz and triangle inequalities, matrix determinant lemma for a rank-one update |
 | `JointRootCert/CDJoint.lean` | Finite-sample cost of safeguarded CD-Joint: width of the safeguarded contrast, one-step bound, cumulative cost bound |
+| `JointRootCert/ActiveBounds.lean` | Confidence-width inversion, Safeguarded-LCB width, counting argument and explicit sample bound for active sampling |
 
 ## How statements are modelled
 
@@ -52,9 +53,9 @@ Rows follow the order of the LaTeX source. "open" means not yet formalized.
 | 4 | App. A | Theorem: Exact rectangular shared-support certificate | `thm:shared-regret` | proved | `Rectangular.lean`: `rect_isGreatest`, `robustRegret_box`, `robustRegret_box_full`, `rectCert_le_iff`, `rectCert_le_marginal` |
 | 5 | App. A | Corollary: Anytime-valid root commitment | `cor:shared-regret-pac` | proved | `Rectangular.lean`: `anytime_valid_commitment`, `anytime_valid_commitment_box` |
 | 6 | App. A | Theorem: Feature-hull dominance | `thm:t2-hull` | proved | `FeatureHull.lean`: `feature_hull_dominance`, `regret_le_of_hull_dist` |
-| 7 | App. B | Theorem: Finite-sample support-sensitive acquisition | `thm:active-er` | partial | Per-step width lemmas proved (`active_width`, `active_os_width`). Open: the Safeguarded-LCB step and the counting argument that turns widths into the stopping-time sums. |
+| 7 | App. B | Theorem: Finite-sample support-sensitive acquisition | `thm:active-er` | proved | `ActiveBounds.lean`: `stopping_time_le_sum_budget` (counting argument), `active_sample_bound` (explicit bound), `active_sg_width` (Safeguarded-LCB); `ActiveWidth.lean`: `active_width`, `active_os_width`. Proved as separate lemmas: the three bounds are the instances of `active_sample_bound` with the thresholds supplied by the three width lemmas, not three statements about a formal model of Algorithm 2. Assumed: the nested interval after `n` observations has width at most `2β(n)`, and simultaneous coverage (both Appendix C). |
 | 8 | App. B | Lemma: Width charged to each selected terminal | `lem:active-width` | proved | `ActiveWidth.lean`: `active_width` |
-| 9 | App. B | Lemma: Explicit confidence-width inversion | `lem:active-inversion` | open |  |
+| 9 | App. B | Lemma: Explicit confidence-width inversion | `lem:active-inversion` | proved | `ActiveBounds.lean`: `width_inversion`, `width_inversion_nat`. Proved without the monotonicity-by-derivative step: the width is shown to be below `r` at every count above the threshold. |
 | 10 | App. B | Lemma: Width charged by optimistic-separation sampling | `lem:active-os-width` | proved | `ActiveWidth.lean`: `active_os_width` |
 | 11 | App. B | Theorem: Certified restart bound | `thm:active-restart` | open |  |
 | 12 | App. C | Lemma: Full-domain confidence sequence | `lem:bay-cs` | open |  |
@@ -112,7 +113,7 @@ Rows follow the order of the LaTeX source. "open" means not yet formalized.
 ## What the open results need
 
 - **Assembling the CD-Joint theorem:** a formal model of Algorithm 1 that discharges the per-step hypotheses of `cd_joint_cost` from `cd_width` and `contrast_l1`, and identifies `‖Lᵀg‖` with `√(gᵀV⁻¹g)` for `L Lᵀ = V⁻¹`.
-- **Appendix B, remaining:** two real-analysis inversion lemmas and the counting argument from interval widths to stopping times; the restart bound needs a probability model of independent episodes.
+- **Appendix B, remaining:** the certified restart bound (`thm:active-restart`), which needs a probability model of independent episodes and a geometric-series bound on the expected stopping time; and formal models of Algorithms 1 and 2 to assemble the two modular theorems.
 - **Appendix C (confidence sequences):** time-uniform Hoeffding, empirical-Bernstein and self-normalized bounds. Mathlib has sub-Gaussian and martingale foundations but not these sequences, so they must be built.
 - **Appendix D (information limits):** change of measure for stopped processes, KL projections, tracking arguments, and the unknown-variance theory. This is the largest block (23 results) and the furthest from existing Mathlib.
 - **Appendix E (UCT / PUCT trajectories):** 19 results on deterministic and noisy search dynamics; needs a formal model of the search procedures.
