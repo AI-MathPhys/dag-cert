@@ -78,3 +78,4 @@ import JointRootCert.RandomisedCore
 import JointRootCert.Randomised
 import JointRootCert.RandomisedGauss
 import JointRootCert.RandomisedStar
+import JointRootCert.Randomised2
