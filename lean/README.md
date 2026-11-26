@@ -2,7 +2,7 @@
 
 Machine-checked proofs, against [Mathlib](https://github.com/leanprover-community/mathlib4), of results from **Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs** ([manuscript](../manuscript/Joint_cert_manuscript.pdf)).
 
-**Status: of the 62 numbered results, 41 are proved, 21 are partly proved, and 0 are open.** The goal is all 62. Everything in this directory compiles with no `sorry` and no added axioms (the theorems depend only on `propext`, `Classical.choice` and `Quot.sound`).
+**Status: of the 62 numbered results, 42 are proved, 20 are partly proved, and 0 are open.** The goal is all 62. Everything in this directory compiles with no `sorry` and no added axioms (the theorems depend only on `propext`, `Classical.choice` and `Quot.sound`).
 
 How to read the status column:
 
@@ -47,6 +47,8 @@ Toolchain `leanprover/lean4:v4.36.0`, Mathlib `v4.36.0` (pinned in `lake-manifes
 | `BernoulliLimit.lean` | Bernoulli information limit: regularity and attained maxima, lower bound with several correct answers, anytime likelihood certificate, tracking bounds |
 | `Discovery.lean` | Discovery cost for a sampler, without an assumed coupling |
 | `GaussianStopped.lean` | Adaptive Gaussian sampler with a stopping rule: explicit density of the transcript law, Wald identity, change of measure; unknown-variance converse; Gaussian information lower bound |
+| `CostModel.lean` | Step-counting cost model; dyadic segment-tree cover compilation and its cost; charged dual-cover update with its invariant and exact cost |
+| `CostEngines.lean` | Level-bucket max-circuit engine with exact per-wave cost; circuit copy cost; deterministic core of the parity-grid stopping work |
 | `Completions.lean` | CD-Joint as one statement about a run of Algorithm 1 |
 | `Completions2.lean` | End-to-end Safeguarded-LCB and optimistic-separation bounds; the restart bound on an explicit product space of independent episodes |
 | `Completions3.lean` | Polynomial accuracy dependence of the recursive-PUCT horizon with an explicit logarithmic factor; oracle substitution |
@@ -67,6 +69,8 @@ Toolchain `leanprover/lean4:v4.36.0`, Mathlib `v4.36.0` (pinned in `lake-manifes
 - Algorithms are not modelled as programs. A run is a sequence of selections satisfying the rule the paper states (for example "the selected index maximises the PUCT score"), so the theorems hold for every tie-breaking rule. Stopping monitors enter through their specification.
 - Probabilistic statements are over an arbitrary probability space carrying the reward tapes, and are stated as bounds on the failure probability.
 - Asymptotic statements (`Θ`, `O`, `Õ`) are proved as explicit two-sided inequalities with named constants.
+- Running-time claims use an explicit step-counting model (`CostModel.lean`): a program returns its result together with a cost computed by the same recursion. Indexed heaps are a primitive charged `⌈log₂ m⌉ + 1` per key update.
+- Samplers in the lower-bound results are deterministic functions of the observed history; probabilities and expectations for unbounded runs are limits over a finite horizon.
 
 ## Hypotheses the manuscript leaves implicit
 
@@ -80,6 +84,7 @@ Found while formalizing; none makes a stated result false.
 - The Safeguarded-LCB width argument needs the lower-confidence candidate to maximise the lower endpoint over the support.
 - The empirical-Bernstein betting parameter needs `δ < 2M`.
 - `thm:t4-finite-sample` needs `δ < 1`; `cor:v35poly` is proved for `ε ≤ 1/e`.
+- `prop:representation-cost`: "each gate endpoint changes at most once per wave" needs gates to be processed in topological order; an arbitrary delivery order can change a gate twice, and the scheduling cost does not appear in the stated bound.
 - The UCT index is written with `log N_t(v)` in its definition but used with `log(1+t)` (and coefficient 2 in one place) in the proofs of the funnel and common-core theorems.
 
 ## Result-by-result status
@@ -144,12 +149,12 @@ Rows follow the order of the LaTeX source.
 | 54 | App. E | Corollary: Polynomial accuracy dependence at fixed depth | `cor:v35poly` | proved | `Completions3.lean`: `log_horizon` (explicit horizon `D^(2^H) · ε^(-2^(H+1)) · log(1/ε)^(2^H)`), `puct_poly_horizon_full`, and the oracle-substitution clause `oracle_substitution_guarantee`, `circuit_substitution_guarantee`, `oracle_substitution_certified`. Needs `ε ≤ 1/e`. The substitution theorems are stated in the controller/oracle model of `Representation.lean`; a recursive-PUCT search is not identified with such a controller, so the horizon and transfer theorems are not composed into one statement. |
 | 55 | App. E | Proposition: Positive-variance root PUCT: almost-sure square-root counts | `prop:v35rootrates` | proved | `RecursivePUCT.lean`: `root_puct_sqrt_rates_ae` (almost surely, via the strong law), `root_puct_upper`, `pullCount_unbounded`; the matching lower rate is `local_puct_revisit`. |
 | 56 | App. E | Counterexample: Zero prior at one internal edge prevents terminal coverage | `ce:v35prior` | proved | `RecursivePUCT.lean`: `zero_prior_never_selected`, `zero_prior_run_exists`. The Bernoulli terminals are abstracted to a nonnegative value on the other edge. |
-| 57 | App. K | Theorem: Exact coupling and charged maintenance | `thm:adaptive-oracle-coupling` | partial | `Representation.lean`: `exact_coupling`, `dualCover_incidence_bound` (`B ≤ 2h(2R_run + K)` for an existing cover under every layout). Open: the compile-work, update-work and space claims (no cost model for the segment-tree and heap algorithm). |
+| 57 | App. K | Theorem: Exact coupling and charged maintenance | `thm:adaptive-oracle-coupling` | partial | `CostModel.lean` (an explicit step-counting model: programs return their result with a computed cost; indexed heaps are a primitive charged `⌈log₂ m⌉ + 1` per key update): `dualCover_compile` (covers of all supports and complements, `B ≤ 2h(2R_run + K)` incidences, cost at most `4h(2R_run + K) + B`, for the decomposition actually executed, `segQuery_bound`), `dcUpdate_inv` and `dcUpdate_cost` (update work `2h` plus heap work per changed subscription, as an equality), `dcRun_bound`. `Representation.lean`: `exact_coupling`, `dualCover_incidence_bound`. Open: the run-merging phase `P_G` (run lists are an input), the `|V|+|E|` term of the space claim, the query term of `eq:dual-cover-work`, and an implemented heap. |
 | 58 | App. K | Proposition: Trajectory Coupling Across Circuit Representations | `prop:representation-coupling` | proved | `Representation.lean`: `MaxCircuit.eval_eq_sup`, `eval_unary`, `eval_gate_congr`, `eval_dyadicCircuit`, `representation_coupling`, `MaxCircuit.retire_preserves`, `retirement_coupling`. One retirement step is proved; the induction over successive retirements is a hypothesis of `retirement_coupling`. |
-| 59 | App. K | Proposition: Unified Full-Cost Representation Comparison | `prop:representation-cost` | partial | `Representation.lean`: `deliveries_le_Splus`, `Sminus_le_deliveries`, `work_upper`, `work_lower`, `representation_advantage`. Assumed: the per-operation charges of the indexed-heap engine. Open: a formal engine satisfying them. |
-| 60 | App. K | Theorem: Every-layout limit of flat dyadic compilation | `thm:coded-main` | partial | `Representation.lean`: the every-layout `Ω(r³)` half via `parityGrid_cover_lower`. Open: the `O(r² log² r)` upper half (needs a TA-UCT process and a cost model). |
-| 61 | App. K | Theorem: Every-Layout Dyadic Cover Lower Bound | `thm:coded-covers` | partial | `Representation.lean`: `parity_separation`, `total_runs_lower`, `runs_le_card_of_cover`, `parityGrid_runs_lower`, `parityGrid_cover_lower` (`r³ ≤ 2 Σ|C_p|` for every layout and every dyadic cover; slightly stronger than the manuscript). Open: the stopping-work step. |
-| 62 | App. K | Proposition: Equivalence Under Unrestricted Circuit Retention | `prop:unrestricted-compiler` | partial | `Representation.lean`: `retained_circuit_coupling` (semantic equivalence). Open: the `O(|V|+|E|)` copy cost. |
+| 59 | App. K | Proposition: Unified Full-Cost Representation Comparison | `prop:representation-cost` | partial | `CostEngines.lean`: a level-bucket max-circuit engine with `wave_spec` (after a wave the invariant holds and the cost is an exact formula: each changed gate delivers once along each parent incidence), `engine_work_upper` and `engine_work_lower`, which discharge the accounting hypotheses of `work_upper` and `work_lower` in `Representation.lean`. `representation_advantage`. Open: online retirement of incidences (the live set is constant here), a costed initialisation pass, and a lower bound over all implementations rather than this engine. The engine pays a scheduling term `L + 3` per wave that the manuscript's bound does not show. |
+| 60 | App. K | Theorem: Every-layout limit of flat dyadic compilation | `thm:coded-main` | partial | `Representation.lean`: the every-layout `Ω(r³)` half via `parityGrid_cover_lower`. `CostEngines.lean`: the deterministic core of the upper half, `wave_cost_three_layers`, `winner_count_lower`, `parity_total_work` (`τ ≤ 1024·r·k` and total work at most `P + 1024·r·k·c_roll`), assuming the root-level UCT selection inequality, that the run has stopped once the winner has `512 r log r` observations, and a per-rollout cost bound. Open: a TA-UCT process on the parity-grid DAG, the coverage probability behind the stopping assumption, and the allocator and initialisation work. |
+| 61 | App. K | Theorem: Every-Layout Dyadic Cover Lower Bound | `thm:coded-covers` | partial | `Representation.lean`: `parity_separation`, `total_runs_lower`, `runs_le_card_of_cover`, `parityGrid_runs_lower`, `parityGrid_cover_lower` (`r³ ≤ 2 Σ|C_p|` for every layout and every dyadic cover; slightly stronger than the manuscript). `CostEngines.lean`: `parity_total_work` for the stopping-work step, under the assumptions listed for `thm:coded-main`. Open: the same items as `thm:coded-main`. |
+| 62 | App. K | Proposition: Equivalence Under Unrestricted Circuit Retention | `prop:unrestricted-compiler` | proved | `CostEngines.lean`: `copyDag_spec`, `copyDag_cost_le`, `retained_compiler` (copying a retained circuit stored as arrays costs at most `4(|V|+|E|)` steps and leaves any costed monitor's result unchanged). `Representation.lean`: `retained_circuit_coupling` (semantic equivalence). In the step-counting model of `CostModel.lean`. |
 
 ## What remains
 
