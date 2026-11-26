@@ -162,7 +162,7 @@ theorem restart_episode_samples [DecidableEq Z] {M δ ρmin : ℝ} (hM : 2 ≤ M
     (hδ1 : δ ≤ 1 / 4) (ρ : Z → ℝ) (hρmin : 0 < ρmin) (hρ : ∀ z, ρmin ≤ ρ z ∧ ρ z ≤ 1)
     {j : ℕ} (hj : 1 ≤ j) (τ : ℕ) (sel : ℕ → Z) (wsel : ℕ → ℝ)
     (hnest : ∀ t < τ, wsel t ≤
-      hoeffdingWidth M (δ / ((j : ℝ) * ((j : ℝ) + 1))) (priorCount sel t))
+      nestedWidth M (δ / ((j : ℝ) * ((j : ℝ) + 1))) (priorCount sel t))
     (hcharged : ∀ t < τ, ρ (sel t) ≤ wsel t) :
     (τ : ℝ) ≤ restartBudget (∑ z, 1 / ρ z ^ 2) (Real.log (32 * M / (δ * ρmin ^ 2))) j := by
   have hj1 : (1 : ℝ) ≤ j := by exact_mod_cast hj
@@ -347,7 +347,7 @@ theorem restart_good_episode_within_cap {Z : Type*} [Fintype Z] [DecidableEq Z] 
     (hjs : restartEpisode (∑ z, 1 / ρ z ^ 2) (Real.log (128 * M / (δ * ρmin ^ 2))) ≤ j)
     (τ : ℕ) (sel : ℕ → Z) (wsel : ℕ → ℝ)
     (hnest : ∀ t < τ, wsel t ≤
-      hoeffdingWidth M (δ / ((j : ℝ) * ((j : ℝ) + 1))) (priorCount sel t))
+      nestedWidth M (δ / ((j : ℝ) * ((j : ℝ) + 1))) (priorCount sel t))
     (hcharged : ∀ t < τ, ρ (sel t) ≤ wsel t) :
     τ ≤ 2 ^ j := by
   obtain ⟨h1, h2, h3, h4⟩ := restart_constants hM hcard hδ0 hδ ρ hρmin hρ

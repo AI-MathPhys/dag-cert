@@ -196,10 +196,6 @@ theorem tape_box_nested (M δ : ℝ) (x : Z → ℕ → ℝ) (sel : ℕ → Z) (
   box_nested (fun z => hoeffLo M δ (x z)) (fun z => hoeffHi M δ (x z))
     (fun t z => queryCount sel t z) (fun t z => queryCount_le_succ sel t z) t z
 
-/-- Width bound of a running-intersection Hoeffding interval after `n` observations:
-`1` before any observation, `2 β(n)` afterwards. -/
-noncomputable def nestedWidth (M δ : ℝ) (n : ℕ) : ℝ := if n = 0 then 1 else hoeffdingWidth M δ n
-
 /-- **Width of the nested Hoeffding interval.**  The running intersection of `[0,1]` and
 the Hoeffding intervals at counts `1, …, n` has width at most `2 β(n)` (and exactly `1` at
 `n = 0`).  This is the fact "a nested Hoeffding interval based on `n` observations has
@@ -215,24 +211,6 @@ theorem run_width_le (M δ : ℝ) (x : ℕ → ℝ) (n : ℕ) :
     simp only [hoeffLo, hoeffHi, hne, ↓reduceIte] at h1 h2
     simp only [nestedWidth, hne, ↓reduceIte]
     linarith
-
-/-- With at least `⌈(32 / r²) log (32 M / (δ r²))⌉` observations the nested width is below
-`r` (`width_inversion_nat`; the count is positive, so the `n = 0` branch does not occur). -/
-lemma nestedWidth_lt {M δ r : ℝ} (hM : 2 ≤ M) (hδ0 : 0 < δ) (hδ1 : δ < 1) (hr0 : 0 < r)
-    (hr1 : r ≤ 1) {n : ℕ} (hn : ⌈32 / r ^ 2 * Real.log (32 * M / (δ * r ^ 2))⌉₊ ≤ n) :
-    nestedWidth M δ n < r := by
-  have hr2 : 0 < r ^ 2 := by positivity
-  have hr2le : r ^ 2 ≤ 1 := by nlinarith
-  have harg : 1 < 32 * M / (δ * r ^ 2) := by
-    rw [lt_div_iff₀ (by positivity)]
-    nlinarith [mul_le_mul hδ1.le hr2le hr2.le (by norm_num : (0 : ℝ) ≤ 1)]
-  have hpos : 0 < 32 / r ^ 2 * Real.log (32 * M / (δ * r ^ 2)) :=
-    mul_pos (by positivity) (Real.log_pos harg)
-  have hn0 : n ≠ 0 := by
-    have := Nat.ceil_pos.mpr hpos
-    omega
-  simp only [nestedWidth, hn0, ↓reduceIte]
-  exact width_inversion_nat hM hδ0 hδ1 hr0 hr1 hn
 
 /-- **Explicit sample bound for running-intersection Hoeffding boxes.**  The statement of
 `active_sample_bound` with the box built from the tapes `x` along the run `sel`: if every

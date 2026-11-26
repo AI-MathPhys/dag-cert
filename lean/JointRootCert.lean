@@ -23,3 +23,4 @@ import JointRootCert.StoppedProcess
 import JointRootCert.Assembly
 import JointRootCert.EmpiricalBernstein
 import JointRootCert.ChiSquare
+import JointRootCert.SelfNormalized

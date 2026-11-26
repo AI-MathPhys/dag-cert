@@ -105,6 +105,28 @@ theorem width_inversion_nat {M δ r : ℝ} (hM : 2 ≤ M) (hδ0 : 0 < δ) (hδ1 
     hoeffdingWidth M δ n < r :=
   width_inversion hM hδ0 hδ1 hr0 hr1 ((Nat.le_ceil _).trans (by exact_mod_cast hn))
 
+/-- Width bound of a nested (running-intersection) Hoeffding interval after `n` observations:
+`1` before any observation, `2 β(n)` afterwards. -/
+noncomputable def nestedWidth (M δ : ℝ) (n : ℕ) : ℝ := if n = 0 then 1 else hoeffdingWidth M δ n
+
+/-- With at least `⌈(32 / r²) log (32 M / (δ r²))⌉` observations the nested width is below
+`r` (`width_inversion_nat`; the count is positive, so the `n = 0` branch does not occur). -/
+lemma nestedWidth_lt {M δ r : ℝ} (hM : 2 ≤ M) (hδ0 : 0 < δ) (hδ1 : δ < 1) (hr0 : 0 < r)
+    (hr1 : r ≤ 1) {n : ℕ} (hn : ⌈32 / r ^ 2 * Real.log (32 * M / (δ * r ^ 2))⌉₊ ≤ n) :
+    nestedWidth M δ n < r := by
+  have hr2 : 0 < r ^ 2 := by positivity
+  have hr2le : r ^ 2 ≤ 1 := by nlinarith
+  have harg : 1 < 32 * M / (δ * r ^ 2) := by
+    rw [lt_div_iff₀ (by positivity)]
+    nlinarith [mul_le_mul hδ1.le hr2le hr2.le (by norm_num : (0 : ℝ) ≤ 1)]
+  have hpos : 0 < 32 / r ^ 2 * Real.log (32 * M / (δ * r ^ 2)) :=
+    mul_pos (by positivity) (Real.log_pos harg)
+  have hn0 : n ≠ 0 := by
+    have := Nat.ceil_pos.mpr hpos
+    omega
+  simp only [nestedWidth, hn0, ↓reduceIte]
+  exact width_inversion_nat hM hδ0 hδ1 hr0 hr1 hn
+
 /-! ### The counting argument -/
 
 section Counting
@@ -164,7 +186,8 @@ theorem stopping_time_le_sum_budget (τ : ℕ) (sel : ℕ → Z) (wsel : ℕ →
   have h3 := hcharged t ht
   linarith
 
-/-- **Explicit sample bound.**  With time-uniform Hoeffding intervals and thresholds
+/-- **Explicit sample bound.**  With time-uniform Hoeffding intervals (width `1` before the
+first observation of a terminal, at most `2 β(n)` after `n` observations) and thresholds
 `0 < ρ z ≤ 1`, the number of queries is at most
 `∑_z ⌈(32 / ρ_z²) log (32 M / (δ ρ_z²))⌉`.
 
@@ -174,11 +197,11 @@ The three bounds of Theorem `thm:active-er` are the instances
 `ρ_z = max {Γ + ε, Δ_z} / 2` (optimistic separation, `active_os_width`). -/
 theorem active_sample_bound {M δ : ℝ} (hM : 2 ≤ M) (hδ0 : 0 < δ) (hδ1 : δ < 1)
     (τ : ℕ) (sel : ℕ → Z) (wsel : ℕ → ℝ) (ρ : Z → ℝ) (hρ : ∀ z, 0 < ρ z ∧ ρ z ≤ 1)
-    (hnest : ∀ t < τ, wsel t ≤ hoeffdingWidth M δ (priorCount sel t))
+    (hnest : ∀ t < τ, wsel t ≤ nestedWidth M δ (priorCount sel t))
     (hcharged : ∀ t < τ, ρ (sel t) ≤ wsel t) :
     τ ≤ ∑ z, ⌈32 / ρ z ^ 2 * Real.log (32 * M / (δ * ρ z ^ 2))⌉₊ :=
-  stopping_time_le_sum_budget τ sel wsel (fun n => hoeffdingWidth M δ n) ρ _ hnest hcharged
-    (fun z _ hn => width_inversion_nat hM hδ0 hδ1 (hρ z).1 (hρ z).2 hn)
+  stopping_time_le_sum_budget τ sel wsel (nestedWidth M δ) ρ _ hnest hcharged
+    (fun z _ hn => nestedWidth_lt hM hδ0 hδ1 (hρ z).1 (hρ z).2 hn)
 
 end Counting
 
