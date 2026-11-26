@@ -222,7 +222,7 @@ Pass `--out-dir build/rebuilt_data` to rebuild alongside the bundled files for c
 
 ## Lean 4 Formalizations (`lean/`)
 
-The [`lean/`](lean/) directory holds a Lean 4 + Mathlib formalization of the paper's numbered results, with no `sorry` and no added axioms. Of the 62 results, 54 are proved, 8 are partly proved and 0 are open. [`lean/README.md`](lean/README.md) gives the status of every result, the Lean theorem names, and exactly what each formal statement assumes.
+The [`lean/`](lean/) directory holds a Lean 4 + Mathlib formalization of the paper's numbered results, with no `sorry` and no added axioms. Of the 62 results, 56 are proved, 6 are partly proved and 0 are open. [`lean/README.md`](lean/README.md) gives the status of every result, the Lean theorem names, and exactly what each formal statement assumes.
 
 Proved in full or in modular form: both main-text theorems (exact joint ellipsoidal certificate with sparse witnesses; finite-sample cost of CD-Joint), all of Appendix A, the active-sampling bounds of Appendix B, the scalar information projection and tied-star lower bound, the root-PUCT and recursive-PUCT count, coverage and certification-horizon theorems, and trajectory coupling across circuit representations. The partly proved results are missing a small set of probabilistic tools that Mathlib does not have, or a formal cost model for running-time claims.
 

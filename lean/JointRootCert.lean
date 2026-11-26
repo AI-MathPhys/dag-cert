@@ -45,3 +45,5 @@ import JointRootCert.UnknownVarianceTracker
 import JointRootCert.HeapImpl
 import JointRootCert.DagRetire
 import JointRootCert.RunMerge
+import JointRootCert.CoreCovers
+import JointRootCert.FunnelUCT
