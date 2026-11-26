@@ -17,8 +17,8 @@ python -m pip install -e ".[dev,audit]"      # Core library + pytest + CVXPY/Cla
 python -m pip install -e ".[all]"
 ```
 
-- All source and data paths are repository-relative and resolved through the installed `joint_root_cert` package.
-- Compact benchmark archives (`joint_root_cert/benchmarks/data/*.npz`, 1.7 MB) and the 20-board SameGame set (`joint_root_cert/benchmarks/data/samegame/StandardTestset.txt`) are bundled in Git so offline verification, all 88 unit tests, and CPU suites run without network access.
+- All source and data paths are repository-relative and resolved through the installed `dagcert` package.
+- Compact benchmark archives (`dagcert/benchmarks/data/*.npz`, 1.7 MB) and the 20-board SameGame set (`dagcert/benchmarks/data/samegame/StandardTestset.txt`) are bundled in Git so offline verification, all 88 unit tests, and CPU suites run without network access.
 - Every upstream dataset and model (FLIP GB1, Zenodo 15203754 TmTrpB, `zjunlp/WorfBench` gold trajectories, `Qwen/Qwen3-0.6B`, `Qwen/Qwen3-Embedding-0.6B`) can be checked, fetched, or rebuilt with `python scripts/fetch_data.py`.
 - For multi-process CPU experiments, pin single-threaded BLAS (`OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1`); `experiment/run_all.py` sets these automatically.
 
@@ -142,6 +142,6 @@ Pass `--all-suites` to `python experiment/run_all.py figures --all-suites` to al
 ## 4. Verification Contracts
 
 1. **Cryptographic integrity (`python experiment/run_all.py verify`).** Verifies SHA-256 digests of all 31 files in the frozen passive-UCT v1 archive (`results/uct_v1_manifest.json`) and every `manifest.json` across all 41 suites (`exp1`–`exp15`, `e0`–`e6`, `v8`–`v14`), asserting that no archived manifest was produced in `--smoke` mode.
-2. **Automated unit, parity, API & oracle tests (`python experiment/run_all.py test`).** Executes all 88 tests across `tests/test_*.py`, covering the public `joint_root_cert` API, bit-exact C++17 vs. Python parity (correlated KG, certified B&B, graph-maintenance kernels, SameGame DP), exact minimax duality against CVXPY/Clarabel, Behrens–Fisher bimodal soundness, and disjoint WorFBench task splits.
+2. **Automated unit, parity, API & oracle tests (`python experiment/run_all.py test`).** Executes all 88 tests across `tests/test_*.py`, covering the public `dagcert` API, bit-exact C++17 vs. Python parity (correlated KG, certified B&B, graph-maintenance kernels, SameGame DP), exact minimax duality against CVXPY/Clarabel, Behrens–Fisher bimodal soundness, and disjoint WorFBench task splits.
 3. **Non-destructive execution.** `verify`, `test`, `list`, and `benchmark --smoke` never modify `results/`. Individual scripts under `experiment/` also accept `--out-dir <path>` (or `--out <path>`), `--smoke`, `--summarize-only`, and `--workers <N>`.
 4. **Deterministic trajectories vs. host-dependent timing.** All random seeds, paired noise tapes, query counts, certification decisions, and SHA-256 manifests are deterministic. Wall-clock latency and peak Python memory depend on host CPU and compiler flags.

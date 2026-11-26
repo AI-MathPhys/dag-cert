@@ -39,12 +39,12 @@ import tracemalloc
 
 import numpy as np
 
-from joint_root_cert import (
+from dagcert import (
     JointEllipsoidCertifier,
     LinearFeatureModel,
     SupportStructure,
 )
-from joint_root_cert.benchmarks import ScalingDAGProblem
+from dagcert.benchmarks import ScalingDAGProblem
 
 
 ROOT = Path(__file__).resolve().parents[2]

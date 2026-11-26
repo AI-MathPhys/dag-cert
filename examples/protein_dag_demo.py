@@ -1,8 +1,8 @@
 """Protein engineering example: certifying an initial GB1 mutation on a canonical 3-edit DAG."""
 from __future__ import annotations
 
-from joint_root_cert import SupportStructure, certify_root_action
-from joint_root_cert.benchmarks import (
+from dagcert import SupportStructure, certify_root_action
+from dagcert.benchmarks import (
     GB1MutationCampaignProblem,
     protein_sequence_kernel,
 )

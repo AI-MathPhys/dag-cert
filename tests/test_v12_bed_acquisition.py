@@ -7,7 +7,7 @@ import unittest
 import numpy as np
 from scipy.stats import norm
 
-from joint_root_cert._core.v12_bed_acquisition import (
+from dagcert._core.v12_bed_acquisition import (
     ALL_V12_POLICIES,
     FixedFeatureGaussianOverlapProblem,
     GaussianPairedDeconfoundedProblem,
@@ -20,7 +20,7 @@ from joint_root_cert._core.v12_bed_acquisition import (
     noisy_gp_ei_log_scores,
     select_bayesian_root_voi,
 )
-from joint_root_cert import SupportStructure
+from dagcert import SupportStructure
 from experiment.simulated.exp_factorial_and_proxy_sweep import TunableProxyDAGProblem
 
 

@@ -39,12 +39,12 @@ import time
 
 import numpy as np
 
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert._core.v6_real_world import (
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert._core.v6_real_world import (
     FlatLUCBSession,
     WorFBenchWorkflowProblem,
 )
-from joint_root_cert._core.v7_bayesian_ucd import (
+from dagcert._core.v7_bayesian_ucd import (
     CorrelationAwareCertSession,
     LinearFeatureModel,
     build_worfbench_feature_matrix,
@@ -55,7 +55,7 @@ from experiment.protein_engineering.exp_real_world_validation import _worfbench_
 
 ROOT = Path(__file__).resolve().parents[2]
 DEST = ROOT / "results/bayesian_ucd_v1/e4_worfbench"
-TEST_NPZ_PATH = ROOT / "joint_root_cert/benchmarks/data/worfbench_qwen3_test_81x32.npz"
+TEST_NPZ_PATH = ROOT / "dagcert/benchmarks/data/worfbench_qwen3_test_81x32.npz"
 
 E4_METHODS = (
     ("flat_lucb_root", "frequentist", False),

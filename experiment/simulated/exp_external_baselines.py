@@ -33,13 +33,13 @@ import statistics
 import time
 import tracemalloc
 
-from joint_root_cert import CertifiedSearchSession
-from joint_root_cert.benchmarks import (
+from dagcert import CertifiedSearchSession
+from dagcert.benchmarks import (
     contiguous_window_dag,
     overlap_dag,
 )
-from joint_root_cert import ActiveDAGLUCBSession
-from joint_root_cert.tracking import (
+from dagcert import ActiveDAGLUCBSession
+from dagcert.tracking import (
     LUCBMicroSession,
     UGapEMCTSSession,
     VarDEDAGSession,

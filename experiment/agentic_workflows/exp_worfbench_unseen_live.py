@@ -46,11 +46,11 @@ import numpy as np
 import requests
 from scipy.linalg import cho_factor, cho_solve
 
-from joint_root_cert import DAG, Problem
-from joint_root_cert.search import splitmix_uniform01
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert.benchmarks import WorFBenchWorkflowProblem
-from joint_root_cert import (
+from dagcert import DAG, Problem
+from dagcert.search import splitmix_uniform01
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert.benchmarks import WorFBenchWorkflowProblem
+from dagcert import (
     CalibratedGPPosteriorModel,
     SmartHybridCertSession,
 )
@@ -73,8 +73,8 @@ from experiment.protein_engineering.exp_real_world_validation import _worfbench_
 
 ROOT = Path(__file__).resolve().parents[2]
 DEST = ROOT / "results/bayesian_ucd_v1/v8_exp5_fresh_worfbench_live"
-CAL_NPZ_PATH = ROOT / "joint_root_cert/benchmarks/data/worfbench_qwen3_81x64.npz"
-TEST_NPZ_PATH = ROOT / "joint_root_cert/benchmarks/data/worfbench_qwen3_test_81x32.npz"
+CAL_NPZ_PATH = ROOT / "dagcert/benchmarks/data/worfbench_qwen3_81x64.npz"
+TEST_NPZ_PATH = ROOT / "dagcert/benchmarks/data/worfbench_qwen3_test_81x32.npz"
 
 OFFLINE_METHODS = (
     ("indep_os", "distribution_free"),
@@ -183,7 +183,7 @@ def _offline_worfbench_worker(task: tuple[str, str, tuple[int, int, int, int], i
     prob = WorFBenchWorkflowProblem(domain=domain, base_config=base_cfg, max_upgrades=max_up)
     test_archive = dict(np.load(TEST_NPZ_PATH))
     leaf_toks, _, act_test_vals, test_opt = _worfbench_leaf_costs_and_unseen_values(prob, test_archive)
-    from joint_root_cert._core.v6_real_world import WORFBENCH_MODULES
+    from dagcert._core.v6_real_world import WORFBENCH_MODULES
 
     mod_lookup = [{name: idx for idx, name in enumerate(WORFBENCH_MODULES[s])} for s in range(4)]
     configs = [

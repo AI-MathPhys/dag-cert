@@ -8,8 +8,8 @@ import random
 import time
 import tracemalloc
 from pathlib import Path
-from joint_root_cert._core.compiled_retirement import Search
-from joint_root_cert._core.certified_uct import TranspositionUCT
+from dagcert._core.compiled_retirement import Search
+from dagcert._core.certified_uct import TranspositionUCT
 from experiment.simulated.passive_uct.uct_frontier_families import make,describe
 from experiment.simulated.passive_uct.audit_uct_backup import direct
 

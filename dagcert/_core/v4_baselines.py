@@ -44,7 +44,7 @@ from .v3_extensions import (
     WitnessDualCovers,
     WitnessMarginalGraph,
 )
-from joint_root_cert._core._samegame_engine import Game, Moves
+from dagcert._core._samegame_engine import Game, Moves
 
 
 CPP_SG_SOURCE = Path(__file__).resolve().parents[1] / "_native" / "_cpp_samegame.cpp"

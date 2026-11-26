@@ -2,7 +2,7 @@
 import json
 from experiment.simulated.passive_uct.uct_frontier_study import DEST,CASES,SEEDS,METHODS,verify
 from experiment.simulated.passive_uct.uct_frontier_families import make
-from joint_root_cert._core.compiled_retirement import Search
+from dagcert._core.compiled_retirement import Search
 
 def run():
     verify()

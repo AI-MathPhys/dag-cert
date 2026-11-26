@@ -31,7 +31,7 @@ from typing import Any
 
 import numpy as np
 
-from joint_root_cert._core.v9_v34_tracker import (
+from dagcert._core.v9_v34_tracker import (
     HeteroscedasticDAGProblem,
     IntrinsicGaussianTape,
     compute_exact_nuisance_kl_rate,

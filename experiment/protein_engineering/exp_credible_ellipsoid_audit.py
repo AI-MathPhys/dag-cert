@@ -63,15 +63,15 @@ import numpy as np
 from scipy.linalg import cho_factor, cho_solve
 from scipy.stats import beta as beta_dist, chi2
 
-from joint_root_cert import DualWitnessCovers
-from joint_root_cert.benchmarks import protein_sequence_kernel
-from joint_root_cert.benchmarks import (
+from dagcert import DualWitnessCovers
+from dagcert.benchmarks import protein_sequence_kernel
+from dagcert.benchmarks import (
     GB1MutationCampaignProblem,
     TrpBMutationCampaignProblem,
     real_world_problem_diagnostics,
 )
-from joint_root_cert import JointEllipsoidCertifier, SupportStructure
-from joint_root_cert import (
+from dagcert import JointEllipsoidCertifier, SupportStructure
+from dagcert import (
     SharedGaussianPosterior,
     correlated_kg_log_scores,
 )

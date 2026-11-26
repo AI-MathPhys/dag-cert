@@ -1,4 +1,4 @@
-"""Quickstart example: Joint Root Certification with the `joint_root_cert` Python library.
+"""Quickstart example: Joint Root Certification with the `dagcert` Python library.
 
 Demonstrates:
   1. Exact shared-support cancellation (Figure 1b of the paper).
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from joint_root_cert import SearchDAG, certify_root_action, exact_rectangular_regret
+from dagcert import SearchDAG, certify_root_action, exact_rectangular_regret
 
 
 def main() -> None:

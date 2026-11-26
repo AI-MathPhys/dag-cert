@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Fetch, verify, and rebuild external benchmark datasets & Hugging Face models from public sources.
 
-All compact preprocessed benchmark archives (`joint_root_cert/benchmarks/data/*.npz`, 1.7 MB total,
-and `joint_root_cert/benchmarks/data/samegame/StandardTestset.txt`) are already bundled in the
-`joint_root_cert` package so offline verification, unit tests, and CPU experiments run out of the
+All compact preprocessed benchmark archives (`dagcert/benchmarks/data/*.npz`, 1.7 MB total,
+and `dagcert/benchmarks/data/samegame/StandardTestset.txt`) are already bundled in the
+`dagcert` package so offline verification, unit tests, and CPU experiments run out of the
 box without network access. Use this script to:
 
   1. Verify bundled data archives, optional Hugging Face model cache, and C++17 compiler (`--check`).
@@ -33,7 +33,7 @@ import shutil
 import subprocess
 import sys
 
-from joint_root_cert.benchmarks import DATA_DIR, SAMEGAME_PATH, WORFBENCH_DOMAINS
+from dagcert.benchmarks import DATA_DIR, SAMEGAME_PATH, WORFBENCH_DOMAINS
 
 ROOT = Path(__file__).resolve().parents[1]
 WORFBENCH_RAW_DIR = DATA_DIR / "worfbench_raw"

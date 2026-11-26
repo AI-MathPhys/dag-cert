@@ -3,7 +3,7 @@ requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "joint-root-cert"
+name = "dagcert"
 version = "1.0.0"
 description = "Joint Root Certification and Decision-Aware Bayesian Experimental Design on Search Graphs."
 readme = "README.md"
@@ -68,15 +68,15 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/AI-MathPhys/joint-root-cert"
-Repository = "https://github.com/AI-MathPhys/joint-root-cert"
+Homepage = "https://github.com/AI-MathPhys/dagcert"
+Repository = "https://github.com/AI-MathPhys/dagcert"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["joint_root_cert*"]
+include = ["dagcert*"]
 
 [tool.setuptools.package-data]
-joint_root_cert = [
+dagcert = [
   "benchmarks/data/*.npz",
   "benchmarks/data/samegame/*.txt",
   "_native/*.cpp",

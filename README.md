@@ -1,11 +1,11 @@
-# Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs (`joint-root-cert`)
+# Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs (`dagcert`)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
 [![Manuscript](https://img.shields.io/badge/Manuscript-PDF-red.svg)](manuscript/Joint_cert_manuscript.pdf)
 [![Lean 4](https://img.shields.io/badge/Formalization-Lean%204-purple.svg)](lean/)
 
-Installable Python library (`joint_root_cert`), full experimental suite (`experiment/`), bundled benchmark datasets, SHA-256-verified run archives (`results/`), Lean 4 formalizations (`lean/`), and complete reproduction scripts for **Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs**.
+Installable Python library (`dagcert`), full experimental suite (`experiment/`), bundled benchmark datasets, SHA-256-verified run archives (`results/`), Lean 4 formalizations (`lean/`), and complete reproduction scripts for **Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs**.
 
 - **Manuscript:** [`manuscript/Joint_cert_manuscript.pdf`](manuscript/Joint_cert_manuscript.pdf) (LaTeX source: [`manuscript/joint_cert_manuscript.tex`](manuscript/joint_cert_manuscript.tex))
 - **Artifact-to-paper map:** [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) maps every table (Tables 1–69) and figure (Figures 1–15) to its archived logs and reproduction command — **100% coverage with zero missing experiments**.
@@ -27,7 +27,7 @@ In sequential decision-making, an initial commitment can be certified as $\varep
 
 > A commitment can be invalidated only by an *excluded* terminal $z \notin S(a)$ that beats *every retained continuation* $y \in S(a)$ by more than $\varepsilon$ under the *same* plausible environment.
 
-Key methodological contributions implemented in `joint_root_cert`:
+Key methodological contributions implemented in `dagcert`:
 
 1. **Structural sharing (exact outside-support regret):** Evaluating all outcomes under a single common environment cancels shared continuations, replacing loose marginal action-value bounds with exact outside-vs-inside certificates.
 2. **Statistical sharing (sparse ellipsoidal dual & CD-Joint):** Under correlated Gaussian or fixed-feature uncertainty sets, worst-case decision regret admits an exact sparse conic dual (supported on at most $d+1$ inside witnesses). **CD-Joint** (Contrast-Directed Joint acquisition) targets the variance of the active outside–inside contrast, exploiting even low-valued but informative off-witness proxies while safeguarding against inside-witness stalling.
@@ -39,11 +39,11 @@ Key methodological contributions implemented in `joint_root_cert`:
 
 Tested on Python 3.10–3.13 (Linux and macOS; pure-Python paths also run on Windows).
 
-### 1. Install `joint_root_cert`
+### 1. Install `dagcert`
 
 ```bash
-git clone https://github.com/AI-MathPhys/joint-root-cert.git
-cd joint-root-cert
+git clone https://github.com/AI-MathPhys/dagcert.git
+cd dagcert
 
 python3 -m venv .venv
 source .venv/bin/activate   # Windows PowerShell: .\.venv\Scripts\Activate.ps1
@@ -56,13 +56,13 @@ python -m pip install -e ".[dev,audit]"   # pytest + CVXPY/Clarabel independent 
 python -m pip install -e ".[all]"         # adds PyTorch / Transformers for live Qwen3-0.6B suites
 ```
 
-> **Native C++17 accelerators (optional, automatic):** If `g++` or `clang++` (or `$CXX`) is on `PATH`, the library automatically compiles and caches four `-O3` C++17 shared libraries in `joint_root_cert/_native/` (exact correlated KG, outward-certified branch-and-bound for unknown-variance tracking, graph-maintenance kernels, and SameGame playouts). Every accelerator has a bit-parity pure-Python fallback.
+> **Native C++17 accelerators (optional, automatic):** If `g++` or `clang++` (or `$CXX`) is on `PATH`, the library automatically compiles and caches four `-O3` C++17 shared libraries in `dagcert/_native/` (exact correlated KG, outward-certified branch-and-bound for unknown-variance tracking, graph-maintenance kernels, and SameGame playouts). Every accelerator has a bit-parity pure-Python fallback.
 
 ### 2. Minimal Library Usage
 
 ```python
 import numpy as np
-from joint_root_cert import (
+from dagcert import (
     SearchDAG,
     certify_root_action,
     exact_rectangular_regret,
@@ -101,18 +101,18 @@ for policy in ("cd_joint", "gp_os", "kg"):
     print(f"{policy:9s} | certified={res.certified} | action={res.action} | evals={res.steps}")
 ```
 
-### 3. Library Architecture (`joint_root_cert/`)
+### 3. Library Architecture (`dagcert/`)
 
 | Module | Paper Concepts | Key Public Exports |
 |---|---|---|
-| [`joint_root_cert/graph.py`](joint_root_cert/graph.py) | Finite all-MAX search DAG, shared root supports, support overlap | `SearchDAG` (`.from_supports`, `.root_supports`, `.root_regrets`, `.support_overlap_matrix`), `DAG`, `Problem`, `SupportStructure` |
-| [`joint_root_cert/certificates.py`](joint_root_cert/certificates.py) | Exact rectangular regret, conic ellipsoidal dual, dual witness covers, bounded residuals | `exact_rectangular_regret`, `JointEllipsoidCertifier`, `check_ellipsoid_stopping`, `DualWitnessCovers`, `CanonicalIntervals`, `NestedIntervals`, `RobustAwareJointCertifier` |
-| [`joint_root_cert/posteriors.py`](joint_root_cert/posteriors.py) | Conjugate Gaussian posterior, contrast rank $r$, $\sqrt{\chi^2_{r,1-\delta}}$, valid anytime posterior-risk MC | `SharedGaussianPosterior`, `contrast_rank_of_kernel`, `chi2_credible_beta`, `contrast_ellipsoid_coverage`, `eval_direct_posterior_risk_valid` |
-| [`joint_root_cert/acquisition.py`](joint_root_cert/acquisition.py) | Decision-aware BED & BO baselines under matched posteriors | `certify_root_action`, `MatchedModelBEDSession`, `CDJointPolicy`, `CorrelatedKGPolicy`, `GPOSPolicy`, `BayesianVOIPolicy`, `GPUCBPolicy`, `GPTSPolicy`, `NoisyGPEIPolicy` |
-| [`joint_root_cert/tracking.py`](joint_root_cert/tracking.py) | Optimal information tracking ($T_*^\varepsilon$), unknown-variance sparse V34 tracker | `RegularizedInfoTrackerSession`, `run_v34_tracker`, `CppV34BnBRunner`, `compute_characteristic_rate`, `solve_action_design_certified` |
-| [`joint_root_cert/search.py`](joint_root_cert/search.py) | Passive trajectory-coupled UCT/PUCT certification monitors | `TrajectoryCoupledUCT`, `RootPUCT`, `RecursivePUCT`, `CertifiedSearchSession`, `CppKernelRunner` |
-| [`joint_root_cert/benchmarks/`](joint_root_cert/benchmarks/) | Bundled synthetic, GB1/TmTrpB protein, WorFBench workflow & SameGame DAG loaders | `OverlapCorrelationDAGProblem`, `OffWitnessProxyDAGProblem`, `GB1MutationCampaignProblem`, `TrpBMutationCampaignProblem`, `WorFBenchWorkflowProblem`, `load_standard_samegame_boards` |
-| [`joint_root_cert/_native/`](joint_root_cert/_native/) | Optional auto-compiled `-O3` C++17 accelerators | `_cpp_v12_kg.cpp`, `_cpp_v34_bnb.cpp`, `_cpp_kernels.cpp`, `_cpp_samegame.cpp` |
+| [`dagcert/graph.py`](dagcert/graph.py) | Finite all-MAX search DAG, shared root supports, support overlap | `SearchDAG` (`.from_supports`, `.root_supports`, `.root_regrets`, `.support_overlap_matrix`), `DAG`, `Problem`, `SupportStructure` |
+| [`dagcert/certificates.py`](dagcert/certificates.py) | Exact rectangular regret, conic ellipsoidal dual, dual witness covers, bounded residuals | `exact_rectangular_regret`, `JointEllipsoidCertifier`, `check_ellipsoid_stopping`, `DualWitnessCovers`, `CanonicalIntervals`, `NestedIntervals`, `RobustAwareJointCertifier` |
+| [`dagcert/posteriors.py`](dagcert/posteriors.py) | Conjugate Gaussian posterior, contrast rank $r$, $\sqrt{\chi^2_{r,1-\delta}}$, valid anytime posterior-risk MC | `SharedGaussianPosterior`, `contrast_rank_of_kernel`, `chi2_credible_beta`, `contrast_ellipsoid_coverage`, `eval_direct_posterior_risk_valid` |
+| [`dagcert/acquisition.py`](dagcert/acquisition.py) | Decision-aware BED & BO baselines under matched posteriors | `certify_root_action`, `MatchedModelBEDSession`, `CDJointPolicy`, `CorrelatedKGPolicy`, `GPOSPolicy`, `BayesianVOIPolicy`, `GPUCBPolicy`, `GPTSPolicy`, `NoisyGPEIPolicy` |
+| [`dagcert/tracking.py`](dagcert/tracking.py) | Optimal information tracking ($T_*^\varepsilon$), unknown-variance sparse V34 tracker | `RegularizedInfoTrackerSession`, `run_v34_tracker`, `CppV34BnBRunner`, `compute_characteristic_rate`, `solve_action_design_certified` |
+| [`dagcert/search.py`](dagcert/search.py) | Passive trajectory-coupled UCT/PUCT certification monitors | `TrajectoryCoupledUCT`, `RootPUCT`, `RecursivePUCT`, `CertifiedSearchSession`, `CppKernelRunner` |
+| [`dagcert/benchmarks/`](dagcert/benchmarks/) | Bundled synthetic, GB1/TmTrpB protein, WorFBench workflow & SameGame DAG loaders | `OverlapCorrelationDAGProblem`, `OffWitnessProxyDAGProblem`, `GB1MutationCampaignProblem`, `TrpBMutationCampaignProblem`, `WorFBenchWorkflowProblem`, `load_standard_samegame_boards` |
+| [`dagcert/_native/`](dagcert/_native/) | Optional auto-compiled `-O3` C++17 accelerators | `_cpp_v12_kg.cpp`, `_cpp_v34_bnb.cpp`, `_cpp_kernels.cpp`, `_cpp_samegame.cpp` |
 
 Standalone runnable library examples live in [`examples/`](examples/):
 
@@ -146,7 +146,7 @@ Every main-paper and appendix result is backed by executable code in `experiment
 
 ## Reproducing the Paper (`experiment/`)
 
-All experiments rely directly on the installed `joint_root_cert` package and are organized into three domain folders mirroring Section 3 of the paper, plus unified plotting (`experiment/plots/`) and CLI (`experiment/run_all.py`):
+All experiments rely directly on the installed `dagcert` package and are organized into three domain folders mirroring Section 3 of the paper, plus unified plotting (`experiment/plots/`) and CLI (`experiment/run_all.py`):
 
 - [`experiment/simulated/`](experiment/simulated/) — Section 3.1 + Appendices G, J, L (27 suites + `passive_uct/` v1 archive)
 - [`experiment/protein_engineering/`](experiment/protein_engineering/) — Section 3.2 + Appendix H (10 GB1 & TmTrpB suites)
@@ -206,15 +206,15 @@ See [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) for the complete table-by-table m
 
 ## External Data & Models (`scripts/fetch_data.py`)
 
-Four compact preprocessed `.npz` archives (`joint_root_cert/benchmarks/data/`, 1.7 MB) and the 20-board SameGame set are bundled in Git so installation, verification, unit tests, and all CPU experiments run offline. Every upstream source can also be downloaded and rebuilt from scratch:
+Four compact preprocessed `.npz` archives (`dagcert/benchmarks/data/`, 1.7 MB) and the 20-board SameGame set are bundled in Git so installation, verification, unit tests, and all CPU experiments run offline. Every upstream source can also be downloaded and rebuilt from scratch:
 
 | Dataset / Asset | Upstream Source | Bundled File | Rebuild Command |
 |---|---|---|---|
-| GB1 (149,361 four-site variants; Wu et al. 2016) | [FLIP](https://github.com/J-SNACKKB/FLIP) | `joint_root_cert/benchmarks/data/gb1_wu2016_measured.npz` | `python scripts/fetch_data.py --proteins` |
-| TmTrpB (159,129 four-site variants; Johnston et al. 2024) | [Zenodo 15203754](https://zenodo.org/records/15203754) | `joint_root_cert/benchmarks/data/trpb_johnston2024_measured.npz` | `python scripts/fetch_data.py --proteins` |
-| WorFBench raw trajectories (4 domains) | [zjunlp/WorfBench](https://github.com/zjunlp/WorfBench) | cached in `joint_root_cert/benchmarks/data/worfbench_raw/` | `python scripts/fetch_data.py --worfbench-tasks` |
+| GB1 (149,361 four-site variants; Wu et al. 2016) | [FLIP](https://github.com/J-SNACKKB/FLIP) | `dagcert/benchmarks/data/gb1_wu2016_measured.npz` | `python scripts/fetch_data.py --proteins` |
+| TmTrpB (159,129 four-site variants; Johnston et al. 2024) | [Zenodo 15203754](https://zenodo.org/records/15203754) | `dagcert/benchmarks/data/trpb_johnston2024_measured.npz` | `python scripts/fetch_data.py --proteins` |
+| WorFBench raw trajectories (4 domains) | [zjunlp/WorfBench](https://github.com/zjunlp/WorfBench) | cached in `dagcert/benchmarks/data/worfbench_raw/` | `python scripts/fetch_data.py --worfbench-tasks` |
 | `Qwen/Qwen3-0.6B` & `Qwen/Qwen3-Embedding-0.6B` | Hugging Face Hub | local Hugging Face cache | `python scripts/fetch_data.py --models` |
-| WorFBench $81\times 64$ & $81\times 32$ score matrices | generated from above | `joint_root_cert/benchmarks/data/worfbench_qwen3_*.npz` | `python scripts/fetch_data.py --rebuild-worfbench` |
+| WorFBench $81\times 64$ & $81\times 32$ score matrices | generated from above | `dagcert/benchmarks/data/worfbench_qwen3_*.npz` | `python scripts/fetch_data.py --rebuild-worfbench` |
 
 Pass `--out-dir build/rebuilt_data` to rebuild alongside the bundled files for comparison, or `--all` to fetch everything. After caching models and trajectories, set `HF_HUB_OFFLINE=1` to run live LLM suites offline.
 
@@ -236,8 +236,8 @@ Build with `cd lean && ./build.sh` (requires Lean 4 / `lake` matching [`lean/lea
 ## Repository Structure
 
 ```text
-joint-root-cert/
-├── joint_root_cert/                 # Installable Python library (`pip install -e .`)
+dagcert/
+├── dagcert/                         # Installable Python library (`pip install dagcert` / `-e .`)
 │   ├── graph.py                     # SearchDAG, SupportStructure, regret & overlap utilities
 │   ├── certificates.py              # Rectangular, conic ellipsoidal, witness-cover & DF bounds
 │   ├── posteriors.py                # SharedGaussianPosterior, contrast rank, chi2 beta, post.-risk MC
@@ -258,8 +258,8 @@ joint-root-cert/
 ├── results/                         # SHA-256-verified run archives, CSV summaries & manifests
 ├── figures/                         # README overview PNG + all 7 `supp_*.pdf` manuscript figures
 ├── scripts/fetch_data.py            # Offline verifier & upstream data/model rebuild utility
-├── lean/                            # Lean 4 + Mathlib formal proofs (untouched)
-├── manuscript/                      # Paper PDF & LaTeX source (untouched)
+├── lean/                            # Lean 4 + Mathlib formal proofs
+├── manuscript/                      # Paper PDF & LaTeX source
 ├── reference/tables/                # Reference LaTeX tables for passive UCT archive
 ├── pyproject.toml                   # Package metadata and optional extras
 ├── CITATION.cff                     # Machine-readable citation metadata
@@ -278,13 +278,13 @@ joint-root-cert/
 
 ## Citation
 
-If you use `joint_root_cert` or this codebase in your research, please cite the accompanying manuscript (see also [`CITATION.cff`](CITATION.cff)):
+If you use `dagcert` or this codebase in your research, please cite the accompanying manuscript (see also [`CITATION.cff`](CITATION.cff)):
 
 ```bibtex
-@misc{pelissier2026jointrootcert,
+@misc{pelissier2026dagcert,
   title  = {Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs},
   author = {P{\'e}lissier, Aur{\'e}lien},
   year   = {2026},
-  url    = {https://github.com/AI-MathPhys/joint-root-cert}
+  url    = {https://github.com/AI-MathPhys/dagcert}
 }
 ```

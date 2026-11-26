@@ -8,7 +8,7 @@ import hashlib
 from pathlib import Path
 import random
 
-from joint_root_cert._core.graph import DAG
+from dagcert._core.graph import DAG
 
 HASH = "d20270c2d3ddff9add5d77fa85593574f85de7fbf8b0db0729e6d8c85b2a4d35"
 STANDARD_PATH = Path(__file__).resolve().parents[1] / "benchmarks" / "data" / "samegame" / "StandardTestset.txt"

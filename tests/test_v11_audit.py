@@ -6,7 +6,7 @@ import unittest
 
 import numpy as np
 
-from joint_root_cert import SupportStructure
+from dagcert import SupportStructure
 from experiment.protein_engineering.exp_validity_ablation import _cp_upper_95, _paired_bootstrap_ci
 from experiment.agentic_workflows.exp_live_qwen3_36campaigns import (
     BASE_SPECS,

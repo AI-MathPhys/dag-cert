@@ -3,7 +3,7 @@
 
 Reads the public FLIP / Wu et al. (2016) `four_mutations_full_data.csv.zip` archive
 (149,361 experimentally measured 4-site GB1 variants across positions V39, D40, G41, V54)
-and writes `joint_root_cert/benchmarks/data/gb1_wu2016_measured.npz` storing:
+and writes `dagcert/benchmarks/data/gb1_wu2016_measured.npz` storing:
   - variants: U4 array of 149,361 4-letter amino-acid strings
   - fitness:  float32 array of experimental binding fitness scores (WT VDGV = 1.0, max = 8.761966)
   - count_in: int32 array of input sequencing read counts
@@ -19,7 +19,7 @@ import numpy as np
 import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_OUT = REPO_ROOT / "joint_root_cert" / "benchmarks" / "data" / "gb1_wu2016_measured.npz"
+DEFAULT_OUT = REPO_ROOT / "dagcert" / "benchmarks" / "data" / "gb1_wu2016_measured.npz"
 FLIP_URL = "https://raw.githubusercontent.com/J-SNACKKB/FLIP/main/splits/gb1/four_mutations_full_data.csv.zip"
 
 

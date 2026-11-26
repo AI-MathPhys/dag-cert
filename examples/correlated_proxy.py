@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from joint_root_cert import certify_root_action
-from joint_root_cert.benchmarks import MotivationalProxyDAGProblem
+from dagcert import certify_root_action
+from dagcert.benchmarks import MotivationalProxyDAGProblem
 
 
 def main() -> None:

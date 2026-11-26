@@ -50,23 +50,23 @@ import time
 import numpy as np
 from scipy.stats import beta as beta_dist
 
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert._core.v6_bayesian_opt import _AA_VEC, protein_sequence_kernel
-from joint_root_cert.benchmarks import (
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert._core.v6_bayesian_opt import _AA_VEC, protein_sequence_kernel
+from dagcert.benchmarks import (
     GB1MutationCampaignProblem,
     TrpBMutationCampaignProblem,
     real_world_problem_diagnostics,
 )
-from joint_root_cert import (
+from dagcert import (
     CorrelationAwareCertSession,
     DiscreteGPPosteriorModel,
     LinearFeatureModel,
 )
-from joint_root_cert.benchmarks import (
+from dagcert.benchmarks import (
     GaussianPriorDAGProblem,
     MisspecifiedLinearDAGProblem,
 )
-from joint_root_cert import (
+from dagcert import (
     CalibratedGPPosteriorModel,
     SmartHybridCertSession,
 )

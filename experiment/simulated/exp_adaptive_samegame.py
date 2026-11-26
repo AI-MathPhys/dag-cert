@@ -35,15 +35,15 @@ import time
 
 import numpy as np
 
-from joint_root_cert._core.v4_baselines import (
+from dagcert._core.v4_baselines import (
     VarDEDAGSession,
     samegame_midgame_case,
 )
-from joint_root_cert._core.v5_hybrid_and_os import (
+from dagcert._core.v5_hybrid_and_os import (
     HybridWitnessDAGLUCBSession,
     noncontainment_star_dag,
 )
-from joint_root_cert import AdaptiveHardRegimeSession
+from dagcert import AdaptiveHardRegimeSession
 from experiment.simulated.exp_inside_witness import (
     _decoy_trap_dag,
     _heterogeneous_support_dag,

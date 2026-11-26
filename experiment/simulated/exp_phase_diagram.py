@@ -31,14 +31,14 @@ import time
 
 import numpy as np
 
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert.tracking import FlatLUCBSession
-from joint_root_cert import (
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert.tracking import FlatLUCBSession
+from dagcert import (
     CorrelationAwareCertSession,
     LinearFeatureModel,
     SupportStructure,
 )
-from joint_root_cert.benchmarks import OverlapCorrelationDAGProblem
+from dagcert.benchmarks import OverlapCorrelationDAGProblem
 
 
 ROOT = Path(__file__).resolve().parents[2]

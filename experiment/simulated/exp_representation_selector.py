@@ -27,17 +27,17 @@ import random
 import statistics
 import time
 
-from joint_root_cert._core.certified_uct import TranspositionUCT, UCTWork
-from joint_root_cert.search import leaf_order, quotient
-from joint_root_cert import DAG, Problem
-from joint_root_cert.benchmarks import (
+from dagcert._core.certified_uct import TranspositionUCT, UCTWork
+from dagcert.search import leaf_order, quotient
+from dagcert import DAG, Problem
+from dagcert.benchmarks import (
     contiguous_window_dag,
     overlap_dag,
     samegame_depth_case,
     samegame_standard_endgame,
     structural_diagnostics,
 )
-from joint_root_cert.certificates import (
+from dagcert.certificates import (
     ChargedDualCovers,
     DirectGraphRegretMonitor,
     FactorizedRegretMonitor,

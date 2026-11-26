@@ -36,7 +36,7 @@ import numpy as np
 import requests
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = REPO_ROOT / "joint_root_cert" / "benchmarks" / "data"
+DATA_DIR = REPO_ROOT / "dagcert" / "benchmarks" / "data"
 WORFBENCH_RAW_DIR = DATA_DIR / "worfbench_raw"
 
 DOMAINS = ("toolbench", "toolalpaca", "seal_tools", "webshop")

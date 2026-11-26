@@ -57,11 +57,11 @@ import requests
 from scipy.linalg import cho_factor, cho_solve
 from scipy.stats import beta as beta_dist
 
-from joint_root_cert import DAG, Problem
-from joint_root_cert.search import splitmix_uniform01
-from joint_root_cert import DualWitnessCovers, HybridWitnessDAGLUCBSession
-from joint_root_cert import SupportStructure
-from joint_root_cert import (
+from dagcert import DAG, Problem
+from dagcert.search import splitmix_uniform01
+from dagcert import DualWitnessCovers, HybridWitnessDAGLUCBSession
+from dagcert import SupportStructure
+from dagcert import (
     CalibratedGPPosteriorModel,
     RobustAwareJointCertifier,
     SmartHybridCertSession,

@@ -5,8 +5,8 @@ from collections.abc import Mapping, Sequence
 
 import numpy as np
 
-from joint_root_cert._core.graph import DAG, LeafOracle, Problem, feature_lattice, trap
-from joint_root_cert._core.v7_bayesian_ucd import SupportStructure
+from dagcert._core.graph import DAG, LeafOracle, Problem, feature_lattice, trap
+from dagcert._core.v7_bayesian_ucd import SupportStructure
 
 
 class SearchDAG(DAG):

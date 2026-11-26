@@ -1,4 +1,4 @@
-"""Unit tests for the public `joint_root_cert` Python library API."""
+"""Unit tests for the public `dagcert` Python library API."""
 from __future__ import annotations
 
 import math
@@ -6,7 +6,7 @@ import unittest
 
 import numpy as np
 
-from joint_root_cert import (
+from dagcert import (
     BayesianVOIPolicy,
     CDJointPolicy,
     CorrelatedKGPolicy,
@@ -22,7 +22,7 @@ from joint_root_cert import (
     exact_rectangular_regret,
     make_policy,
 )
-from joint_root_cert.benchmarks import (
+from dagcert.benchmarks import (
     GB1_TEMPLATES,
     TRPB_TEMPLATES,
     GB1MutationCampaignProblem,
@@ -31,7 +31,7 @@ from joint_root_cert.benchmarks import (
 )
 
 
-class TestJointRootCertLibraryAPI(unittest.TestCase):
+class TestDagCertLibraryAPI(unittest.TestCase):
     def test_search_dag_from_supports_and_regrets(self) -> None:
         dag = SearchDAG.from_supports([[0, 1], [1, 2]], action_labels=["a1", "a2"], leaf_labels=["z1", "zAB", "z2"])
         sups = dag.root_supports()

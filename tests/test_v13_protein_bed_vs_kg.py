@@ -6,10 +6,10 @@ import unittest
 
 import numpy as np
 
-from joint_root_cert.benchmarks import protein_sequence_kernel
-from joint_root_cert.benchmarks import GB1MutationCampaignProblem, TrpBMutationCampaignProblem
-from joint_root_cert import JointEllipsoidCertifier, SupportStructure
-from joint_root_cert import SharedGaussianPosterior, correlated_kg_log_scores
+from dagcert.benchmarks import protein_sequence_kernel
+from dagcert.benchmarks import GB1MutationCampaignProblem, TrpBMutationCampaignProblem
+from dagcert import JointEllipsoidCertifier, SupportStructure
+from dagcert import SharedGaussianPosterior, correlated_kg_log_scores
 from experiment.protein_engineering.exp_matched_bed_vs_kg import (
     _check_bayes_ellipsoid,
     _nominal_gp_beta,

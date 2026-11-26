@@ -61,15 +61,15 @@ import time
 import numpy as np
 from scipy.stats import beta as beta_dist
 
-from joint_root_cert import DualWitnessCovers, HybridWitnessDAGLUCBSession
-from joint_root_cert.benchmarks import protein_sequence_kernel
-from joint_root_cert.benchmarks import (
+from dagcert import DualWitnessCovers, HybridWitnessDAGLUCBSession
+from dagcert.benchmarks import protein_sequence_kernel
+from dagcert.benchmarks import (
     GB1MutationCampaignProblem,
     TrpBMutationCampaignProblem,
     real_world_problem_diagnostics,
 )
-from joint_root_cert import JointEllipsoidCertifier, SupportStructure
-from joint_root_cert import (
+from dagcert import JointEllipsoidCertifier, SupportStructure
+from dagcert import (
     SharedGaussianPosterior,
     correlated_kg_log_scores,
 )

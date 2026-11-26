@@ -8,8 +8,8 @@ from pathlib import Path
 import random
 
 from .graph import DAG, Problem
-from joint_root_cert._core._samegame_engine import Game, Moves, finish
-from joint_root_cert._core._uct_families import binary_root
+from dagcert._core._samegame_engine import Game, Moves, finish
+from dagcert._core._uct_families import binary_root
 
 
 ROOT = Path(__file__).resolve().parents[1]

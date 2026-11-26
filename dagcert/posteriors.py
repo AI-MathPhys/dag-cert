@@ -8,10 +8,10 @@ import numpy as np
 from scipy.linalg import cho_factor, cho_solve
 from scipy.stats import beta as beta_dist, chi2
 
-from joint_root_cert._core.v6_bayesian_opt import DiscreteGPSurrogate
-from joint_root_cert._core.v7_bayesian_ucd import DiscreteGPPosteriorModel, LinearFeatureModel
-from joint_root_cert._core.v8_unified_experiments import CalibratedGPPosteriorModel
-from joint_root_cert._core.v12_bed_acquisition import (
+from dagcert._core.v6_bayesian_opt import DiscreteGPSurrogate
+from dagcert._core.v7_bayesian_ucd import DiscreteGPPosteriorModel, LinearFeatureModel
+from dagcert._core.v8_unified_experiments import CalibratedGPPosteriorModel
+from dagcert._core.v12_bed_acquisition import (
     SharedGaussianPosterior,
     clopper_pearson_upper,
     estimate_posterior_root_risks,

@@ -29,13 +29,13 @@ import random
 import statistics
 import time
 
-from joint_root_cert import CertifiedSearchSession
-from joint_root_cert.benchmarks import (
+from dagcert import CertifiedSearchSession
+from dagcert.benchmarks import (
     overlap_dag,
     puct_noisy_funnel,
     puct_root_funnel,
 )
-from joint_root_cert.search import CppKernelRunner, SplitMixProblem
+from dagcert.search import CppKernelRunner, SplitMixProblem
 from experiment.simulated.passive_uct.uct_backup_families import funnel
 from experiment.simulated.passive_uct.uct_frontier_families import coded
 

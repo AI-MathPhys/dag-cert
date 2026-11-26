@@ -5,11 +5,11 @@ import unittest
 
 import numpy as np
 
-from joint_root_cert.benchmarks import noncontainment_star_dag
-from joint_root_cert.benchmarks import real_world_problem_diagnostics
-from joint_root_cert import LinearFeatureModel, SupportStructure
-from joint_root_cert.benchmarks import MisspecifiedLinearDAGProblem, MotivationalProxyDAGProblem, ScalingDAGProblem
-from joint_root_cert._core.v8_unified_experiments import (
+from dagcert.benchmarks import noncontainment_star_dag
+from dagcert.benchmarks import real_world_problem_diagnostics
+from dagcert import LinearFeatureModel, SupportStructure
+from dagcert.benchmarks import MisspecifiedLinearDAGProblem, MotivationalProxyDAGProblem, ScalingDAGProblem
+from dagcert._core.v8_unified_experiments import (
     AdaptiveHardRegimeSession,
     DeconfoundedOverlapCorrelationProblem,
     RegularizedInfoTrackerSession,

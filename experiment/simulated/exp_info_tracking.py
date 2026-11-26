@@ -45,20 +45,20 @@ import time
 
 import numpy as np
 
-from joint_root_cert import DAG, Problem
-from joint_root_cert import (
+from dagcert import DAG, Problem
+from dagcert import (
     CorrelationAwareCertSession,
     LinearFeatureModel,
     SupportStructure,
     compute_characteristic_rate,
 )
-from joint_root_cert._core.v7_benchmarks import (
+from dagcert._core.v7_benchmarks import (
     MotivationalProxyDAGProblem,
     MultiAnswerCommitmentDAGProblem,
     ScalingDAGProblem,
     _GaussianOracle,
 )
-from joint_root_cert.tracking import (
+from dagcert.tracking import (
     RegularizedInfoTrackerSession,
     fast_characteristic_rate,
     verify_characteristic_rate_independently,

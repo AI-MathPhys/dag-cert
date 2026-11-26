@@ -30,9 +30,9 @@ import statistics
 import time
 import tracemalloc
 
-from joint_root_cert import DAG, Problem
-from joint_root_cert import CertifiedSearchSession
-from joint_root_cert.benchmarks import overlap_dag, puct_noisy_funnel, puct_root_funnel
+from dagcert import DAG, Problem
+from dagcert import CertifiedSearchSession
+from dagcert.benchmarks import overlap_dag, puct_noisy_funnel, puct_root_funnel
 from experiment.simulated.passive_uct.uct_backup_families import binary_root
 from experiment.simulated.passive_uct.uct_frontier_families import coded
 

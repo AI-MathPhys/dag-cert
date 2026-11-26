@@ -45,17 +45,17 @@ from typing import Any
 
 import numpy as np
 
-from joint_root_cert import DAG, Problem
-from joint_root_cert.benchmarks import protein_sequence_kernel
-from joint_root_cert import (
+from dagcert import DAG, Problem
+from dagcert.benchmarks import protein_sequence_kernel
+from dagcert import (
     CorrelationAwareCertSession,
     LinearFeatureModel,
 )
-from joint_root_cert import (
+from dagcert import (
     CalibratedGPPosteriorModel,
     SmartHybridCertSession,
 )
-from joint_root_cert._core.v9_v34_tracker import (
+from dagcert._core.v9_v34_tracker import (
     CppV34BnBRunner,
     HeteroscedasticDAGProblem,
     IntrinsicGaussianTape,
@@ -69,8 +69,8 @@ from experiment.agentic_workflows.exp_worfbench_unseen_live import _build_workfl
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT_DIR = ROOT / "results/bayesian_ucd_v1/v10_exp2_real_heteroscedastic_v34"
-GB1_NPZ = ROOT / "joint_root_cert/benchmarks/data/gb1_wu2016_measured.npz"
-WF_NPZ = ROOT / "joint_root_cert/benchmarks/data/worfbench_qwen3_81x64.npz"
+GB1_NPZ = ROOT / "dagcert/benchmarks/data/gb1_wu2016_measured.npz"
+WF_NPZ = ROOT / "dagcert/benchmarks/data/worfbench_qwen3_81x64.npz"
 
 _GB1_CACHE: dict[str, tuple[int, int, float]] | None = None
 _WF_CACHE: dict[str, Any] | None = None

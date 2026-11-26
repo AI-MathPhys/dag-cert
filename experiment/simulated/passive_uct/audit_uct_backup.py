@@ -4,8 +4,8 @@ import hashlib
 import json
 import struct
 
-from joint_root_cert._core.certified_uct import TranspositionUCT
-from joint_root_cert._core.onpolicy_backup import MonitoredUCT
+from dagcert._core.certified_uct import TranspositionUCT
+from dagcert._core.onpolicy_backup import MonitoredUCT
 from experiment.simulated.passive_uct.uct_backup_benchmark import DEST,ROOT,CASES,SEEDS,METHODS,digest
 from experiment.simulated.passive_uct.uct_backup_families import fixture
 

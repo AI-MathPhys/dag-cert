@@ -4,17 +4,17 @@ from __future__ import annotations
 import random
 import unittest
 
-from joint_root_cert._core.certified_uct import UCTWork
-from joint_root_cert import DAG
-from joint_root_cert import CertifiedSearchSession
-from joint_root_cert.benchmarks import (
+from dagcert._core.certified_uct import UCTWork
+from dagcert import DAG
+from dagcert import CertifiedSearchSession
+from dagcert.benchmarks import (
     contiguous_window_dag,
     overlap_dag,
     puct_root_funnel,
     samegame_standard_endgame,
 )
-from joint_root_cert import NestedIntervals
-from joint_root_cert._core.v3_extensions import (
+from dagcert import NestedIntervals
+from dagcert._core.v3_extensions import (
     ActiveDAGLUCBSession,
     CppKernelRunner,
     SplitMixProblem,

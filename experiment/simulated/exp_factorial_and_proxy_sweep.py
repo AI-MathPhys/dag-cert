@@ -43,14 +43,14 @@ import time
 
 import numpy as np
 
-from joint_root_cert import DAG, Problem
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert import (
+from dagcert import DAG, Problem
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert import (
     CorrelationAwareCertSession,
     LinearFeatureModel,
 )
-from joint_root_cert._core.v7_benchmarks import _UniformBoundedOracle
-from joint_root_cert._core.v8_unified_experiments import (
+from dagcert._core.v7_benchmarks import _UniformBoundedOracle
+from dagcert._core.v8_unified_experiments import (
     CalibratedGPPosteriorModel,
     DeconfoundedOverlapCorrelationProblem,
     SmartHybridCertSession,

@@ -3,7 +3,7 @@
 
 Reads `TrpB4.csv` from the Arnold Lab SSMuLA archive (Zenodo record 15203754 /
 DOI 10.5281/zenodo.13910505), filters out nonsense stop-codon variants (`# Stop == 0`),
-and writes `joint_root_cert/benchmarks/data/trpb_johnston2024_measured.npz` storing all 159,129
+and writes `dagcert/benchmarks/data/trpb_johnston2024_measured.npz` storing all 159,129
 experimentally measured 4-site TmTrpB variants across active-site residues
 V183, F184, V227, and S228 (parent `VFVS` fitness = 0.408074, global max `AIKG` = 1.0).
 """
@@ -19,7 +19,7 @@ import pandas as pd
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_OUT = REPO_ROOT / "joint_root_cert" / "benchmarks" / "data" / "trpb_johnston2024_measured.npz"
+DEFAULT_OUT = REPO_ROOT / "dagcert" / "benchmarks" / "data" / "trpb_johnston2024_measured.npz"
 ZENODO_TAR_URL = "https://zenodo.org/api/records/15203754/files/data.tar.gz/content"
 
 

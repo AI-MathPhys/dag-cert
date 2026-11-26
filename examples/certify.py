@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import random
 
-from joint_root_cert import TrajectoryCoupledUCT
-from joint_root_cert.graph import DAG, Problem
+from dagcert import TrajectoryCoupledUCT
+from dagcert.graph import DAG, Problem
 
 
 class _BoundedProblem(Problem):

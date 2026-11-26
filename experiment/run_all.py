@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unified reproducibility CLI for AI-MathPhys/joint-root-cert.
+"""Unified reproducibility CLI for AI-MathPhys/dagcert.
 
 Covers ALL experiments in *Certify the Decision, Not the Outcome: Bayesian Experimental Design
 on Search Graphs*, organized into the paper's three experimental domains:
@@ -455,7 +455,7 @@ def main() -> None:
     p_b.add_argument("--domain", choices=("all", "simulated", "protein_engineering", "agentic_workflows"), default="all")
     p_b.add_argument("--only", choices=tuple(SUITE_BY_KEY.keys()), default=None)
     p_b.add_argument("--smoke", action="store_true", help="Fast non-destructive smoke mode writing to tempdir")
-    p_b.add_argument("--smoke-dir", type=Path, default=Path(tempfile.gettempdir()) / "joint_root_cert_smoke")
+    p_b.add_argument("--smoke-dir", type=Path, default=Path(tempfile.gettempdir()) / "dagcert_smoke")
 
     args = ap.parse_args()
     {

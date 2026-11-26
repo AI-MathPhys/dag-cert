@@ -1,32 +1,32 @@
 """Information-optimal, unknown-variance (V34), hybrid, and active exact-regret trackers."""
 from __future__ import annotations
 
-from joint_root_cert._core.v3_extensions import ActiveDAGLUCBSession
-from joint_root_cert._core.v4_baselines import (
+from dagcert._core.v3_extensions import ActiveDAGLUCBSession
+from dagcert._core.v4_baselines import (
     InsideWitnessDAGLUCBSession,
     LUCBMicroSession,
     UGapEMCTSSession,
     VarDEDAGSession,
 )
-from joint_root_cert._core.v5_hybrid_and_os import HybridWitnessDAGLUCBSession
-from joint_root_cert._core.v6_bayesian_opt import (
+from dagcert._core.v5_hybrid_and_os import HybridWitnessDAGLUCBSession
+from dagcert._core.v6_bayesian_opt import (
     GPBoxCertSession,
     GPEllipsoidCertSession,
     GPGuidedRootCertSession,
 )
-from joint_root_cert._core.v6_real_world import FlatLUCBSession
-from joint_root_cert._core.v7_bayesian_ucd import (
+from dagcert._core.v6_real_world import FlatLUCBSession
+from dagcert._core.v7_bayesian_ucd import (
     CorrelationAwareCertSession,
     compute_characteristic_rate,
 )
-from joint_root_cert._core.v8_unified_experiments import (
+from dagcert._core.v8_unified_experiments import (
     AdaptiveHardRegimeSession,
     RegularizedInfoTrackerSession,
     SmartHybridCertSession,
     fast_characteristic_rate,
     verify_characteristic_rate_independently,
 )
-from joint_root_cert._core.v9_v34_tracker import (
+from dagcert._core.v9_v34_tracker import (
     CertifiedDesignResult,
     CertifiedProjectionResult,
     ComponentPolyhedron,

@@ -6,9 +6,9 @@ import math
 
 import numpy as np
 
-from joint_root_cert._core.graph import DAG
-from joint_root_cert._core.retired_bounds import CanonicalIntervals, RetiredBounds
-from joint_root_cert._core.v2_monitors import (
+from dagcert._core.graph import DAG
+from dagcert._core.retired_bounds import CanonicalIntervals, RetiredBounds
+from dagcert._core.v2_monitors import (
     ChargedDualCovers,
     DirectGraphRegretMonitor,
     FactorizedRegretMonitor,
@@ -19,9 +19,9 @@ from joint_root_cert._core.v2_monitors import (
     brute_force_exact_regret,
     brute_force_marginal,
 )
-from joint_root_cert._core.v5_hybrid_and_os import DualWitnessCovers
-from joint_root_cert._core.v6_bayesian_opt import solve_ellipsoid_challenger
-from joint_root_cert._core.v7_bayesian_ucd import (
+from dagcert._core.v5_hybrid_and_os import DualWitnessCovers
+from dagcert._core.v6_bayesian_opt import solve_ellipsoid_challenger
+from dagcert._core.v7_bayesian_ucd import (
     ActionCertificate,
     ChallengerResult,
     CharacteristicRateResult,
@@ -36,7 +36,7 @@ from joint_root_cert._core.v7_bayesian_ucd import (
     solve_feature_challenger_dense_afw,
     solve_primal_ellipsoid_regret,
 )
-from joint_root_cert._core.v8_unified_experiments import (
+from dagcert._core.v8_unified_experiments import (
     RobustAwareJointCertifier,
     ScheduledConicCertifier,
 )

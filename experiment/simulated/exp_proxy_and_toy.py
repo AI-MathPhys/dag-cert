@@ -45,9 +45,9 @@ import time
 
 import numpy as np
 
-from joint_root_cert import DAG
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert._core.v7_bayesian_ucd import (
+from dagcert import DAG
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert._core.v7_bayesian_ucd import (
     CorrelationAwareCertSession,
     JointEllipsoidCertifier,
     LinearFeatureModel,
@@ -55,7 +55,7 @@ from joint_root_cert._core.v7_bayesian_ucd import (
     compute_characteristic_rate,
     solve_primal_ellipsoid_regret,
 )
-from joint_root_cert.benchmarks import MotivationalProxyDAGProblem
+from dagcert.benchmarks import MotivationalProxyDAGProblem
 
 
 ROOT = Path(__file__).resolve().parents[2]

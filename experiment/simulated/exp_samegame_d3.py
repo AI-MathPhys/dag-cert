@@ -30,14 +30,14 @@ import statistics
 import time
 import tracemalloc
 
-from joint_root_cert._core.certified_uct import TranspositionUCT
-from joint_root_cert import CertifiedSearchSession
-from joint_root_cert.benchmarks import (
+from dagcert._core.certified_uct import TranspositionUCT
+from dagcert import CertifiedSearchSession
+from dagcert.benchmarks import (
     samegame_depth_case,
     samegame_standard_endgame,
     structural_diagnostics,
 )
-from joint_root_cert.certificates import ChargedDualCovers, MarginalGraphMonitor
+from dagcert.certificates import ChargedDualCovers, MarginalGraphMonitor
 
 
 ROOT = Path(__file__).resolve().parents[2]

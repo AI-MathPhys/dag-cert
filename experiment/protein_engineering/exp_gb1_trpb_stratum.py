@@ -41,15 +41,15 @@ import time
 
 import numpy as np
 
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert._core.v6_bayesian_opt import GPGuidedRootCertSession, protein_sequence_kernel
-from joint_root_cert._core.v6_real_world import (
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert._core.v6_bayesian_opt import GPGuidedRootCertSession, protein_sequence_kernel
+from dagcert._core.v6_real_world import (
     FlatLUCBSession,
     GB1MutationCampaignProblem,
     TrpBMutationCampaignProblem,
     real_world_problem_diagnostics,
 )
-from joint_root_cert import (
+from dagcert import (
     CorrelationAwareCertSession,
     DiscreteGPPosteriorModel,
 )

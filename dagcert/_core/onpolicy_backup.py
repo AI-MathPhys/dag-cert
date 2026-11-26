@@ -13,7 +13,7 @@ class CompiledCovers:
         count = len(graph.leaves)
         self.size = 1 << (count-1).bit_length()
         self.rank = {leaf:j for j,leaf in enumerate(graph.leaves)}
-        from joint_root_cert._core._interval_utils import CountTree, merge
+        from dagcert._core._interval_utils import CountTree, merge
         intervals = [()] * len(graph)
         w.initialization += len(graph)+2*count
         for v in reversed(graph.order):

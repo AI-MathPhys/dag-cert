@@ -30,14 +30,14 @@ import random
 import statistics
 import time
 
-from joint_root_cert import CertifiedSearchSession
-from joint_root_cert.benchmarks import (
+from dagcert import CertifiedSearchSession
+from dagcert.benchmarks import (
     contiguous_window_dag,
     overlap_dag,
     samegame_depth_case,
     samegame_standard_endgame,
 )
-from joint_root_cert import ActiveDAGLUCBSession
+from dagcert import ActiveDAGLUCBSession
 from experiment.simulated.passive_uct.uct_frontier_families import coded
 
 

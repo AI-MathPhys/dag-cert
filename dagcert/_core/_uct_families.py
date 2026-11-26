@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import random
 
-from joint_root_cert._core.backprop_problems import reconvergent
-from joint_root_cert._core.graph import DAG, Problem, feature_lattice
+from dagcert._core.backprop_problems import reconvergent
+from dagcert._core.graph import DAG, Problem, feature_lattice
 
 
 def binary_root(rows, nodes):

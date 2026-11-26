@@ -44,13 +44,13 @@ import random
 import statistics
 import time
 
-from joint_root_cert.tracking import (
+from dagcert.tracking import (
     LUCBMicroSession,
     UGapEMCTSSession,
     VarDEDAGSession,
 )
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert._core.v6_real_world import (
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert._core.v6_real_world import (
     FlatLUCBSession,
     GB1MutationCampaignProblem,
     WorFBenchWorkflowProblem,

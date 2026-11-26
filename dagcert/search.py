@@ -1,21 +1,21 @@
 """Passive trajectory-coupled UCT/PUCT certification and native C++17 maintenance kernels."""
 from __future__ import annotations
 
-from joint_root_cert._core.compiled_retirement import (
+from dagcert._core.compiled_retirement import (
     CircuitMonitor,
     Search as TrajectoryCoupledUCT,
     cover_compile,
     leaf_order,
     quotient,
 )
-from joint_root_cert._core.puct import (
+from dagcert._core.puct import (
     CertifiedSearchSession,
     RecursivePUCT,
     RootPUCT,
     build_monitor,
     make_priors,
 )
-from joint_root_cert._core.v3_extensions import (
+from dagcert._core.v3_extensions import (
     CppKernelRunner,
     SplitMixProblem,
     WitnessDirectGraphRegret,
@@ -26,7 +26,7 @@ from joint_root_cert._core.v3_extensions import (
     build_witness_monitor,
     splitmix_uniform01,
 )
-from joint_root_cert._core.v4_baselines import CppSameGameRunner
+from dagcert._core.v4_baselines import CppSameGameRunner
 
 __all__ = [
     "CertifiedSearchSession",

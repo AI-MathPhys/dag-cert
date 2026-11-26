@@ -39,12 +39,12 @@ import time
 
 import numpy as np
 
-from joint_root_cert import (
+from dagcert import (
     CorrelationAwareCertSession,
     DiscreteGPPosteriorModel,
     LinearFeatureModel,
 )
-from joint_root_cert.benchmarks import (
+from dagcert.benchmarks import (
     GaussianPriorDAGProblem,
     MisspecifiedLinearDAGProblem,
 )

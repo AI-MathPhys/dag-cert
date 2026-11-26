@@ -38,10 +38,10 @@ import time
 import numpy as np
 import requests
 
-from joint_root_cert import DAG, Problem
-from joint_root_cert.search import splitmix_uniform01
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert import (
+from dagcert import DAG, Problem
+from dagcert.search import splitmix_uniform01
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert import (
     CalibratedGPPosteriorModel,
     SmartHybridCertSession,
 )

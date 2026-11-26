@@ -1,4 +1,4 @@
-"""joint_root_cert: Joint Root Certification and Decision-Aware Bayesian Experimental Design.
+"""dagcert: Joint Root Certification and Decision-Aware Bayesian Experimental Design.
 
 Official Python library accompanying:
     *Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs*
@@ -6,7 +6,7 @@ Official Python library accompanying:
 Quick start
 -----------
 >>> import numpy as np
->>> from joint_root_cert import SearchDAG, certify_root_action
+>>> from dagcert import SearchDAG, certify_root_action
 >>> dag = SearchDAG.from_supports([[0, 1, 2], [1, 2, 3]])
 >>> true_means = np.array([0.82, 0.70, 0.65, 0.50])
 >>> rng = np.random.default_rng(0)
@@ -27,7 +27,7 @@ from __future__ import annotations
 
 __version__ = "1.0.0"
 
-from joint_root_cert.acquisition import (
+from dagcert.acquisition import (
     ALL_V12_POLICIES,
     AcquisitionPolicy,
     BayesianVOIPolicy,
@@ -48,7 +48,7 @@ from joint_root_cert.acquisition import (
     select_bayesian_root_voi,
     select_gp_arm_with_beta,
 )
-from joint_root_cert.certificates import (
+from dagcert.certificates import (
     ActionCertificate,
     ChallengerResult,
     CharacteristicRateResult,
@@ -64,14 +64,14 @@ from joint_root_cert.certificates import (
     exact_rectangular_regret,
     solve_ellipsoid_challenger,
 )
-from joint_root_cert.graph import (
+from dagcert.graph import (
     DAG,
     LeafOracle,
     Problem,
     SearchDAG,
     SupportStructure,
 )
-from joint_root_cert.posteriors import (
+from dagcert.posteriors import (
     CalibratedGPPosteriorModel,
     DiscreteGPPosteriorModel,
     DiscreteGPSurrogate,
@@ -88,7 +88,7 @@ from joint_root_cert.posteriors import (
     nominal_gp_beta,
     pointwise_coverage_diag,
 )
-from joint_root_cert.search import (
+from dagcert.search import (
     CertifiedSearchSession,
     CircuitMonitor,
     CppKernelRunner,
@@ -97,7 +97,7 @@ from joint_root_cert.search import (
     RootPUCT,
     TrajectoryCoupledUCT,
 )
-from joint_root_cert.tracking import (
+from dagcert.tracking import (
     ActiveDAGLUCBSession,
     AdaptiveHardRegimeSession,
     CorrelationAwareCertSession,

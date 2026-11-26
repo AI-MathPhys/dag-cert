@@ -9,9 +9,9 @@ import unittest
 import numpy as np
 from scipy.stats import chi2
 
-from joint_root_cert.benchmarks import protein_sequence_kernel
-from joint_root_cert.benchmarks import GB1MutationCampaignProblem, TrpBMutationCampaignProblem
-from joint_root_cert import SupportStructure
+from dagcert.benchmarks import protein_sequence_kernel
+from dagcert.benchmarks import GB1MutationCampaignProblem, TrpBMutationCampaignProblem
+from dagcert import SupportStructure
 from experiment.protein_engineering.exp_real_world_applications import GB1_TEMPLATES
 from experiment.protein_engineering.exp_real_world_validation import TRPB_TEMPLATES
 from experiment.protein_engineering.exp_credible_ellipsoid_audit import (

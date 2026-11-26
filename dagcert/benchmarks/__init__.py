@@ -6,7 +6,7 @@ from pathlib import Path
 DATA_DIR = Path(__file__).resolve().parent / "data"
 SAMEGAME_PATH = DATA_DIR / "samegame" / "StandardTestset.txt"
 
-from joint_root_cert.benchmarks.proteins import (
+from dagcert.benchmarks.proteins import (
     GB1_NPZ_PATH,
     GB1_TEMPLATES,
     TRPB_NPZ_PATH,
@@ -19,7 +19,7 @@ from joint_root_cert.benchmarks.proteins import (
     protein_sequence_kernel,
     real_world_problem_diagnostics,
 )
-from joint_root_cert.benchmarks.synthetic import (
+from dagcert.benchmarks.synthetic import (
     BoundedNoiseProblem,
     CorrelatedSupportDAGProblem,
     DeconfoundedOverlapCorrelationProblem,
@@ -55,7 +55,7 @@ from joint_root_cert.benchmarks.synthetic import (
     stochastic_routing_dag,
     structural_diagnostics,
 )
-from joint_root_cert.benchmarks.workflows import (
+from dagcert.benchmarks.workflows import (
     WORFBENCH_DOMAINS,
     WORFBENCH_NPZ_PATH,
     WORFBENCH_TEST_NPZ_PATH,

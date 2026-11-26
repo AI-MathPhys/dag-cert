@@ -9,9 +9,9 @@ from typing import Literal
 import numpy as np
 from scipy.stats import norm
 
-from joint_root_cert._core.v5_hybrid_and_os import DualWitnessCovers
-from joint_root_cert._core.v7_bayesian_ucd import JointEllipsoidCertifier, SupportStructure
-from joint_root_cert._core.v12_bed_acquisition import (
+from dagcert._core.v5_hybrid_and_os import DualWitnessCovers
+from dagcert._core.v7_bayesian_ucd import JointEllipsoidCertifier, SupportStructure
+from dagcert._core.v12_bed_acquisition import (
     ALL_V12_POLICIES,
     MatchedModelBEDSession,
     SharedGaussianPosterior,
@@ -22,9 +22,9 @@ from joint_root_cert._core.v12_bed_acquisition import (
     noisy_gp_ei_log_scores,
     select_bayesian_root_voi,
 )
-from joint_root_cert.certificates import check_ellipsoid_stopping
-from joint_root_cert.graph import DAG, SearchDAG
-from joint_root_cert.posteriors import (
+from dagcert.certificates import check_ellipsoid_stopping
+from dagcert.graph import DAG, SearchDAG
+from dagcert.posteriors import (
     chi2_credible_beta,
     contrast_rank_of_kernel,
     eval_direct_posterior_risk_valid,

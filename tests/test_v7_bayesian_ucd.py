@@ -7,10 +7,10 @@ import unittest
 import cvxpy as cp
 import numpy as np
 
-from joint_root_cert import DAG, Problem
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert.benchmarks import WorFBenchWorkflowProblem
-from joint_root_cert._core.v7_bayesian_ucd import (
+from dagcert import DAG, Problem
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert.benchmarks import WorFBenchWorkflowProblem
+from dagcert._core.v7_bayesian_ucd import (
     CorrelationAwareCertSession,
     JointEllipsoidCertifier,
     LinearFeatureModel,
@@ -22,7 +22,7 @@ from joint_root_cert._core.v7_bayesian_ucd import (
     solve_feature_challenger_cvxpy,
     solve_primal_ellipsoid_regret,
 )
-from joint_root_cert.benchmarks import (
+from dagcert.benchmarks import (
     HullDominanceDAGProblem,
     MisspecifiedLinearDAGProblem,
     MotivationalProxyDAGProblem,

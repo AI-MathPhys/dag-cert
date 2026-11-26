@@ -31,14 +31,14 @@ import time
 
 import numpy as np
 
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert._core.v6_bayesian_opt import (
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert._core.v6_bayesian_opt import (
     CorrelatedSupportDAGProblem,
     GPEllipsoidCertSession,
     GPGuidedRootCertSession,
     alt_protein_sequence_kernel,
 )
-from joint_root_cert.benchmarks import (
+from dagcert.benchmarks import (
     GB1MutationCampaignProblem,
     gb1_mean_to_raw_fitness,
     real_world_problem_diagnostics,

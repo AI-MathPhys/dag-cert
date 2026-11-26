@@ -50,20 +50,20 @@ import cvxpy as cp
 import numpy as np
 from scipy.optimize import differential_evolution, linprog, minimize
 
-from joint_root_cert import DAG
-from joint_root_cert.certificates import (
+from dagcert import DAG
+from dagcert.certificates import (
     DirectGraphRegretMonitor,
     FactorizedRegretMonitor,
     brute_force_exact_regret,
 )
-from joint_root_cert import DualWitnessCovers
-from joint_root_cert._core.v7_bayesian_ucd import (
+from dagcert import DualWitnessCovers
+from dagcert._core.v7_bayesian_ucd import (
     SupportStructure,
     solve_alt_projection_dual,
     solve_feature_challenger_colgen,
 )
-from joint_root_cert.tracking import fast_characteristic_rate
-from joint_root_cert.tracking import (
+from dagcert.tracking import fast_characteristic_rate
+from dagcert.tracking import (
     ComponentPolyhedron,
     build_screened_components,
     eval_profiled_loss,

@@ -1,7 +1,7 @@
 import unittest
 
-from joint_root_cert import DAG,Problem
-from joint_root_cert._core.onpolicy_backup import CompiledCovers,MonitoredUCT
+from dagcert import DAG,Problem
+from dagcert._core.onpolicy_backup import CompiledCovers,MonitoredUCT
 from experiment.simulated.passive_uct.audit_uct_backup import direct
 from experiment.simulated.passive_uct.uct_backup_benchmark import METHODS
 from experiment.simulated.passive_uct.uct_backup_families import fixture,funnel,wide_core

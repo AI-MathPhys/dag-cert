@@ -28,15 +28,15 @@ import random
 import statistics
 import time
 
-from joint_root_cert.benchmarks import (
+from dagcert.benchmarks import (
     contiguous_window_dag,
     overlap_dag,
 )
-from joint_root_cert._core.v4_baselines import (
+from dagcert._core.v4_baselines import (
     LUCBMicroSession,
     samegame_midgame_case,
 )
-from joint_root_cert._core.v5_hybrid_and_os import (
+from dagcert._core.v5_hybrid_and_os import (
     HybridWitnessDAGLUCBSession,
     noncontainment_star_dag,
 )

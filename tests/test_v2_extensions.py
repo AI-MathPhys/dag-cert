@@ -5,10 +5,10 @@ import math
 import random
 import unittest
 
-from joint_root_cert._core.certified_uct import UCTWork
-from joint_root_cert import DAG, Problem
-from joint_root_cert.search import CertifiedSearchSession, RecursivePUCT, RootPUCT, build_monitor, make_priors
-from joint_root_cert.benchmarks import (
+from dagcert._core.certified_uct import UCTWork
+from dagcert import DAG, Problem
+from dagcert.search import CertifiedSearchSession, RecursivePUCT, RootPUCT, build_monitor, make_priors
+from dagcert.benchmarks import (
     contiguous_window_dag,
     overlap_dag,
     puct_noisy_funnel,
@@ -17,7 +17,7 @@ from joint_root_cert.benchmarks import (
     samegame_standard_endgame,
     structural_diagnostics,
 )
-from joint_root_cert._core.v2_monitors import (
+from dagcert._core.v2_monitors import (
     ChargedDualCovers,
     DirectGraphRegretMonitor,
     FactorizedRegretMonitor,

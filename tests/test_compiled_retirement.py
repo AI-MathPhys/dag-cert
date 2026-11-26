@@ -1,7 +1,7 @@
 import unittest
-from joint_root_cert import DAG,Problem
-from joint_root_cert._core.compiled_retirement import Search,cover_compile
-from joint_root_cert._core.certified_uct import UCTWork
+from dagcert import DAG,Problem
+from dagcert._core.compiled_retirement import Search,cover_compile
+from dagcert._core.certified_uct import UCTWork
 from experiment.simulated.passive_uct.audit_uct_backup import direct
 from experiment.simulated.passive_uct.uct_frontier_families import make,describe
 

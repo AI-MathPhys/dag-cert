@@ -26,7 +26,7 @@ from typing import Any
 
 import numpy as np
 
-from joint_root_cert._core.v9_v34_tracker import (
+from dagcert._core.v9_v34_tracker import (
     ComponentPolyhedron,
     CppV34BnBRunner,
     HeteroscedasticDAGProblem,

@@ -34,15 +34,15 @@ import time
 
 import numpy as np
 
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert import (
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert import (
     CorrelationAwareCertSession,
     LinearFeatureModel,
     SupportStructure,
     compute_characteristic_rate,
     compute_hull_discrepancy,
 )
-from joint_root_cert.benchmarks import (
+from dagcert.benchmarks import (
     HullDominanceDAGProblem,
     MultiAnswerCommitmentDAGProblem,
     OffWitnessProxyDAGProblem,

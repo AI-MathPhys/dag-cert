@@ -25,12 +25,12 @@ import random
 import statistics
 import time
 
-from joint_root_cert import DAG, Problem
-from joint_root_cert.benchmarks import (
+from dagcert import DAG, Problem
+from dagcert.benchmarks import (
     contiguous_window_dag,
     overlap_dag,
 )
-from joint_root_cert._core.v4_baselines import (
+from dagcert._core.v4_baselines import (
     BoundedNoiseProblem,
     InsideWitnessDAGLUCBSession,
     samegame_midgame_case,

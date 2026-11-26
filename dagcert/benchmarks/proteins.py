@@ -1,11 +1,11 @@
 """Real epistatic combinatorial protein-fitness benchmarks (GB1 and TmTrpB)."""
 from __future__ import annotations
 
-from joint_root_cert._core.v6_bayesian_opt import (
+from dagcert._core.v6_bayesian_opt import (
     alt_protein_sequence_kernel,
     protein_sequence_kernel,
 )
-from joint_root_cert._core.v6_real_world import (
+from dagcert._core.v6_real_world import (
     GB1_NPZ_PATH,
     GB1_PANELS,
     TRPB_NPZ_PATH,
@@ -15,7 +15,7 @@ from joint_root_cert._core.v6_real_world import (
     gb1_mean_to_raw_fitness,
     real_world_problem_diagnostics,
 )
-from joint_root_cert._core.v8_unified_experiments import build_protein_eigenfeatures
+from dagcert._core.v8_unified_experiments import build_protein_eigenfeatures
 
 GB1_TEMPLATES: tuple[str, ...] = (
     "VDGV",  # Wild-type GB1 (epistatic ridge)

@@ -1,7 +1,7 @@
 """Cold DAGs for the on-policy selective-backup comparison."""
 import random
-from joint_root_cert.graph import DAG, Problem, feature_lattice
-from joint_root_cert._core.backprop_problems import reconvergent
+from dagcert.graph import DAG, Problem, feature_lattice
+from dagcert._core.backprop_problems import reconvergent
 
 
 def binary_root(rows, nodes):

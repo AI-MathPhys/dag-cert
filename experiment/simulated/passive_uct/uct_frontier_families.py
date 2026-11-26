@@ -2,8 +2,8 @@
 from collections import Counter
 from functools import lru_cache
 import random
-from joint_root_cert.graph import DAG, Problem, feature_lattice
-from joint_root_cert._core._samegame_engine import Game, Moves, finish
+from dagcert.graph import DAG, Problem, feature_lattice
+from dagcert._core._samegame_engine import Game, Moves, finish
 from experiment.simulated.passive_uct.uct_backup_families import funnel
 
 

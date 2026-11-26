@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build disjoint unseen WorFBench test archive (81x32) + run genuine live online Qwen3-0.6B audit.
 
-1. Phase 1 (`joint_root_cert/benchmarks/data/worfbench_qwen3_test_81x32.npz`):
+1. Phase 1 (`dagcert/benchmarks/data/worfbench_qwen3_test_81x32.npz`):
    Evaluates all 81 = 3^4 canonical 4-stage Qwen3-0.6B workflows on 32 strictly
    disjoint unseen WorFBench tasks (`items[17:25]` in each of ToolBench, ToolAlpaca,
    Seal-Tools, and WebShop; disjoint from exemplar `0` and certification pool `1..16`),
@@ -37,11 +37,11 @@ import time
 
 import numpy as np
 
-from joint_root_cert import DAG, Problem
-from joint_root_cert.search import splitmix_uniform01
-from joint_root_cert.tracking import LUCBMicroSession
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert.tracking import FlatLUCBSession
+from dagcert import DAG, Problem
+from dagcert.search import splitmix_uniform01
+from dagcert.tracking import LUCBMicroSession
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert.tracking import FlatLUCBSession
 from experiment.agentic_workflows.build_worfbench_llm_matrix import (
     CONTEXT_MODES,
     DECODE_MODES,
@@ -59,7 +59,7 @@ from experiment.agentic_workflows.build_worfbench_llm_matrix import (
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = REPO_ROOT / "joint_root_cert" / "benchmarks" / "data"
+DATA_DIR = REPO_ROOT / "dagcert" / "benchmarks" / "data"
 VAL_DIR = REPO_ROOT / "results" / "uct_v4_icml_baselines" / "exp13_real_world_validation"
 
 

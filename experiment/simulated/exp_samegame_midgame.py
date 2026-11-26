@@ -34,14 +34,14 @@ import statistics
 import time
 import tracemalloc
 
-from joint_root_cert import CertifiedSearchSession
-from joint_root_cert.benchmarks import (
+from dagcert import CertifiedSearchSession
+from dagcert.benchmarks import (
     samegame_depth_case,
     samegame_standard_endgame,
     structural_diagnostics,
 )
-from joint_root_cert import ActiveDAGLUCBSession
-from joint_root_cert._core.v4_baselines import (
+from dagcert import ActiveDAGLUCBSession
+from dagcert._core.v4_baselines import (
     FastSameGameProblem,
     LUCBMicroSession,
     UGapEMCTSSession,

@@ -7,7 +7,7 @@ from .graph import DAG
 from .certified_uct import UCTWork, TranspositionUCT
 from .retired_bounds import CanonicalIntervals, RetiredBounds
 from .onpolicy_backup import CompiledCovers
-from joint_root_cert._core._interval_utils import merge
+from dagcert._core._interval_utils import merge
 
 
 def quotient(graph, work):

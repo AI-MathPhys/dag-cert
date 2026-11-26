@@ -4,9 +4,9 @@ from __future__ import annotations
 import statistics
 import unittest
 
-from joint_root_cert.tracking import LUCBMicroSession
-from joint_root_cert._core.v5_hybrid_and_os import HybridWitnessDAGLUCBSession, noncontainment_star_dag
-from joint_root_cert._core.v6_bayesian_opt import (
+from dagcert.tracking import LUCBMicroSession
+from dagcert._core.v5_hybrid_and_os import HybridWitnessDAGLUCBSession, noncontainment_star_dag
+from dagcert._core.v6_bayesian_opt import (
     CorrelatedSupportDAGProblem,
     DiscreteGPSurrogate,
     GPBoxCertSession,
@@ -16,7 +16,7 @@ from joint_root_cert._core.v6_bayesian_opt import (
     protein_sequence_kernel,
     solve_ellipsoid_challenger,
 )
-from joint_root_cert._core.v6_real_world import (
+from dagcert._core.v6_real_world import (
     FlatLUCBSession,
     GB1MutationCampaignProblem,
     TRPB_NPZ_PATH,

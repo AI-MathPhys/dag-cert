@@ -50,14 +50,14 @@ import tracemalloc
 
 import numpy as np
 
-from joint_root_cert import HybridWitnessDAGLUCBSession
-from joint_root_cert import (
+from dagcert import HybridWitnessDAGLUCBSession
+from dagcert import (
     JointEllipsoidCertifier,
     LinearFeatureModel,
     SupportStructure,
 )
-from joint_root_cert.benchmarks import ScalingDAGProblem
-from joint_root_cert import ScheduledConicCertifier
+from dagcert.benchmarks import ScalingDAGProblem
+from dagcert import ScheduledConicCertifier
 
 
 ROOT = Path(__file__).resolve().parents[2]

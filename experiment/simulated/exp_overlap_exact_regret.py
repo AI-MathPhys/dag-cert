@@ -30,9 +30,9 @@ import random
 import statistics
 import time
 
-from joint_root_cert._core.certified_uct import TranspositionUCT, UCTWork
-from joint_root_cert.search import CertifiedSearchSession, build_monitor
-from joint_root_cert.benchmarks import (
+from dagcert._core.certified_uct import TranspositionUCT, UCTWork
+from dagcert.search import CertifiedSearchSession, build_monitor
+from dagcert.benchmarks import (
     contiguous_window_dag,
     overlap_dag,
     puct_noisy_funnel,
@@ -40,7 +40,7 @@ from joint_root_cert.benchmarks import (
     samegame_standard_endgame,
     structural_diagnostics,
 )
-from joint_root_cert.certificates import (
+from dagcert.certificates import (
     ChargedDualCovers,
     FactorizedRegretMonitor,
     MarginalGraphMonitor,

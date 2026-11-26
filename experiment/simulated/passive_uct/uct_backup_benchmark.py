@@ -7,7 +7,7 @@ import random
 import time
 from pathlib import Path
 
-from joint_root_cert._core.onpolicy_backup import MonitoredUCT
+from dagcert._core.onpolicy_backup import MonitoredUCT
 from experiment.simulated.passive_uct.uct_backup_families import fixture
 
 ROOT = Path(__file__).resolve().parents[3]

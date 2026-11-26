@@ -9,4 +9,4 @@ dist/
 .venv/
 .pytest_cache/
 build/
-joint_root_cert/benchmarks/data/worfbench_raw/
+dagcert/benchmarks/data/worfbench_raw/
