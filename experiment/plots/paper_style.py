@@ -25,8 +25,8 @@ TEXT_WIDTH = 5.5  # ICLR text block, inches
 
 # Font sizes are multiplied by FONT_SCALE and figure heights by HEIGHT_SCALE, so the
 # whole set can be enlarged in one place.
-FONT_SCALE = 1.2
-HEIGHT_SCALE = 1.12
+FONT_SCALE = 1.07  # labels ~8 pt, ticks ~7.5 pt: just below the 10 pt Times captions
+HEIGHT_SCALE = 1.06
 
 # Entity colours (names are historical roles, not hues).
 OURS = "#C8501E"  # CD-Joint and its calibrated / unknown-variance variants (burnt orange)

@@ -249,7 +249,7 @@ def fig3_protein_stopping_regimes(out: Path) -> None:
             ps.bars(axis, x, vals, col, width=w3 * 0.9,
                     lo=[float(r["rm_ci95_lo"]) / scale for r in rows],
                     hi=[float(r["rm_ci95_hi"]) / scale for r in rows],
-                    labels=[fmt.format(v) for v in vals], label_size=5.3)
+                    labels=[fmt.format(v) for v in vals], label_size=6.0)
         axis.set_xticks(range(2))
         axis.set_xticklabels([n for _, n in LANDSCAPES])
         axis.set_ylabel(ylabel)
@@ -266,7 +266,7 @@ def fig3_protein_stopping_regimes(out: Path) -> None:
     xs5, w5 = _grouped(cx, 2, 5, width=0.86)
     for (m, _, col), x in zip(df_methods, xs5):
         vals = [100.0 * float(v13[(land, m)]["cert_rate"]) for land, _ in LANDSCAPES]
-        ps.bars(cx, x, vals, col, width=w5 * 0.9, labels=["" if v > 99.5 else f"{v:.0f}" for v in vals], label_size=5.3)
+        ps.bars(cx, x, vals, col, width=w5 * 0.9, labels=["" if v > 99.5 else f"{v:.0f}" for v in vals], label_size=6.0)
     cx.set_xticks(range(2))
     cx.set_xticklabels([n for _, n in LANDSCAPES])
     cx.set_ylim(0, 118)
@@ -506,7 +506,7 @@ def fig10_live_workflow_validation(out: Path) -> None:
         ps.ygrid(a)
         a.set_xticks(xs)
         a.set_xticklabels(ticks)
-        a.tick_params(axis="x", labelsize=ps.fs(6.2))
+        a.tick_params(axis="x", labelsize=ps.fs(6.6))
 
     ps.panel(ax, "a", "Certification")
     vals = [100.0 * float(r["cert_rate"]) for r in rs]
@@ -558,7 +558,7 @@ def fig11_information_tracking(out: Path) -> None:
     ps.label(ax, x[-1], 1.0, "lower bound", dy=2, ha="right", size=6.4, color=MUTED)
     ax.set_xticks(x)
     ax.set_xticklabels([f"{d:g}".replace("0.", ".") if d >= 0.001 else "$10^{-4}$" for d in deltas])
-    ax.tick_params(axis="x", labelsize=ps.fs(6.2))
+    ax.tick_params(axis="x", labelsize=ps.fs(6.6))
     ax.set_ylim(0, 13)
     ax.set_yticks([0, 4, 8, 12])
     ax.set_xlabel("Confidence level $\\delta$")
@@ -638,7 +638,7 @@ def fig12_protein_calibration_robustness(out: Path) -> None:
     ps.reference(bx, 5.0, "$\\delta=5\\%$", dy=7)
     bx.set_xticks(range(3))
     bx.set_xticklabels(["Nominal\nBayes", "Nominal\nCD-Joint", "EB+LOO"])
-    bx.tick_params(axis="x", labelsize=ps.fs(6.2))
+    bx.tick_params(axis="x", labelsize=ps.fs(6.6))
     bx.set_ylim(0, 46)
     bx.set_ylabel("False certificates (%)")
 
@@ -690,7 +690,7 @@ def fig13_eprocess_safety_and_compute(out: Path) -> None:
     ps.bars(ax, xs, vals, (BAD, BLUE, OURS), width=0.58, labels=[f"{v:.1f}%" for v in vals])
     ps.reference(ax, 100.0 * float(r_b[ms[0]]["delta"]), "$\\delta=5\\%$", dy=7)
     ax.set_xticklabels(["Reset\n(invalid)", "Preserved\n(V33)", "Skip\n(V34)"])
-    ax.tick_params(axis="x", labelsize=ps.fs(6.2))
+    ax.tick_params(axis="x", labelsize=ps.fs(6.6))
     ax.set_ylim(0, 47)
     ax.set_ylabel("Null false certificates (%)")
 
@@ -698,7 +698,7 @@ def fig13_eprocess_safety_and_compute(out: Path) -> None:
     vals = [r_a[m] for m in ("v33_all_action", "v34_bonferroni_j", "v34_full")]
     ps.bars(bx, xs, vals, (BLUE, ORANGE, OURS), width=0.58, labels=[f"{v:.0f}" for v in vals])
     bx.set_xticklabels(["Dense", "Local\nBonferroni", "Local IUT\n(V34)"])
-    bx.tick_params(axis="x", labelsize=ps.fs(6.2))
+    bx.tick_params(axis="x", labelsize=ps.fs(6.6))
     bx.set_ylim(0, 520)
     bx.set_ylabel("Median null-component solves")
 
@@ -706,7 +706,7 @@ def fig13_eprocess_safety_and_compute(out: Path) -> None:
     vals = [d4[m] for m in ("v33_full", "v33_sparse", "v34_full")]
     ps.bars(cx, xs, vals, (BLUE, ORANGE, OURS), width=0.58, labels=[f"{v:.1f} s" for v in vals])
     cx.set_xticklabels(["Dense\n(V33)", "Sparse\nrefresh", "Sparse +\nlocal (V34)"])
-    cx.tick_params(axis="x", labelsize=ps.fs(6.2))
+    cx.tick_params(axis="x", labelsize=ps.fs(6.6))
     cx.set_ylim(0, 62)
     cx.set_ylabel("Median total compute (s)")
     ps.save(fig, out / "supp_eprocess_safety_and_compute.pdf")
@@ -774,7 +774,7 @@ def fig15_native_solver_and_workflows(out: Path) -> None:
     ax.set_xticks(range(len(paired)))
     ax.set_xticklabels([f"{r['d']}, {r['K']}" for r in paired])
     ax.set_xlabel("$d$, $K$")
-    ax.tick_params(axis="x", labelsize=ps.fs(6.2))
+    ax.tick_params(axis="x", labelsize=ps.fs(6.6))
     ax.set_xlim(-0.5, len(paired) - 0.3)
     ax.set_ylim(0.04, 400)
     _plain_log(ax, "y", (0.1, 1, 10, 100))
@@ -796,7 +796,7 @@ def fig15_native_solver_and_workflows(out: Path) -> None:
         ps.label(bx, i, v, f"{v:,.0f}" + ("\n(cap)" if capped else ""), dy=5)
     bx.set_xticks(range(3))
     bx.set_xticklabels(["Student-$t$\nOS", "EB+\nLOO", "V34\n(C++)"])
-    bx.tick_params(axis="x", labelsize=ps.fs(6.2))
+    bx.tick_params(axis="x", labelsize=ps.fs(6.6))
     bx.set_xlim(-0.6, 2.6)
     bx.set_ylim(100, 400000)
     _plain_log(bx, "y", (100, 1000, 10000, 100000), "{:,.0f}")
@@ -813,7 +813,7 @@ def fig15_native_solver_and_workflows(out: Path) -> None:
             labels=[f"{v:.1f}k\n{c}/{n} cert." for v, c, n in zip(vals, cert, runs)], label_size=6.2)
     cx.set_xticks(range(3))
     cx.set_xticklabels(["DF-OS", "Hybrid\nEB", "EB+LOO"])
-    cx.tick_params(axis="x", labelsize=ps.fs(6.2))
+    cx.tick_params(axis="x", labelsize=ps.fs(6.6))
     cx.set_ylim(0, 92)
     cx.set_yticks([0, 20, 40, 60, 80])
     cx.set_ylabel("Median fresh tokens ($\\times 10^3$)")
