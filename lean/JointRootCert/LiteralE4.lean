@@ -42,8 +42,8 @@ root actions, a passive traversal policy `pick`):
 There is no term `T · L`.  The differences from the manuscript's display are: `|E| log D`
 in the initialisation, `samp` in place of `T`, and the factor `log(2 + D) + log(2 + L)` on
 the deliveries in place of `log(2 + D)` (the worklist that orders the changed gates
-topologically).  `bucket_engine_lower` shows that the level-bucket scheduler of
-`CostEngines.wave` cannot meet the display.
+topologically).  `LiteralE7a.ram_work_bounds_display` removes the first and the third
+difference (bottom-up heap construction, and a stack scheduler without levels).
 
 Unit charges (by definition): one unit per index evaluation and per traversed edge of the
 sampler; `2K` per eager query; the charges listed in `RetireFinal.lean`, `DagRetire.lean`
