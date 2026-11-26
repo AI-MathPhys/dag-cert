@@ -119,11 +119,11 @@ Dataset builders: `experiment/agentic_workflows/build_worfbench_llm_matrix.py`, 
 
 ## 3. Manuscript Figures Map (`figures/` & `experiment/plots/`)
 
-Figure 1 (concept overview) is drawn in TikZ inside `manuscript/joint_cert_manuscript.tex`. Every data figure (Figures 2–15) is a vector PDF generated at its printed size, in one shared style (`experiment/plots/paper_style.py`), directly from the SHA-256-verified archives by `python experiment/run_all.py figures` (`experiment/plots/plot_manuscript_figures.py`):
+Every figure (Figures 1–15) is a vector PDF generated at its printed size, in one shared style (`experiment/plots/paper_style.py`), by `python experiment/run_all.py figures`. Figure 1 is a schematic built from the worked example of the introduction; Figures 2–15 are drawn directly from the SHA-256-verified archives by `python experiment/run_all.py figures` (`experiment/plots/plot_manuscript_figures.py`):
 
 | Manuscript Figure | File in `figures/` | Backing Suites |
 |---|---|---|
-| **Fig. 1** (Concept overview) | `fig1_concept_overview.png` (README banner) / TikZ in LaTeX | Analytic example (`examples/quickstart_cd_joint.py`) |
+| **Fig. 1** (Concept overview) | `fig1_concept_overview.pdf` (+ `.png` README banner) | Schematic (worked example of the introduction) |
 | **Fig. 2** (Overlap & proxy mechanisms) | `fig2_decision_relevant_information.pdf` | `exp1`, `e0` |
 | **Fig. 3** (Protein stopping regimes) | `fig3_protein_stopping_regimes.pdf` | `v14`, `v13` |
 | **Fig. 4** (App. G.1) | `fig4_acquisition_and_latency.pdf` | `v12` |

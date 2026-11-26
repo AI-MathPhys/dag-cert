@@ -1,5 +1,5 @@
 % ICLR 2027 anonymous review submission. Compile with pdflatex twice.
-% The .sty files and the fourteen figure PDFs (figures/) ship in the source archive.
+% The .sty files and the fifteen figure PDFs (figures/) ship in the source archive.
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -187,48 +187,9 @@ correlated evidence to be exploited more efficiently.
 
 \begin{figure}[t]
 \centering
-\begin{minipage}[t]{0.39\linewidth}
-\centering
-{\footnotesize\textbf{(a) Tree-unrolled paths}}\par\vspace{2pt}
-\begin{tikzpicture}[x=0.88cm,y=0.67cm,>=Stealth,font=\scriptsize,
-  action/.style={draw=navy,fill=navy!7,rounded corners=2pt,minimum width=1.15cm,minimum height=.45cm},
-  leaf/.style={draw=gray!65,fill=gray!6,rounded corners=2pt,minimum width=1.1cm,minimum height=.43cm}]
-\node[action] (start) at (2,3.8) {start};
-\node[action] (a) at (.75,2.65) {first $A$};
-\node[action] (b) at (3.25,2.65) {first $B$};
-\node[leaf] (ab1) at (.75,1.35) {$A\!\to\!B$};
-\node[leaf] (ab2) at (3.25,1.35) {$B\!\to\!A$};
-\draw[->,navy,thick] (start)--(a);
-\draw[->,navy,thick] (start)--(b);
-\draw[->,navy,thick] (a)--(ab1);
-\draw[->,navy,thick] (b)--(ab2);
-\draw[<->,teal,densely dashed] (ab1)--(ab2);
-\node[teal,align=center] at (2,.35) {same terminal\\duplicated in the tree};
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.59\linewidth}
-\centering
-{\footnotesize\textbf{(b) Canonical DAG and root certificate}}\par\vspace{2pt}
-\begin{tikzpicture}[x=0.92cm,y=0.67cm,>=Stealth,font=\scriptsize,
-  action/.style={draw=navy,fill=navy!7,rounded corners=2pt,minimum width=1.05cm,minimum height=.45cm},
-  leaf/.style={draw=gray!65,fill=gray!6,rounded corners=2pt,minimum width=1.05cm,minimum height=.43cm}]
-\node[action] (a) at (1.05,3.35) {$a_1$};
-\node[action] (b) at (4.75,3.35) {$a_2$};
-\node[leaf] (private1) at (.5,2.00) {$z_1$};
-\node[leaf,fill=teal!12,draw=teal] (shared) at (2.9,2.00) {$z_{AB}$};
-\node[leaf] (private2) at (5.35,2.00) {$z_2$};
-\draw[->,thick,navy] (a)--(private1);
-\draw[->,thick,teal] (a)--(shared);
-\draw[->,thick,teal] (b)--(shared);
-\draw[->,thick,navy] (b)--(private2);
-\node at (.5,1.35) {$[.72,.80]$};
-\node at (2.9,1.35) {$[.40,.95]$};
-\node at (5.35,1.35) {$[.30,.55]$};
-\node[align=center,text width=6.2cm,font=\scriptsize] at (2.9,.3) {Marginal gap $=.95-.72=.23$\\Exact outside-support regret $=[.55-.72]_+=0$};
-\end{tikzpicture}
-\end{minipage}
-\vspace{-7pt}
-\caption{\textbf{Shared outcomes change what can invalidate a root decision.} \textbf{(a)} Two action orders reach the same terminal, duplicated by tree unrolling. \textbf{(b)} Both root actions reach $z_{AB}$. To assess $a_1$, only the excluded $z_2$ can invalidate it; its upper bound $0.55$ lies below the inside lower bound $0.72$. Thus $a_1$ is certified despite the unresolved shared interval $[0.40,0.95]$. A marginal action-value comparison retains an unnecessary gap of $0.23$ even after observations are pooled.}
+\includegraphics{figures/fig1_concept_overview.pdf}
+\vspace{-20pt}
+\caption{\textbf{Certify the decision, not the outcome.} \textbf{(a)} Actions $a_1$ and $a_2$ share the outcome $z_s$; committing to $a_1$ excludes only $z_2$. \textbf{(b)} Only an excluded outcome can invalidate $a_1$: since $0.55<0.72$, $a_1$ is certified while the shared interval stays unresolved and the marginal gap of $0.23$ persists. \textbf{(c)} CD-Joint (schematic) selects queries that shrink the correlated credible ellipsoid along the outside--inside contrast $g$ until no plausible environment invalidates $a_1$.}
 \label{fig:concept-overview}
 \end{figure}
 
@@ -928,7 +889,7 @@ Root-action identification is classical; our contribution is to determine which 
 The stopping-rule experiments also identify the limits of this advantage. KG stops faster under direct posterior-risk stopping, whereas independent-arm distribution-free confidence sequences require exploration beyond that induced by GP-only CD-Joint. Correct Gaussian credible geometry does not ensure calibration on measured fitness landscapes. Future work should couple decision-calibrated evidence with acquisition robust to misspecification and extend beyond finite, known all-MAX graphs to stochastic transitions, adversarial choices, or unknown reachable supports. The general principle is to measure uncertainty that can change a commitment and certify it with evidence appropriate to the observation model.
 \label{main:lastpage}
 
-\clearpage
+
 \section*{AI Use Statement}
 Generative AI tools assisted with literature synthesis,
 theoretical development, proof generation, experimental

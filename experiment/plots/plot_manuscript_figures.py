@@ -1,10 +1,11 @@
-"""Generate every data figure of the manuscript (Figures 2-15) as vector PDFs.
+"""Generate every figure of the manuscript (Figures 1-15) as vector PDFs.
 
 Each figure is drawn at its final printed size in the shared ICLR style
 (`paper_style.py`) and reads only the SHA-256-verified archives under `results/`.
 Nothing is hard-coded from the manuscript text: where the paper quotes a number,
 the same number is recomputed here from the archive.
 
+  Fig.  1  fig1_concept_overview.pdf (+ .png)       schematic (worked example of the introduction)
   Fig.  2  fig2_decision_relevant_information.pdf   exp1, e0
   Fig.  3  fig3_protein_stopping_regimes.pdf        v14, v13
   Fig.  4  fig4_acquisition_and_latency.pdf         v12
@@ -26,11 +27,12 @@ import argparse
 import csv
 import json
 import sys
+import warnings
 from pathlib import Path
 
 import numpy as np
 from matplotlib.lines import Line2D
-from matplotlib.patches import Patch
+from matplotlib.patches import Ellipse, FancyBboxPatch, Patch
 from matplotlib.ticker import FixedLocator, FuncFormatter, NullFormatter, NullLocator
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -92,6 +94,95 @@ def _overlap_axis(ax) -> None:
 # ----------------------------------------------------------------------------
 # Main text
 # ----------------------------------------------------------------------------
+def fig1_concept_overview(out: Path) -> None:
+    """Schematic of the paper: shared-outcome DAG -> joint root certificate -> contrast-directed acquisition.
+
+    Panels (a)-(b) use the worked example of the introduction (intervals
+    [.72,.80], [.40,.95], [.30,.55]); panel (c) is an illustrative geometry.
+    """
+    soft_green, soft_orange = "#DDF1EA", "#FBEBD0"
+    fig, (ax, bx, cx) = ps.figure(3, height=1.36, gridspec_kw={"width_ratios": [1.0, 1.3, 1.12]})
+
+    # (a) the search DAG ------------------------------------------------------
+    ps.panel(ax, "a", "Search DAG, shared outcome")
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+    pos = {"root": (0.5, 0.92), "a1": (0.26, 0.60), "a2": (0.74, 0.60),
+           "z1": (0.12, 0.25), "zs": (0.50, 0.25), "z2": (0.88, 0.25)}
+    ax.add_patch(FancyBboxPatch((0.0, 0.13), 0.64, 0.24, boxstyle="round,pad=0,rounding_size=0.05",
+                                facecolor=soft_green, edgecolor="none", zorder=1))
+    ax.add_patch(FancyBboxPatch((0.76, 0.13), 0.24, 0.24, boxstyle="round,pad=0,rounding_size=0.05",
+                                facecolor=soft_orange, edgecolor="none", zorder=1))
+    for s, t, col in (("root", "a1", OURS), ("root", "a2", ps.AXIS), ("a1", "z1", OURS), ("a1", "zs", OURS),
+                      ("a2", "zs", ps.AXIS), ("a2", "z2", ps.AXIS)):
+        ax.annotate("", xy=pos[t], xytext=pos[s], zorder=2,
+                    arrowprops=dict(arrowstyle="-|>", color=col, linewidth=1.0, shrinkA=6.5, shrinkB=6.5, mutation_scale=6))
+    for key, text, edge in (("root", "start", ps.AXIS), ("a1", "$a_1$", OURS), ("a2", "$a_2$", ps.AXIS),
+                            ("z1", "$z_1$", OURS), ("zs", "$z_s$", OURS), ("z2", "$z_2$", ORANGE)):
+        ax.text(*pos[key], text, ha="center", va="center", fontsize=7.5, zorder=4,
+                bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor=edge, linewidth=0.9))
+    ax.text(0.32, 0.055, "retained by $a_1$", ha="center", va="center", fontsize=6.8)
+    ax.text(0.88, 0.055, "excluded", ha="center", va="center", fontsize=6.8)
+
+    # (b) the certificate -----------------------------------------------------
+    ps.panel(bx, "b", "Joint root certificate for $a_1$")
+    rows = (("$z_1$", 2, 0.72, 0.80, OURS), ("$z_s$", 1, 0.40, 0.95, OURS), ("$z_2$", 0, 0.30, 0.55, ORANGE))
+    for _, y, lo, hi, col in rows:
+        bx.plot([lo, hi], [y, y], color=col, linewidth=4.2, solid_capstyle="round", zorder=3)
+        bx.annotate(f"{lo:.2f}".lstrip("0"), (lo, y), xytext=(-5, 0), textcoords="offset points", ha="right",
+                    va="center", fontsize=6.4)
+        bx.annotate(f"{hi:.2f}".lstrip("0"), (hi, y), xytext=(5, 0), textcoords="offset points", ha="left",
+                    va="center", fontsize=6.4)
+    bx.plot([0.72, 0.72], [-0.45, 2.3], color=OURS, linestyle=(0, (1.5, 2)), linewidth=0.8, zorder=2)
+    arrow = dict(arrowstyle="<|-|>", linewidth=0.9, shrinkA=0, shrinkB=0, mutation_scale=5)
+    bx.annotate("", xy=(0.95, 1.5), xytext=(0.72, 1.5), arrowprops=dict(color=BAD, **arrow), zorder=4)
+    bx.text(0.69, 1.5, "marginal gap .23", ha="right", va="center", fontsize=6.4, linespacing=1.0)
+    bx.annotate("", xy=(0.72, 0.5), xytext=(0.55, 0.5), arrowprops=dict(color=OURS, **arrow), zorder=4)
+    bx.text(0.52, 0.5, "certified: .55 < .72", ha="right", va="center", fontsize=6.4,
+            linespacing=1.0)
+    bx.set_xlim(0.0, 1.05)
+    bx.set_ylim(-0.5, 2.45)
+    bx.set_yticks([2, 1, 0])
+    bx.set_yticklabels(["$z_1$", "$z_s$", "$z_2$"])
+    bx.set_xticks([0.25, 0.5, 0.75, 1.0])
+    bx.set_xticklabels([".25", ".5", ".75", "1"])
+    bx.tick_params(axis="y", length=0)
+    bx.spines["left"].set_visible(False)
+    bx.set_xlabel("Plausible terminal value")
+
+    # (c) the experiment ------------------------------------------------------
+    ps.panel(cx, "c", "CD-Joint: shrink the contrast")
+    off, centre = 0.12, np.array([1.0, 0.48])  # schematic axes: the boundary is mu_z = mu_y + eps
+    xs = np.array([-0.5, 2.5])
+    cx.fill_between(xs, xs - off, 3.0, color=soft_orange, linewidth=0, zorder=1)
+    cx.plot(xs, xs - off, color=ORANGE, linewidth=0.9, zorder=2)
+    cx.add_patch(Ellipse(centre, 1.0, 0.68, angle=45, facecolor="none", edgecolor=MUTED, linewidth=0.9,
+                         linestyle=(0, (3, 2)), zorder=3))
+    cx.add_patch(Ellipse(centre, 0.90, 0.19, angle=45, facecolor=OURS, alpha=0.30, edgecolor="none", zorder=4))
+    cx.add_patch(Ellipse(centre, 0.90, 0.19, angle=45, facecolor="none", edgecolor=OURS, linewidth=1.1, zorder=5))
+    g = np.array([-1.0, 1.0]) / np.sqrt(2.0)
+    for sign in (1.0, -1.0):
+        cx.annotate("", xy=centre + sign * 0.115 * g, xytext=centre + sign * 0.33 * g, zorder=6,
+                    arrowprops=dict(arrowstyle="-|>", color=INK, linewidth=0.9, shrinkA=0, shrinkB=0, mutation_scale=6))
+    cx.text(0.03, 0.97, "$a_1$ invalid", transform=cx.transAxes, ha="left", va="top", fontsize=6.6)
+    cx.text(0.97, 0.97, "prior", transform=cx.transAxes, ha="right", va="top", fontsize=6.6, color=MUTED)
+    cx.text(0.97, 0.03, "queries shrink\ncontrast $g$", transform=cx.transAxes, ha="right", va="bottom",
+            fontsize=6.6, linespacing=1.0)
+    cx.set_xlim(0.2, 1.7)
+    cx.set_ylim(0.06, 0.92)
+    cx.set_aspect("equal", adjustable="datalim")
+    cx.set_xticks([])
+    cx.set_yticks([])
+    cx.set_xlabel("Best retained value $\\mu_y$")
+    cx.set_ylabel("Excluded value $\\mu_z$")
+
+    with warnings.catch_warnings():  # the equal-aspect panel adjusts its own data limits
+        warnings.simplefilter("ignore", UserWarning)
+        fig.savefig(out / "fig1_concept_overview.png", dpi=300)
+        ps.save(fig, out / "fig1_concept_overview.pdf")
+
+
 def fig2_decision_relevant_information(out: Path) -> None:
     mean, lo, hi = _overlap_ratio()
     toy = {r["method"]: r for r in _csv(BAY / "e0_and_toy/summary_toy.csv")}
@@ -722,6 +813,7 @@ def fig15_native_solver_and_workflows(out: Path) -> None:
 
 
 FIGURES = (
+    fig1_concept_overview,
     fig2_decision_relevant_information,
     fig3_protein_stopping_regimes,
     fig4_acquisition_and_latency,
@@ -744,7 +836,7 @@ def generate_all(out_dir: Path) -> None:
     ps.setup()
     for fn in FIGURES:
         fn(out_dir)
-    print(f"Generated {len(FIGURES)} manuscript figure PDFs (Figures 2-15) in {out_dir}")
+    print(f"Generated {len(FIGURES)} manuscript figure PDFs (Figures 1-15) in {out_dir}")
 
 
 def main() -> None:
