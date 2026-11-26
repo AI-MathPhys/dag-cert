@@ -128,7 +128,7 @@ Standalone runnable library examples live in [`examples/`](https://github.com/AI
 
 ```bash
 python examples/quickstart_cd_joint.py   # Fig. 1b + CD-Joint vs. GP-OS vs. KG + distribution-free
-python examples/correlated_proxy.py      # Low-valued off-witness proxy allocation (Fig. 2b)
+python examples/correlated_proxy.py      # Low-valued off-witness proxy allocation (Fig. 2e)
 python examples/protein_dag_demo.py      # GB1 combinatorial mutation DAG certification
 python examples/certify.py               # Trajectory-coupled passive UCT monitor parity
 ```
@@ -143,9 +143,9 @@ Every main-paper and appendix result is backed by executable code in `experiment
 |---|---|---|
 | §2.3, Table 1 | Lazy conic certificate updates scale from $0.70\text{ ms}$ ($M=64$) to $25.7\text{ ms}$ ($M=4{,}096$) | `simulated` (`e6`) |
 | §3.1, Table 3; App. G.1 (Tables 7–9, Fig. 3) | Matched-model $M=64, K=8$ factorial: CD-Joint needs **$2{,}358$** vs. Correlated KG **$5{,}056$** capped evals (**$2.14\times$** reduction; $2.53\times$ with overlap + correlation); **$1.65\times$** under anytime-valid $d=8$ frequentist stopping | `simulated` (`v12`) |
-| §3.1, Fig. 2a, Table 10 | Exact outside-support stopping needs **$0.054\times$** the queries of marginal stopping at $M=256$, overlap $.88$ (**$18.4\times$**) | `simulated` (`exp1`) |
-| §3.1, Fig. 2b, Tables 11 & 13 | CD-Joint routes **$76.8\%$** of queries to a low-valued proxy vs. **$0.6\%$** for direct-witness sampling; up to **$48.5\times$** lower median cost | `simulated` (`e0`, `v8_3`) |
-| §3.2, Fig. 2c–e, Table 4; App. H (Tables 24–26, Fig. 8) | 410 paired GB1 ($n=200$) & TmTrpB ($n=210$) campaigns: under rank-corrected $\sqrt{\chi^2_{r,.95}}$ ellipsoid, CD-Joint needs **$17{,}678$** [70%] / **$3{,}629$** [100%] assays vs. KG **$25{,}000^*$** [0%] / **$9{,}337$** [85.7%] (**$2.57\times$** on TmTrpB); ranking reverses under direct posterior risk (KG **$130$/$63$** vs. CD-Joint **$240$/$92$**) and independent-arm DF ($0\%$ for GP-only CD-Joint) | `protein_engineering` (`v14`, `v13`) |
+| §3.1, Fig. 2d, Table 10 | Exact outside-support stopping needs **$0.054\times$** the queries of marginal stopping at $M=256$, overlap $.88$ (**$18.4\times$**) | `simulated` (`exp1`) |
+| §3.1, Fig. 2e, Tables 11 & 13 | CD-Joint routes **$76.8\%$** of queries to a low-valued proxy vs. **$0.6\%$** for direct-witness sampling; up to **$48.5\times$** lower median cost | `simulated` (`e0`, `v8_3`) |
+| §3.2, Fig. 2f–h, Table 4; App. H (Tables 24–26, Fig. 8) | 410 paired GB1 ($n=200$) & TmTrpB ($n=210$) campaigns: under rank-corrected $\sqrt{\chi^2_{r,.95}}$ ellipsoid, CD-Joint needs **$17{,}678$** [70%] / **$3{,}629$** [100%] assays vs. KG **$25{,}000^*$** [0%] / **$9{,}337$** [85.7%] (**$2.57\times$** on TmTrpB); ranking reverses under direct posterior risk (KG **$130$/$63$** vs. CD-Joint **$240$/$92$**) and independent-arm DF ($0\%$ for GP-only CD-Joint) | `protein_engineering` (`v14`, `v13`) |
 | §3.2, Table 27 | Empirical-Bayes protein audit: simultaneous terminal coverage $91.5\%$ / $82.9\%$, yet **$100\%$** root-regret-bound coverage across 410 campaigns | `protein_engineering` (`v11_1`) |
 | §3.3, Table 5 (offline), Table 35 | WorFBench offline ($3^4=81$ workflows): OS certifies **$100\%$** in **$1{,}937$** median evals ($0.95\text{ M}$ tokens) vs. Flat-LUCB **$8{,}486$** ($4.78\text{ M}$ tokens) at identical held-out $F_1 = 0.529$ | `agentic_workflows` (`exp12`) |
 | §3.3, Table 5 (live), Table 37, Fig. 9 | 36 fresh uncached Qwen3-0.6B campaigns across 4 domains: formal DF stops **$0/36$** by 60 evals; model-based EB+LOO certifies **$36/36$** in median **$24$** evals (**$14{,}291$** tokens, held-out $F_1 = 0.4717$) | `agentic_workflows` (`v11_2`) |
@@ -203,9 +203,9 @@ See [`REPRODUCIBILITY.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/REP
 |---|---|---|---|
 | §2.3, App. L.1 (conic update scaling & break-even) | Tables 1, 57, 58 | `simulated` | `e6`, `v8_4` |
 | §3.1, App. G.1, App. L.1 (matched BED vs. KG/VOI/BO & $d=8$ anytime) | Table 3, Tables 7–9, 14, 59; Fig. 3 | `simulated` | `v12` |
-| §3.1, App. G.2–G.3 (structural overlap & correlated proxy mechanisms) | Fig. 2a–b, Tables 10–13, 15; Figs. 4–5 | `simulated` | `exp1`, `e0`, `e1`, `e2`, `v8_3` |
+| §3.1, App. G.2–G.3 (structural overlap & correlated proxy mechanisms) | Fig. 2d–e, Tables 10–13, 15; Figs. 4–5 | `simulated` | `exp1`, `e0`, `e1`, `e2`, `v8_3` |
 | App. G.4–G.5 (DF baselines, witness ablations, SameGame & routing) | Tables 16–23; Figs. 6–7 | `simulated` | `exp5`, `exp6`, `exp8`–`exp11`, `v8_6` |
-| §3.2, App. H.1–H.4 (matched GB1 & TmTrpB BED vs. KG & $\chi^2_{r,.95}$ audit) | Fig. 2c–e, Table 4, Tables 24–26; Fig. 8 | `protein_engineering` | `v14`, `v13` |
+| §3.2, App. H.1–H.4 (matched GB1 & TmTrpB BED vs. KG & $\chi^2_{r,.95}$ audit) | Fig. 2f–h, Table 4, Tables 24–26; Fig. 8 | `protein_engineering` | `v14`, `v13` |
 | §3.2, App. H.5–H.6 (calibration, validity ablation, extended GB1/TmTrpB) | Tables 27–34; Fig. 11 | `protein_engineering` | `v11_1`, `v8_1`, `exp12`–`exp14`, `e3` |
 | §3.3, App. I (WorFBench offline & live uncached Qwen3-0.6B workflows) | Table 5, Tables 35–39; Figs. 9, 14c | `agentic_workflows` | `exp12`, `exp13`, `v11_2`, `v10_3`, `v8_5` |
 | App. J.1–J.4 (info tracking, unknown variance V34, heteroscedastic bridge) | Tables 40–50; Figs. 10–13, 14b | `simulated` / `protein_engineering` | `v8_2`, `e5`, `v8_1`, `v9_1`–`v9_4`, `v10_2`, `v11_1` |

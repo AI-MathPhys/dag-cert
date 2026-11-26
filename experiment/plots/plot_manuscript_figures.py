@@ -6,7 +6,7 @@ Nothing is hard-coded from the manuscript text: where the paper quotes a number,
 the same number is recomputed here from the archive.
 
   Fig.  1  fig1_concept_overview.pdf (+ .png)       schematic (README banner; the paper uses its own Figure 1)
-  Fig.  2  fig2_main_results.pdf                    exp1, e0 (a-b); v14, v13 (c-e)
+  Fig.  2  fig2_main_results.pdf                    task schematics (a-c); exp1, e0 (d-e); v14, v13 (f-h)
   Fig.  3  fig3_acquisition_and_latency.pdf         v12
   Fig.  4  fig4_overlap_mechanism.pdf               exp1, exp8
   Fig.  5  fig5_correlation_factorial.pdf           v8_3
@@ -184,11 +184,11 @@ def fig1_concept_overview(out: Path) -> None:
 
 
 def _draw_mechanism_panels(ax, bx) -> None:
-    """Panels (a)-(b) of Figure 2: structural overlap and the low-value proxy."""
+    """Panels (d)-(e) of Figure 2: structural overlap and the low-value proxy."""
     mean, lo, hi = _overlap_ratio()
     toy = {r["method"]: r for r in _csv(BAY / "e0_and_toy/summary_toy.csv")}
 
-    ps.panel(ax, "a", "Shared support changes stopping")
+    ps.panel(ax, "d", "Shared support changes stopping")
     ax.grid(color=ps.GRID, linewidth=0.5)
     ax.fill_between(RHOS, lo, hi, color=OURS, alpha=0.18, linewidth=0)
     ax.plot(RHOS, mean, color=OURS, marker="o", markeredgecolor="white", markeredgewidth=0.7, zorder=4)
@@ -201,7 +201,7 @@ def _draw_mechanism_panels(ax, bx) -> None:
     ax.set_xlabel("Root-support overlap $\\rho$")
     ax.set_ylabel("Exact / marginal")
 
-    ps.panel(bx, "b", "Queries to a low-value proxy")
+    ps.panel(bx, "e", "Queries to a low-value proxy")
     ps.xgrid(bx)
     names = ("Direct witness", "Bayes-IDS", "CD-Joint")
     keys = ("direct_witness_joint", "bayes_ids_joint", "contrast_directed_joint")
@@ -228,7 +228,7 @@ def _grouped(ax, groups: int, series: int, width: float = 0.8):
 
 
 def _draw_protein_panels(ax, bx, cx, legend_host) -> None:
-    """Panels (c)-(e) of Figure 2: protein campaigns under three stopping rules."""
+    """Panels (f)-(h) of Figure 2: protein campaigns under three stopping rules."""
     v14 = {(r["condition"], r["landscape"], r["method"]): r
            for r in _csv(BAY / "v14_protein_credible_ellipsoid/v14_protein_credible_summary.csv")}
     v13 = {(r["landscape"], r["method"]): r for r in _csv(BAY / "v13_protein_bed_vs_kg/v13_protein_summary.csv")
@@ -251,14 +251,14 @@ def _draw_protein_panels(ax, bx, cx, legend_host) -> None:
         axis.set_xticks(range(2))
         axis.set_xticklabels([n for _, n in LANDSCAPES])
         axis.set_ylabel(ylabel)
-    ps.panel(ax, "c", "Joint credible ellipsoid")
-    ps.panel(bx, "d", "Posterior-risk stop")
+    ps.panel(ax, "f", "Joint credible ellipsoid")
+    ps.panel(bx, "g", "Posterior-risk stop")
     ax.set_ylim(0, 29.5)
     ax.set_yticks([0, 10, 20])
     bx.set_ylim(0, 290)
     bx.set_yticks([0, 100, 200])
 
-    ps.panel(cx, "e", "Distribution-free")
+    ps.panel(cx, "h", "Distribution-free")
     ps.ygrid(cx)
     df_methods = PROTEIN_METHODS + (("gp_root_info_df", "GP-Root-Info (DF)", PINK), ("df_os", "DF-OS", REF))
     xs5, w5 = _grouped(cx, 2, 5, width=0.86)
@@ -276,10 +276,120 @@ def _draw_protein_panels(ax, bx, cx, legend_host) -> None:
                        handlelength=0.9, handleheight=0.7, columnspacing=1.0)
 
 
+# Light fills for the task schematics.
+_SHARED_FILL = "#F8DCC8"  # shared outcomes (light orange)
+_PRIVATE_FILL = "#E6DAF3"  # outcomes reachable from one action only (light purple)
+
+
+def _node(ax, x, y, text, *, fill="white", edge=None, size=6.4, weight="normal", pad=0.22, color=None, z=4):
+    ax.text(x, y, text, ha="center", va="center", fontsize=ps.fs(size), fontweight=weight, zorder=z,
+            color=color or INK,
+            bbox=dict(boxstyle=f"round,pad={pad},rounding_size=0.18", facecolor=fill, edgecolor=edge or ps.EDGE,
+                      linewidth=0.7))
+
+
+def _edge(ax, a, b, *, color=MUTED, lw=0.8, shrink=6.0, z=2, arrow=True):
+    ax.annotate("", xy=b, xytext=a, zorder=z,
+                arrowprops=dict(arrowstyle="-|>" if arrow else "-", color=color, linewidth=lw,
+                                shrinkA=shrink, shrinkB=shrink, mutation_scale=5))
+
+
+def _schematic_axes(ax):
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+
+
+def _draw_simulated_task(ax) -> None:
+    """(a) Synthetic overlap DAG: each root action reaches private terminals and a shared hub."""
+    _schematic_axes(ax)
+    ps.panel(ax, "a", "Simulated search graphs")
+    _node(ax, 0.5, 0.93, "root", fill="white", size=6.0)
+    xs = (0.17, 0.5, 0.83)
+    for i, x in enumerate(xs, start=1):
+        _edge(ax, (0.5, 0.93), (x, 0.66))
+        _node(ax, x, 0.66, f"$a_{i}$", fill="white", edge=BLUE, size=6.6)
+        for dx in (-0.07, 0.0, 0.07):
+            _edge(ax, (x, 0.66), (x + dx, 0.38), color=ORANGE, lw=0.6, shrink=5.0)
+            ax.plot([x + dx], [0.36], marker="s", markersize=4.0, color=_PRIVATE_FILL, markeredgecolor=ORANGE,
+                    markeredgewidth=0.7, zorder=4)
+        _edge(ax, (x, 0.66), (0.5 + (x - 0.5) * 0.45, 0.17), color=OURS, lw=0.8, shrink=5.0)
+    ax.add_patch(FancyBboxPatch((0.06, 0.04), 0.88, 0.14, boxstyle="round,pad=0,rounding_size=0.04",
+                                facecolor=_SHARED_FILL, edgecolor=OURS, linewidth=0.8, zorder=3))
+    ax.text(0.5, 0.115, "shared terminals (fraction $\\rho$)", ha="center", va="center", fontsize=ps.fs(5.8),
+            zorder=5)
+
+
+def _seq(ax, x, y, seq, mutated=(), *, w=0.052, h=0.12):
+    """Four amino-acid tiles centred at (x, y); mutated sites are filled orange."""
+    for i, aa in enumerate(seq):
+        cx = x + (i - 1.5) * w
+        fill = PINK if i in mutated else "white"
+        ax.add_patch(FancyBboxPatch((cx - w / 2 + 0.003, y - h / 2), w - 0.006, h,
+                                    boxstyle="round,pad=0,rounding_size=0.01", facecolor=fill,
+                                    edgecolor=ps.EDGE, linewidth=0.6, zorder=4))
+        ax.text(cx, y, aa, ha="center", va="center", fontsize=ps.fs(6.2), zorder=5)
+
+
+def _draw_protein_task(ax) -> None:
+    """(b) Protein engineering: substitutions on GB1; two mutation orders reach the same variant."""
+    _schematic_axes(ax)
+    ps.panel(ax, "b", "Protein engineering")
+    _seq(ax, 0.5, 0.86, "VDGV")
+    for i, site in enumerate(("39", "40", "41", "54")):
+        ax.text(0.5 + (i - 1.5) * 0.052, 0.965, site, ha="center", va="center", fontsize=ps.fs(4.8), color=MUTED)
+    ax.text(0.5 + 2.2 * 0.052 + 0.01, 0.86, "parent", ha="left", va="center", fontsize=ps.fs(5.6), color=MUTED)
+    left, right, bottom = (0.24, 0.5), (0.76, 0.5), (0.5, 0.13)
+    _seq(ax, *left, "ADGV", mutated=(0,))
+    _seq(ax, *right, "VWGV", mutated=(1,))
+    _seq(ax, *bottom, "AWGV", mutated=(0, 1))
+    _edge(ax, (0.45, 0.8), (0.3, 0.57), color=BLUE)
+    _edge(ax, (0.55, 0.8), (0.7, 0.57), color=BLUE)
+    ax.text(0.33, 0.7, "V39A", ha="right", va="center", fontsize=ps.fs(5.6), color=BLUE)
+    ax.text(0.67, 0.7, "D40W", ha="left", va="center", fontsize=ps.fs(5.6), color=BLUE)
+    _edge(ax, (0.3, 0.43), (0.45, 0.2), color=OURS)
+    _edge(ax, (0.7, 0.43), (0.55, 0.2), color=OURS)
+    ax.text(0.34, 0.27, "D40W", ha="right", va="center", fontsize=ps.fs(5.6), color=OURS)
+    ax.text(0.66, 0.27, "V39A", ha="left", va="center", fontsize=ps.fs(5.6), color=OURS)
+    ax.text(0.5 + 2.2 * 0.052 + 0.01, 0.13, "shared variant", ha="left", va="center", fontsize=ps.fs(5.6),
+            color=OURS)
+
+
+def _draw_workflow_task(ax) -> None:
+    """(c) Agentic workflows: one module per stage, 3^4 = 81 configurations run by Qwen3-0.6B."""
+    _schematic_axes(ax)
+    ps.panel(ax, "c", "Agentic workflows")
+    stages = (
+        ("Tools", ("raw", "compact", "embed")),
+        ("Plan", ("0-shot", "CoT", "1-shot")),
+        ("Decode", ("greedy", "sample", "MBR")),
+        ("Verify", ("parse", "norm", "repair")),
+    )
+    xs = (0.12, 0.37, 0.62, 0.87)
+    ys = (0.73, 0.52, 0.31)
+    chosen = (2, 1, 2, 2)
+    pts = []
+    for (name, mods), x, pick in zip(stages, xs, chosen):
+        ax.text(x, 0.93, name, ha="center", va="center", fontsize=ps.fs(5.9), fontweight="bold")
+        for j, (mod, y) in enumerate(zip(mods, ys)):
+            on = j == pick
+            _node(ax, x, y, mod, fill=_SHARED_FILL if on else "white", edge=OURS if on else REF,
+                  size=5.3, pad=0.18, color=INK if on else MUTED)
+        pts.append((x, ys[pick]))
+    for a, b in zip(pts[:-1], pts[1:]):
+        _edge(ax, a, b, color=OURS, lw=0.9, shrink=11.0)
+    ax.text(0.5, 0.08, "$3^4=81$ workflows · Qwen3-0.6B · F$_1$ vs. gold", ha="center", va="center",
+            fontsize=ps.fs(5.6), color=MUTED)
+
+
 def fig2_main_results(out: Path) -> None:
-    """Figure 2: (a)-(b) decision-relevant information, (c)-(e) protein stopping regimes."""
-    fig = plt.figure(figsize=(ps.TEXT_WIDTH, 2.5))
-    top, bottom = fig.subfigures(2, 1, height_ratios=[1.0, 1.3], hspace=0.04)
+    """Figure 2: (a)-(c) the three task families, (d)-(e) decision-relevant information, (f)-(h) protein stopping regimes."""
+    fig = plt.figure(figsize=(ps.TEXT_WIDTH, 3.62))
+    tasks, top, bottom = fig.subfigures(3, 1, height_ratios=[1.08, 1.0, 1.3], hspace=0.03)
+    ta, tb, tc = tasks.subplots(1, 3)
+    _draw_simulated_task(ta)
+    _draw_protein_task(tb)
+    _draw_workflow_task(tc)
     ax, bx = top.subplots(1, 2)
     _draw_mechanism_panels(ax, bx)
     cx, dx, ex = bottom.subplots(1, 3)

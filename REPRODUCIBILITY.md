@@ -50,8 +50,8 @@ Covers Section 2.3, Section 3.1, Appendix G, Appendix J, and Appendix L.
 | Key | Manuscript Evidence | Script (`experiment/simulated/`) | Verified Archive (`results/`) |
 |---|---|---|---|
 | `v12` | **Table 3** (§3.1); **Tables 7, 8, 9, 14, 59; Fig. 3** (App. G.1, L.1) — 15,280-run matched-model BED vs. Correlated KG, GP-OS, VOI, BO & $d=8$ anytime frequentist + latency crossover | `exp_bed_vs_bo.py` | `bayesian_ucd_v1/v12_bed_vs_bo/` |
-| `exp1` | **Fig. 2a, Table 10, Fig. 4** (§3.1, App. G.2) — exact outside-support vs. marginal stopping across overlap | `exp_overlap_exact_regret.py` | `uct_v2_extensions/exp1_exact_regret/` |
-| `e0` | **Fig. 2b, Table 11** (§3.1, App. G.3) — off-witness low-valued proxy benchmark & conic audit | `exp_proxy_and_toy.py` | `bayesian_ucd_v1/e0_and_toy/` |
+| `exp1` | **Fig. 2d, Table 10, Fig. 4** (§3.1, App. G.2) — exact outside-support vs. marginal stopping across overlap | `exp_overlap_exact_regret.py` | `uct_v2_extensions/exp1_exact_regret/` |
+| `e0` | **Fig. 2e, Table 11** (§3.1, App. G.3) — off-witness low-valued proxy benchmark & conic audit | `exp_proxy_and_toy.py` | `bayesian_ucd_v1/e0_and_toy/` |
 | `e1` | **Table 12** (App. G.3) — $4\times 4$ overlap $\times$ correlation phase diagram | `exp_phase_diagram.py` | `bayesian_ucd_v1/e1_phase_diagram/` |
 | `e2` | Supports App. A.4 — feature-hull dominance, proxy & multi-answer geometry | `exp_geometry_and_hull.py` | `bayesian_ucd_v1/e2_geometry_and_proxy/` |
 | `v8_3` | **Tables 13, 15; Fig. 5** (§3.1, App. G.3) — proxy alignment $\times$ cost sweep & deconfounded overlap $\times$ correlation $\times$ mismatch factorial | `exp_factorial_and_proxy_sweep.py` | `bayesian_ucd_v1/v8_exp3_factorial_phase/` |
@@ -86,8 +86,8 @@ Covers Section 3.2, Appendix H, and Appendix J.2/J.4 on measured four-site GB1 (
 
 | Key | Manuscript Evidence | Script (`experiment/protein_engineering/`) | Verified Archive (`results/`) |
 |---|---|---|---|
-| `v14` | **Fig. 2c–e, Table 4** (§3.2); **Table 24, Fig. 8** (App. H.3) — 410-campaign proper $\sqrt{\chi^2_{M-1,.95/.90}}$ joint credible ellipsoid, valid anytime direct posterior-risk MC & simultaneous contrast coverage audit | `exp_credible_ellipsoid_audit.py` | `bayesian_ucd_v1/v14_protein_credible_ellipsoid/` |
-| `v13` | **Table 4 (DF rows), Fig. 2e** (§3.2); **Tables 25, 26** (App. H.2, H.4) — 12,300-run matched GB1 & TmTrpB acquisition comparison (CD-Joint, Correlated KG, GP-OS, GP-Root-Info, GP-UCB) under nominal & DF stopping | `exp_matched_bed_vs_kg.py` | `bayesian_ucd_v1/v13_protein_bed_vs_kg/` |
+| `v14` | **Fig. 2f–h, Table 4** (§3.2); **Table 24, Fig. 8** (App. H.3) — 410-campaign proper $\sqrt{\chi^2_{M-1,.95/.90}}$ joint credible ellipsoid, valid anytime direct posterior-risk MC & simultaneous contrast coverage audit | `exp_credible_ellipsoid_audit.py` | `bayesian_ucd_v1/v14_protein_credible_ellipsoid/` |
+| `v13` | **Table 4 (DF rows), Fig. 2h** (§3.2); **Tables 25, 26** (App. H.2, H.4) — 12,300-run matched GB1 & TmTrpB acquisition comparison (CD-Joint, Correlated KG, GP-OS, GP-Root-Info, GP-UCB) under nominal & DF stopping | `exp_matched_bed_vs_kg.py` | `bayesian_ucd_v1/v13_protein_bed_vs_kg/` |
 | `v11_1` | **Table 27** (§3.2, App. H.5); **Tables 49, 50** (App. J.4) — protein certificate-validity factorial & coupled-stream replay ($91.5\%$ / $82.9\%$ terminal vs. $100\%$ root-regret coverage) | `exp_validity_ablation.py` | `bayesian_ucd_v1/v11_exp1_protein_validity_ablation/` |
 | `v8_1` | **Table 28** (App. H.5); **Table 42, Fig. 11** (App. J.2) — calibrated EB+LOO proteins, rough-GP cure & $(\xi,\varepsilon)$ bounded-residual frontier | `exp_calibrated_proteins.py` | `bayesian_ucd_v1/v8_exp1_calibrated_proteins/` |
 | `v10_2` | **Table 47, Fig. 14b** (App. J.4) — heteroscedastic V34 bridge on GB1 shot noise & WorFBench + raw misspecification stress | `exp_heteroscedastic_bridge.py` | `bayesian_ucd_v1/v10_exp2_real_heteroscedastic_v34/` |
@@ -124,7 +124,7 @@ Figures 2–14 are vector PDFs generated at their printed size, in one shared st
 | Manuscript Figure | File in `figures/` | Backing Suites |
 |---|---|---|
 | **Fig. 1** (Concept overview) | `fig1_concept_overview.png` (README banner; the paper uses its own Figure 1) | Schematic (worked example of the introduction) |
-| **Fig. 2** (a–b: overlap & proxy mechanisms; c–e: protein stopping regimes) | `fig2_main_results.pdf` | `exp1`, `e0`, `v14`, `v13` |
+| **Fig. 2** (a–c: task schematics; d–e: overlap & proxy mechanisms; f–h: protein stopping regimes) | `fig2_main_results.pdf` | `exp1`, `e0`, `v14`, `v13` |
 | **Fig. 3** (App. G.1) | `fig3_acquisition_and_latency.pdf` | `v12` |
 | **Fig. 4** (App. G.2) | `fig4_overlap_mechanism.pdf` | `exp1`, `exp8` |
 | **Fig. 5** (App. G.3) | `fig5_correlation_factorial.pdf` | `v8_3` |
