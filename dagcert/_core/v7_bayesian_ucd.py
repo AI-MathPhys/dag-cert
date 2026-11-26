@@ -39,7 +39,6 @@ import logging
 import math
 import time
 
-import cvxpy as cp
 import numpy as np
 from scipy.linalg import cho_solve, solve_triangular
 from scipy.optimize import minimize
@@ -619,7 +618,17 @@ def solve_feature_challenger_cvxpy(
     raw_features: np.ndarray,
     beta: float,
 ) -> ChallengerResult:
-    """Reference interior-point Second-Order Cone Program (SOCP) via CVXPY."""
+    """Reference interior-point Second-Order Cone Program (SOCP) via CVXPY.
+
+    CVXPY is an optional dependency (``pip install "dagcert[audit]"``); the default
+    column-generation solvers do not need it.
+    """
+    try:
+        import cvxpy as cp
+    except ImportError as exc:  # pragma: no cover - depends on the environment
+        raise ImportError(
+            "solver='cvxpy_socp' needs CVXPY; install it with `pip install \"dagcert[audit]\"`."
+        ) from exc
     k = len(sup)
     p_var = cp.Variable(k, nonneg=True)
     m_z = float(means[z_idx])

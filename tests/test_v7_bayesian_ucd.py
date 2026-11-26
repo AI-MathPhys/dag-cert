@@ -4,8 +4,8 @@ from __future__ import annotations
 import math
 import unittest
 
-import cvxpy as cp
 import numpy as np
+import pytest
 
 from dagcert import DAG, Problem
 from dagcert import HybridWitnessDAGLUCBSession
@@ -31,6 +31,7 @@ from dagcert.benchmarks import (
 
 
 class TestV7BayesianUCD(unittest.TestCase):
+    @pytest.mark.audit
     def test_t1_primal_dual_socp_and_caratheodory_sparsity(self) -> None:
         """T1.1--T1.3: ColGen, Dense-AFW, CVXPY SOCP, and Primal Maximization agree and obey ordering."""
         rng = np.random.default_rng(20261118)
@@ -247,8 +248,11 @@ class TestV7BayesianUCD(unittest.TestCase):
             v_act = float(vals[prob.graph.children[prob.graph.root][sess.action]])
             self.assertLessEqual(v_star - v_act, 0.03 + 1e-12)
 
+    @pytest.mark.audit
     def test_t5_alt_projection_dual_matches_cvxpy_qp_and_multianswer(self) -> None:
         """T5.1--T5.3: Variational dual matches CVXPY QP projection onto cl(H_eps(z, S(a))), and min_regret wins."""
+        import cvxpy as cp
+
         prob = MultiAnswerCommitmentDAGProblem(seed=11, epsilon=0.030, m_leaves=24)
         sup_struct = SupportStructure(prob.graph)
         d = prob.phi.shape[1]

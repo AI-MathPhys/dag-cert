@@ -1,13 +1,14 @@
 [build-system]
-requires = ["setuptools>=68.0"]
+requires = ["setuptools>=77.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "dagcert"
-version = "1.0.0"
-description = "Joint Root Certification and Decision-Aware Bayesian Experimental Design on Search Graphs."
+dynamic = ["version"]
+description = "Certify the decision, not the outcome: joint root certification and decision-aware Bayesian experimental design on search graphs."
 readme = "README.md"
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 authors = [
   {name = "Aurélien Pélissier"},
@@ -24,30 +25,36 @@ keywords = [
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Scientific/Engineering :: Mathematics",
 ]
 dependencies = [
   "numpy>=1.24",
   "scipy>=1.10",
-  "matplotlib>=3.7",
-  "requests>=2.28",
 ]
 
 [project.optional-dependencies]
-dev = [
-  "pytest>=7.0",
-]
+# Independent CVXPY/Clarabel reference solvers (solver="cvxpy_socp") and oracle audits.
 audit = [
   "cvxpy>=1.5",
   "clarabel>=0.7",
   "scs>=3.2",
 ]
+# Everything needed to rerun the paper's experiments, figures and dataset builders.
+experiments = [
+  "matplotlib>=3.7",
+  "pandas>=2.1",
+  "requests>=2.28",
+  "networkx>=3.2",
+]
+# Fresh uncached Qwen3-0.6B WorFBench suites.
 llm = [
   "torch>=2.2",
   "transformers>=4.45",
@@ -55,21 +62,22 @@ llm = [
   "accelerate>=0.30",
   "safetensors>=0.4",
 ]
-all = [
+dev = [
   "pytest>=7.0",
-  "cvxpy>=1.5",
-  "clarabel>=0.7",
-  "scs>=3.2",
-  "torch>=2.2",
-  "transformers>=4.45",
-  "huggingface-hub>=0.25",
-  "accelerate>=0.30",
-  "safetensors>=0.4",
+  "build>=1.2",
+  "twine>=5.0",
 ]
+all = ["dagcert[audit,experiments,llm,dev]"]
 
 [project.urls]
-Homepage = "https://github.com/AI-MathPhys/dagcert"
-Repository = "https://github.com/AI-MathPhys/dagcert"
+Homepage = "https://github.com/AI-MathPhys/dag-cert"
+Repository = "https://github.com/AI-MathPhys/dag-cert"
+Issues = "https://github.com/AI-MathPhys/dag-cert/issues"
+Paper = "https://github.com/AI-MathPhys/dag-cert/blob/main/manuscript/Joint_cert_manuscript.pdf"
+Reproducibility = "https://github.com/AI-MathPhys/dag-cert/blob/main/REPRODUCIBILITY.md"
+
+[tool.setuptools.dynamic]
+version = {attr = "dagcert.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -85,3 +93,7 @@ dagcert = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+markers = [
+  "native: needs a C++17 compiler ($CXX, g++ or clang++); skipped when none is found",
+  "audit: needs the optional CVXPY/Clarabel solvers (pip install \"dagcert[audit]\"); skipped otherwise",
+]

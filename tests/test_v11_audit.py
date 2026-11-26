@@ -5,6 +5,7 @@ import math
 import unittest
 
 import numpy as np
+import pytest
 
 from dagcert import SupportStructure
 from experiment.protein_engineering.exp_validity_ablation import _cp_upper_95, _paired_bootstrap_ci
@@ -32,6 +33,7 @@ class TestV11Audit(unittest.TestCase):
         self.assertTrue(res_b["passed"], f"Audit B failed: {res_b}")
         self.assertEqual(res_b["dom_failures"], 0)
 
+    @pytest.mark.native  # also compares against the C++17 branch-and-bound
     def test_v34_oracles_and_supermartingale_null(self) -> None:
         res_c1 = audit_c1_v34_profiled_oracles(n_random=20, n_bimodal=10, seed=103)
         self.assertTrue(res_c1["passed"], f"Audit C1 failed: {res_c1}")

@@ -1,18 +1,20 @@
 # Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs (`dagcert`)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
-[![Manuscript](https://img.shields.io/badge/Manuscript-PDF-red.svg)](manuscript/Joint_cert_manuscript.pdf)
-[![Lean 4](https://img.shields.io/badge/Formalization-Lean%204-purple.svg)](lean/)
+[![PyPI](https://img.shields.io/pypi/v/dagcert.svg)](https://pypi.org/project/dagcert/)
+[![CI](https://github.com/AI-MathPhys/dag-cert/actions/workflows/ci.yml/badge.svg)](https://github.com/AI-MathPhys/dag-cert/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/AI-MathPhys/dag-cert/blob/main/LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://github.com/AI-MathPhys/dag-cert/blob/main/pyproject.toml)
+[![Manuscript](https://img.shields.io/badge/Manuscript-PDF-red.svg)](https://github.com/AI-MathPhys/dag-cert/blob/main/manuscript/Joint_cert_manuscript.pdf)
+[![Lean 4](https://img.shields.io/badge/Formalization-Lean%204-purple.svg)](https://github.com/AI-MathPhys/dag-cert/tree/main/lean/)
 
 Installable Python library (`dagcert`), full experimental suite (`experiment/`), bundled benchmark datasets, SHA-256-verified run archives (`results/`), Lean 4 formalizations (`lean/`), and complete reproduction scripts for **Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs**.
 
-- **Manuscript:** [`manuscript/Joint_cert_manuscript.pdf`](manuscript/Joint_cert_manuscript.pdf) (LaTeX source: [`manuscript/joint_cert_manuscript.tex`](manuscript/joint_cert_manuscript.tex))
-- **Artifact-to-paper map:** [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) maps every table (Tables 1–69) and figure (Figures 1–15) to its archived logs and reproduction command — **100% coverage with zero missing experiments**.
-- **Formal mathematics:** [`lean/`](lean/) contains a Lean 4 formalization of the paper's 62 numbered results (59 proved as written, 3 partial, 0 open); see [`lean/README.md`](lean/README.md) for the status of each.
+- **Manuscript:** [`manuscript/Joint_cert_manuscript.pdf`](https://github.com/AI-MathPhys/dag-cert/blob/main/manuscript/Joint_cert_manuscript.pdf) (LaTeX source: [`manuscript/joint_cert_manuscript.tex`](https://github.com/AI-MathPhys/dag-cert/blob/main/manuscript/joint_cert_manuscript.tex))
+- **Artifact-to-paper map:** [`REPRODUCIBILITY.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/REPRODUCIBILITY.md) maps every table (Tables 1–69) and figure (Figures 1–15) to its archived logs and reproduction command — **100% coverage with zero missing experiments**.
+- **Formal mathematics:** [`lean/`](https://github.com/AI-MathPhys/dag-cert/tree/main/lean/) contains a Lean 4 formalization of the paper's 62 numbered results (59 proved as written, 3 partial, 0 open); see [`lean/README.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/lean/README.md) for the status of each.
 
 <p align="center">
-  <img src="figures/fig1_concept_overview.png" width="94%" alt="Shared outcomes change what can invalidate a root decision"/>
+  <img src="https://raw.githubusercontent.com/AI-MathPhys/dag-cert/main/figures/fig1_concept_overview.png" width="94%" alt="Shared outcomes change what can invalidate a root decision"/>
 </p>
 
 *Shared outcomes change what can invalidate a root decision (Figure 1 of the manuscript): a terminal that the chosen action can still reach cannot count against it, so only excluded outcomes matter.*
@@ -37,26 +39,34 @@ Key methodological contributions implemented in `dagcert`:
 
 ## Installation & Python Library Quickstart
 
-Tested on Python 3.10–3.13 (Linux and macOS; pure-Python paths also run on Windows).
+Requires Python 3.10 or newer. The core library depends only on NumPy and SciPy.
 
 ### 1. Install `dagcert`
 
 ```bash
-git clone https://github.com/AI-MathPhys/dagcert.git
-cd dagcert
-
-python3 -m venv .venv
-source .venv/bin/activate   # Windows PowerShell: .\.venv\Scripts\Activate.ps1
-
-# Core library (numpy, scipy, matplotlib, requests)
-python -m pip install -e .
-
-# Optional extras:
-python -m pip install -e ".[dev,audit]"   # pytest + CVXPY/Clarabel independent oracle audits
-python -m pip install -e ".[all]"         # adds PyTorch / Transformers for live Qwen3-0.6B suites
+pip install dagcert
 ```
 
-> **Native C++17 accelerators (optional, automatic):** If `g++` or `clang++` (or `$CXX`) is on `PATH`, the library automatically compiles and caches four `-O3` C++17 shared libraries in `dagcert/_native/` (exact correlated KG, outward-certified branch-and-bound for unknown-variance tracking, graph-maintenance kernels, and SameGame playouts). Every accelerator has a bit-parity pure-Python fallback.
+Optional extras:
+
+```bash
+pip install "dagcert[audit]"         # CVXPY/Clarabel reference solvers (solver="cvxpy_socp") and oracle audits
+pip install "dagcert[experiments]"   # matplotlib, pandas, requests, networkx: paper experiments and figures
+pip install "dagcert[llm]"           # PyTorch / Transformers for the live Qwen3-0.6B workflow suites
+pip install "dagcert[all]"           # everything, plus pytest, build and twine
+```
+
+To reproduce the paper, install from source instead:
+
+```bash
+git clone https://github.com/AI-MathPhys/dag-cert.git
+cd dag-cert
+python -m venv .venv
+source .venv/bin/activate            # Windows PowerShell: .\.venv\Scripts\Activate.ps1
+python -m pip install -e ".[dev,audit,experiments]"
+```
+
+> **Native C++17 accelerators (optional):** when `$CXX`, `g++` or `clang++` is available, `dagcert` compiles its four `-O3` C++17 kernels on first use and caches the shared libraries in the system temporary directory (exact correlated KG, outward-certified branch-and-bound for unknown-variance tracking, graph-maintenance kernels, and SameGame playouts). Exact correlated KG falls back to a pure-Python implementation with identical results; the other three are research accelerators that require a compiler, and their tests are skipped when none is found.
 
 ### 2. Minimal Library Usage
 
@@ -105,16 +115,16 @@ for policy in ("cd_joint", "gp_os", "kg"):
 
 | Module | Paper Concepts | Key Public Exports |
 |---|---|---|
-| [`dagcert/graph.py`](dagcert/graph.py) | Finite all-MAX search DAG, shared root supports, support overlap | `SearchDAG` (`.from_supports`, `.root_supports`, `.root_regrets`, `.support_overlap_matrix`), `DAG`, `Problem`, `SupportStructure` |
-| [`dagcert/certificates.py`](dagcert/certificates.py) | Exact rectangular regret, conic ellipsoidal dual, dual witness covers, bounded residuals | `exact_rectangular_regret`, `JointEllipsoidCertifier`, `check_ellipsoid_stopping`, `DualWitnessCovers`, `CanonicalIntervals`, `NestedIntervals`, `RobustAwareJointCertifier` |
-| [`dagcert/posteriors.py`](dagcert/posteriors.py) | Conjugate Gaussian posterior, contrast rank $r$, $\sqrt{\chi^2_{r,1-\delta}}$, valid anytime posterior-risk MC | `SharedGaussianPosterior`, `contrast_rank_of_kernel`, `chi2_credible_beta`, `contrast_ellipsoid_coverage`, `eval_direct_posterior_risk_valid` |
-| [`dagcert/acquisition.py`](dagcert/acquisition.py) | Decision-aware BED & BO baselines under matched posteriors | `certify_root_action`, `MatchedModelBEDSession`, `CDJointPolicy`, `CorrelatedKGPolicy`, `GPOSPolicy`, `BayesianVOIPolicy`, `GPUCBPolicy`, `GPTSPolicy`, `NoisyGPEIPolicy` |
-| [`dagcert/tracking.py`](dagcert/tracking.py) | Optimal information tracking ($T_*^\varepsilon$), unknown-variance sparse V34 tracker | `RegularizedInfoTrackerSession`, `run_v34_tracker`, `CppV34BnBRunner`, `compute_characteristic_rate`, `solve_action_design_certified` |
-| [`dagcert/search.py`](dagcert/search.py) | Passive trajectory-coupled UCT/PUCT certification monitors | `TrajectoryCoupledUCT`, `RootPUCT`, `RecursivePUCT`, `CertifiedSearchSession`, `CppKernelRunner` |
-| [`dagcert/benchmarks/`](dagcert/benchmarks/) | Bundled synthetic, GB1/TmTrpB protein, WorFBench workflow & SameGame DAG loaders | `OverlapCorrelationDAGProblem`, `OffWitnessProxyDAGProblem`, `GB1MutationCampaignProblem`, `TrpBMutationCampaignProblem`, `WorFBenchWorkflowProblem`, `load_standard_samegame_boards` |
-| [`dagcert/_native/`](dagcert/_native/) | Optional auto-compiled `-O3` C++17 accelerators | `_cpp_v12_kg.cpp`, `_cpp_v34_bnb.cpp`, `_cpp_kernels.cpp`, `_cpp_samegame.cpp` |
+| [`dagcert/graph.py`](https://github.com/AI-MathPhys/dag-cert/blob/main/dagcert/graph.py) | Finite all-MAX search DAG, shared root supports, support overlap | `SearchDAG` (`.from_supports`, `.root_supports`, `.root_regrets`, `.support_overlap_matrix`), `DAG`, `Problem`, `SupportStructure` |
+| [`dagcert/certificates.py`](https://github.com/AI-MathPhys/dag-cert/blob/main/dagcert/certificates.py) | Exact rectangular regret, conic ellipsoidal dual, dual witness covers, bounded residuals | `exact_rectangular_regret`, `JointEllipsoidCertifier`, `check_ellipsoid_stopping`, `DualWitnessCovers`, `CanonicalIntervals`, `NestedIntervals`, `RobustAwareJointCertifier` |
+| [`dagcert/posteriors.py`](https://github.com/AI-MathPhys/dag-cert/blob/main/dagcert/posteriors.py) | Conjugate Gaussian posterior, contrast rank $r$, $\sqrt{\chi^2_{r,1-\delta}}$, valid anytime posterior-risk MC | `SharedGaussianPosterior`, `contrast_rank_of_kernel`, `chi2_credible_beta`, `contrast_ellipsoid_coverage`, `eval_direct_posterior_risk_valid` |
+| [`dagcert/acquisition.py`](https://github.com/AI-MathPhys/dag-cert/blob/main/dagcert/acquisition.py) | Decision-aware BED & BO baselines under matched posteriors | `certify_root_action`, `MatchedModelBEDSession`, `CDJointPolicy`, `CorrelatedKGPolicy`, `GPOSPolicy`, `BayesianVOIPolicy`, `GPUCBPolicy`, `GPTSPolicy`, `NoisyGPEIPolicy` |
+| [`dagcert/tracking.py`](https://github.com/AI-MathPhys/dag-cert/blob/main/dagcert/tracking.py) | Optimal information tracking ($T_*^\varepsilon$), unknown-variance sparse V34 tracker | `RegularizedInfoTrackerSession`, `run_v34_tracker`, `CppV34BnBRunner`, `compute_characteristic_rate`, `solve_action_design_certified` |
+| [`dagcert/search.py`](https://github.com/AI-MathPhys/dag-cert/blob/main/dagcert/search.py) | Passive trajectory-coupled UCT/PUCT certification monitors | `TrajectoryCoupledUCT`, `RootPUCT`, `RecursivePUCT`, `CertifiedSearchSession`, `CppKernelRunner` |
+| [`dagcert/benchmarks/`](https://github.com/AI-MathPhys/dag-cert/tree/main/dagcert/benchmarks/) | Bundled synthetic, GB1/TmTrpB protein, WorFBench workflow & SameGame DAG loaders | `OverlapCorrelationDAGProblem`, `OffWitnessProxyDAGProblem`, `GB1MutationCampaignProblem`, `TrpBMutationCampaignProblem`, `WorFBenchWorkflowProblem`, `load_standard_samegame_boards` |
+| [`dagcert/_native/`](https://github.com/AI-MathPhys/dag-cert/tree/main/dagcert/_native/) | Optional auto-compiled `-O3` C++17 accelerators | `_cpp_v12_kg.cpp`, `_cpp_v34_bnb.cpp`, `_cpp_kernels.cpp`, `_cpp_samegame.cpp` |
 
-Standalone runnable library examples live in [`examples/`](examples/):
+Standalone runnable library examples live in [`examples/`](https://github.com/AI-MathPhys/dag-cert/tree/main/examples/):
 
 ```bash
 python examples/quickstart_cd_joint.py   # Fig. 1b + CD-Joint vs. GP-OS vs. KG + distribution-free
@@ -148,10 +158,10 @@ Every main-paper and appendix result is backed by executable code in `experiment
 
 All experiments rely directly on the installed `dagcert` package and are organized into three domain folders mirroring Section 3 of the paper, plus unified plotting (`experiment/plots/`) and CLI (`experiment/run_all.py`):
 
-- [`experiment/simulated/`](experiment/simulated/) — Section 3.1 + Appendices G, J, L (27 suites + `passive_uct/` v1 archive)
-- [`experiment/protein_engineering/`](experiment/protein_engineering/) — Section 3.2 + Appendix H (10 GB1 & TmTrpB suites)
-- [`experiment/agentic_workflows/`](experiment/agentic_workflows/) — Section 3.3 + Appendix I (WorFBench offline & live Qwen3-0.6B suites)
-- [`experiment/plots/`](experiment/plots/) — All manuscript data figures (Figures 2–15: `figures/fig*.pdf`, `figures/supp_*.pdf`) in one shared style, plus detailed suite figures
+- [`experiment/simulated/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/simulated/) — Section 3.1 + Appendices G, J, L (27 suites + `passive_uct/` v1 archive)
+- [`experiment/protein_engineering/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/protein_engineering/) — Section 3.2 + Appendix H (10 GB1 & TmTrpB suites)
+- [`experiment/agentic_workflows/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/agentic_workflows/) — Section 3.3 + Appendix I (WorFBench offline & live Qwen3-0.6B suites)
+- [`experiment/plots/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/plots/) — All manuscript data figures (Figures 2–15: `figures/fig*.pdf`, `figures/supp_*.pdf`) in one shared style, plus detailed suite figures
 
 ### Fast Verification (~2 minutes, CPU only, offline)
 
@@ -187,7 +197,7 @@ python experiment/run_all.py benchmark --domain protein_engineering --only v14
 
 ### Paper Section to Suite Key Map
 
-See [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) for the complete table-by-table mapping across Tables 1–69 and Figures 1–15.
+See [`REPRODUCIBILITY.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/REPRODUCIBILITY.md) for the complete table-by-table mapping across Tables 1–69 and Figures 1–15.
 
 | Paper Section | Tables / Figures | Domain | Suite Keys |
 |---|---|---|---|
@@ -222,16 +232,16 @@ Pass `--out-dir build/rebuilt_data` to rebuild alongside the bundled files for c
 
 ## Lean 4 Formalizations (`lean/`)
 
-The [`lean/`](lean/) directory holds a Lean 4 + Mathlib formalization of the paper's numbered results, with no `sorry` and no added axioms. Of the 62 results, 59 are proved as written up to harmless differences, 3 are partly proved or proved in a form that differs from the manuscript statement, and 0 are open, according to an independent clause-by-clause review. [`lean/README.md`](lean/README.md) gives, for every result, the Lean theorem names and exactly how the formal statement relates to the manuscript, a list of hypotheses the manuscript leaves implicit, and the limits of the formalization (for example: algorithms are specified by their selection rules, numerical oracles enter through the paper's contract, and running-time claims hold in an explicit step-counting model).
+The [`lean/`](https://github.com/AI-MathPhys/dag-cert/tree/main/lean/) directory holds a Lean 4 + Mathlib formalization of the paper's numbered results, with no `sorry` and no added axioms. Of the 62 results, 59 are proved as written up to harmless differences, 3 are partly proved or proved in a form that differs from the manuscript statement, and 0 are open, according to an independent clause-by-clause review. [`lean/README.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/lean/README.md) gives, for every result, the Lean theorem names and exactly how the formal statement relates to the manuscript, a list of hypotheses the manuscript leaves implicit, and the limits of the formalization (for example: algorithms are specified by their selection rules, numerical oracles enter through the paper's contract, and running-time claims hold in an explicit step-counting model).
 
-Build with `cd lean && lake exe cache get && lake build` (Lean toolchain pinned in [`lean/lean-toolchain`](lean/lean-toolchain)).
+Build with `cd lean && lake exe cache get && lake build` (Lean toolchain pinned in [`lean/lean-toolchain`](https://github.com/AI-MathPhys/dag-cert/blob/main/lean/lean-toolchain)).
 
 ---
 
 ## Repository Structure
 
 ```text
-dagcert/
+dag-cert/
 ├── dagcert/                         # Installable Python library (`pip install dagcert` / `-e .`)
 │   ├── graph.py                     # SearchDAG, SupportStructure, regret & overlap utilities
 │   ├── certificates.py              # Rectangular, conic ellipsoidal, witness-cover & DF bounds
@@ -256,6 +266,7 @@ dagcert/
 ├── lean/                            # Lean 4 + Mathlib formal proofs (status in lean/README.md)
 ├── manuscript/                      # Paper PDF & LaTeX source
 ├── reference/tables/                # Reference LaTeX tables for passive UCT archive
+├── .github/workflows/               # CI (Linux and macOS) and PyPI release on version tags
 ├── pyproject.toml                   # Package metadata and optional extras
 ├── CITATION.cff                     # Machine-readable citation metadata
 └── REPRODUCIBILITY.md               # Complete Table 1--69 & Figure 1--15 artifact map
@@ -273,13 +284,13 @@ dagcert/
 
 ## Citation
 
-If you use `dagcert` or this codebase in your research, please cite the accompanying manuscript (see also [`CITATION.cff`](CITATION.cff)):
+If you use `dagcert` or this codebase in your research, please cite the accompanying manuscript (see also [`CITATION.cff`](https://github.com/AI-MathPhys/dag-cert/blob/main/CITATION.cff)):
 
 ```bibtex
 @misc{pelissier2026dagcert,
   title  = {Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs},
   author = {P{\'e}lissier, Aur{\'e}lien},
   year   = {2026},
-  url    = {https://github.com/AI-MathPhys/dagcert}
+  url    = {https://github.com/AI-MathPhys/dag-cert}
 }
 ```

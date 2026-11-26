@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unified reproducibility CLI for AI-MathPhys/dagcert.
+"""Unified reproducibility CLI for AI-MathPhys/dag-cert.
 
 Covers ALL experiments in *Certify the Decision, Not the Outcome: Bayesian Experimental Design
 on Search Graphs*, organized into the paper's three experimental domains:

@@ -12,7 +12,7 @@ Appendix letters follow the compiled PDF: A–F (theory & methods), **G** (simul
 ## 1. Environment, Library & Data Setup
 
 ```bash
-python -m pip install -e ".[dev,audit]"      # Core library + pytest + CVXPY/Clarabel oracle tests
+python -m pip install -e ".[dev,audit,experiments]"   # Library + pytest + CVXPY/Clarabel oracle tests + plotting/data tools
 # Optional for fresh uncached live Qwen3-0.6B runs (v8_5, v10_3, v11_2):
 python -m pip install -e ".[all]"
 ```

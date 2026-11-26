@@ -5,8 +5,8 @@ type: software
 authors:
   - family-names: "Pélissier"
     given-names: "Aurélien"
-repository-code: "https://github.com/AI-MathPhys/dagcert"
-url: "https://github.com/AI-MathPhys/dagcert"
+repository-code: "https://github.com/AI-MathPhys/dag-cert"
+url: "https://github.com/AI-MathPhys/dag-cert"
 license: MIT
 version: "1.0.0"
 date-released: "2026-11-26"
