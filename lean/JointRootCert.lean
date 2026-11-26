@@ -21,3 +21,5 @@ import JointRootCert.UnknownVariance
 import JointRootCert.GaussianInfo
 import JointRootCert.StoppedProcess
 import JointRootCert.Assembly
+import JointRootCert.EmpiricalBernstein
+import JointRootCert.ChiSquare
