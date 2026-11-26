@@ -10,14 +10,14 @@
 Installable Python library (`dagcert`), full experimental suite (`experiment/`), bundled benchmark datasets, SHA-256-verified run archives (`results/`), Lean 4 formalizations (`lean/`), and complete reproduction scripts for **Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs**.
 
 - **Manuscript:** [`manuscript/Joint_cert_manuscript.pdf`](https://github.com/AI-MathPhys/dag-cert/blob/main/manuscript/Joint_cert_manuscript.pdf) (LaTeX source: [`manuscript/joint_cert_manuscript.tex`](https://github.com/AI-MathPhys/dag-cert/blob/main/manuscript/joint_cert_manuscript.tex))
-- **Artifact-to-paper map:** [`REPRODUCIBILITY.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/REPRODUCIBILITY.md) maps every table (Tables 1–69) and figure (Figures 1–15) to its archived logs and reproduction command — **100% coverage with zero missing experiments**.
+- **Artifact-to-paper map:** [`REPRODUCIBILITY.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/REPRODUCIBILITY.md) maps every table (Tables 1–69) and figure (Figures 1–14) to its archived logs and reproduction command — **100% coverage with zero missing experiments**.
 - **Formal mathematics:** [`lean/`](https://github.com/AI-MathPhys/dag-cert/tree/main/lean/) contains a Lean 4 formalization of the paper's 62 numbered results (62 proved as written, 0 false as written with a counterexample, 0 partial, 0 open); see [`lean/README.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/lean/README.md) for the status of each.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/AI-MathPhys/dag-cert/main/figures/fig1_concept_overview.png" width="94%" alt="Shared outcomes change what can invalidate a root decision"/>
 </p>
 
-*Shared outcomes change what can invalidate a root decision (Figure 1 of the manuscript): a terminal that the chosen action can still reach cannot count against it, so only excluded outcomes matter.*
+*Shared outcomes change what can invalidate a root decision: a terminal that the chosen action can still reach cannot count against it, so only excluded outcomes matter.*
 
 ---
 
@@ -142,15 +142,15 @@ Every main-paper and appendix result is backed by executable code in `experiment
 | Paper Location | Finding | Domain & Suite |
 |---|---|---|
 | §2.3, Table 1 | Lazy conic certificate updates scale from $0.70\text{ ms}$ ($M=64$) to $25.7\text{ ms}$ ($M=4{,}096$) | `simulated` (`e6`) |
-| §3.1, Table 3; App. G.1 (Tables 7–9, Fig. 4) | Matched-model $M=64, K=8$ factorial: CD-Joint needs **$2{,}358$** vs. Correlated KG **$5{,}056$** capped evals (**$2.14\times$** reduction; $2.53\times$ with overlap + correlation); **$1.65\times$** under anytime-valid $d=8$ frequentist stopping | `simulated` (`v12`) |
+| §3.1, Table 3; App. G.1 (Tables 7–9, Fig. 3) | Matched-model $M=64, K=8$ factorial: CD-Joint needs **$2{,}358$** vs. Correlated KG **$5{,}056$** capped evals (**$2.14\times$** reduction; $2.53\times$ with overlap + correlation); **$1.65\times$** under anytime-valid $d=8$ frequentist stopping | `simulated` (`v12`) |
 | §3.1, Fig. 2a, Table 10 | Exact outside-support stopping needs **$0.054\times$** the queries of marginal stopping at $M=256$, overlap $.88$ (**$18.4\times$**) | `simulated` (`exp1`) |
 | §3.1, Fig. 2b, Tables 11 & 13 | CD-Joint routes **$76.8\%$** of queries to a low-valued proxy vs. **$0.6\%$** for direct-witness sampling; up to **$48.5\times$** lower median cost | `simulated` (`e0`, `v8_3`) |
-| §3.2, Fig. 3, Table 4; App. H (Tables 24–26, Fig. 9) | 410 paired GB1 ($n=200$) & TmTrpB ($n=210$) campaigns: under rank-corrected $\sqrt{\chi^2_{r,.95}}$ ellipsoid, CD-Joint needs **$17{,}678$** [70%] / **$3{,}629$** [100%] assays vs. KG **$25{,}000^*$** [0%] / **$9{,}337$** [85.7%] (**$2.57\times$** on TmTrpB); ranking reverses under direct posterior risk (KG **$130$/$63$** vs. CD-Joint **$240$/$92$**) and independent-arm DF ($0\%$ for GP-only CD-Joint) | `protein_engineering` (`v14`, `v13`) |
+| §3.2, Fig. 2c–e, Table 4; App. H (Tables 24–26, Fig. 8) | 410 paired GB1 ($n=200$) & TmTrpB ($n=210$) campaigns: under rank-corrected $\sqrt{\chi^2_{r,.95}}$ ellipsoid, CD-Joint needs **$17{,}678$** [70%] / **$3{,}629$** [100%] assays vs. KG **$25{,}000^*$** [0%] / **$9{,}337$** [85.7%] (**$2.57\times$** on TmTrpB); ranking reverses under direct posterior risk (KG **$130$/$63$** vs. CD-Joint **$240$/$92$**) and independent-arm DF ($0\%$ for GP-only CD-Joint) | `protein_engineering` (`v14`, `v13`) |
 | §3.2, Table 27 | Empirical-Bayes protein audit: simultaneous terminal coverage $91.5\%$ / $82.9\%$, yet **$100\%$** root-regret-bound coverage across 410 campaigns | `protein_engineering` (`v11_1`) |
 | §3.3, Table 5 (offline), Table 35 | WorFBench offline ($3^4=81$ workflows): OS certifies **$100\%$** in **$1{,}937$** median evals ($0.95\text{ M}$ tokens) vs. Flat-LUCB **$8{,}486$** ($4.78\text{ M}$ tokens) at identical held-out $F_1 = 0.529$ | `agentic_workflows` (`exp12`) |
-| §3.3, Table 5 (live), Table 37, Fig. 10 | 36 fresh uncached Qwen3-0.6B campaigns across 4 domains: formal DF stops **$0/36$** by 60 evals; model-based EB+LOO certifies **$36/36$** in median **$24$** evals (**$14{,}291$** tokens, held-out $F_1 = 0.4717$) | `agentic_workflows` (`v11_2`) |
-| App. J.3, Table 43, Fig. 14a | Unknown-variance sparse-refresh + action-local IUT tracker (V34): **$50.4\times$** speedup at $K=64$, rank 2 ($34.0\text{ s} \to 0.675\text{ s}$) | `simulated` (`v9_1`) |
-| App. L.5–L.6, Tables 68–69, Fig. 15 | Native C++17 outward-certified B&B achieves **$31$–$82\times$** end-to-end speedup; zero-shared-code independent numerical-oracle audit passes **$5/5$** checks | `simulated` (`v10_1`, `v11_3`) |
+| §3.3, Table 5 (live), Table 37, Fig. 9 | 36 fresh uncached Qwen3-0.6B campaigns across 4 domains: formal DF stops **$0/36$** by 60 evals; model-based EB+LOO certifies **$36/36$** in median **$24$** evals (**$14{,}291$** tokens, held-out $F_1 = 0.4717$) | `agentic_workflows` (`v11_2`) |
+| App. J.3, Table 43, Fig. 13a | Unknown-variance sparse-refresh + action-local IUT tracker (V34): **$50.4\times$** speedup at $K=64$, rank 2 ($34.0\text{ s} \to 0.675\text{ s}$) | `simulated` (`v9_1`) |
+| App. L.5–L.6, Tables 68–69, Fig. 14 | Native C++17 outward-certified B&B achieves **$31$–$82\times$** end-to-end speedup; zero-shared-code independent numerical-oracle audit passes **$5/5$** checks | `simulated` (`v10_1`, `v11_3`) |
 
 ---
 
@@ -161,7 +161,7 @@ All experiments rely directly on the installed `dagcert` package and are organiz
 - [`experiment/simulated/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/simulated/) — Section 3.1 + Appendices G, J, L (27 suites + `passive_uct/` v1 archive)
 - [`experiment/protein_engineering/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/protein_engineering/) — Section 3.2 + Appendix H (10 GB1 & TmTrpB suites)
 - [`experiment/agentic_workflows/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/agentic_workflows/) — Section 3.3 + Appendix I (WorFBench offline & live Qwen3-0.6B suites)
-- [`experiment/plots/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/plots/) — All manuscript data figures (Figures 2–15: `figures/fig*.pdf`, `figures/supp_*.pdf`) in one shared style, plus detailed suite figures
+- [`experiment/plots/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/plots/) — All manuscript data figures (Figures 2–14: `figures/fig*.pdf`, `figures/supp_*.pdf`) in one shared style, plus detailed suite figures
 
 ### Fast Verification (~2 minutes, CPU only, offline)
 
@@ -175,7 +175,7 @@ python experiment/run_all.py verify
 # 3. Run all 88 unit, parity, library-API, and independent-oracle tests
 python experiment/run_all.py test
 
-# 4. Regenerate all 14 manuscript data figures (Figures 2-15: `figures/fig*.pdf`, `figures/supp_*.pdf`)
+# 4. Regenerate all 14 manuscript data figures (Figures 2–14: `figures/fig*.pdf`, `figures/supp_*.pdf`)
 python experiment/run_all.py figures
 ```
 
@@ -197,20 +197,20 @@ python experiment/run_all.py benchmark --domain protein_engineering --only v14
 
 ### Paper Section to Suite Key Map
 
-See [`REPRODUCIBILITY.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/REPRODUCIBILITY.md) for the complete table-by-table mapping across Tables 1–69 and Figures 1–15.
+See [`REPRODUCIBILITY.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/REPRODUCIBILITY.md) for the complete table-by-table mapping across Tables 1–69 and Figures 1–14.
 
 | Paper Section | Tables / Figures | Domain | Suite Keys |
 |---|---|---|---|
 | §2.3, App. L.1 (conic update scaling & break-even) | Tables 1, 57, 58 | `simulated` | `e6`, `v8_4` |
-| §3.1, App. G.1, App. L.1 (matched BED vs. KG/VOI/BO & $d=8$ anytime) | Table 3, Tables 7–9, 14, 59; Fig. 4 | `simulated` | `v12` |
-| §3.1, App. G.2–G.3 (structural overlap & correlated proxy mechanisms) | Fig. 2, Tables 10–13, 15; Figs. 5–6 | `simulated` | `exp1`, `e0`, `e1`, `e2`, `v8_3` |
-| App. G.4–G.5 (DF baselines, witness ablations, SameGame & routing) | Tables 16–23; Figs. 7–8 | `simulated` | `exp5`, `exp6`, `exp8`–`exp11`, `v8_6` |
-| §3.2, App. H.1–H.4 (matched GB1 & TmTrpB BED vs. KG & $\chi^2_{r,.95}$ audit) | Fig. 3, Table 4, Tables 24–26; Fig. 9 | `protein_engineering` | `v14`, `v13` |
-| §3.2, App. H.5–H.6 (calibration, validity ablation, extended GB1/TmTrpB) | Tables 27–34; Fig. 12 | `protein_engineering` | `v11_1`, `v8_1`, `exp12`–`exp14`, `e3` |
-| §3.3, App. I (WorFBench offline & live uncached Qwen3-0.6B workflows) | Table 5, Tables 35–39; Figs. 10, 15c | `agentic_workflows` | `exp12`, `exp13`, `v11_2`, `v10_3`, `v8_5` |
-| App. J.1–J.4 (info tracking, unknown variance V34, heteroscedastic bridge) | Tables 40–50; Figs. 11–14, 15b | `simulated` / `protein_engineering` | `v8_2`, `e5`, `v8_1`, `v9_1`–`v9_4`, `v10_2`, `v11_1` |
+| §3.1, App. G.1, App. L.1 (matched BED vs. KG/VOI/BO & $d=8$ anytime) | Table 3, Tables 7–9, 14, 59; Fig. 3 | `simulated` | `v12` |
+| §3.1, App. G.2–G.3 (structural overlap & correlated proxy mechanisms) | Fig. 2a–b, Tables 10–13, 15; Figs. 4–5 | `simulated` | `exp1`, `e0`, `e1`, `e2`, `v8_3` |
+| App. G.4–G.5 (DF baselines, witness ablations, SameGame & routing) | Tables 16–23; Figs. 6–7 | `simulated` | `exp5`, `exp6`, `exp8`–`exp11`, `v8_6` |
+| §3.2, App. H.1–H.4 (matched GB1 & TmTrpB BED vs. KG & $\chi^2_{r,.95}$ audit) | Fig. 2c–e, Table 4, Tables 24–26; Fig. 8 | `protein_engineering` | `v14`, `v13` |
+| §3.2, App. H.5–H.6 (calibration, validity ablation, extended GB1/TmTrpB) | Tables 27–34; Fig. 11 | `protein_engineering` | `v11_1`, `v8_1`, `exp12`–`exp14`, `e3` |
+| §3.3, App. I (WorFBench offline & live uncached Qwen3-0.6B workflows) | Table 5, Tables 35–39; Figs. 9, 14c | `agentic_workflows` | `exp12`, `exp13`, `v11_2`, `v10_3`, `v8_5` |
+| App. J.1–J.4 (info tracking, unknown variance V34, heteroscedastic bridge) | Tables 40–50; Figs. 10–13, 14b | `simulated` / `protein_engineering` | `v8_2`, `e5`, `v8_1`, `v9_1`–`v9_4`, `v10_2`, `v11_1` |
 | App. J.5, L.2–L.4 (passive UCT/PUCT, C++ maintenance kernels, memory) | Tables 51–56, 60–67 | `simulated` | `passive_uct/`, `exp2`–`exp4`, `exp7` |
-| App. L.5–L.6 (native C++17 B&B scaling, independent oracle audit) | Tables 68–69; Fig. 15a | `simulated` | `v10_1`, `v11_3` |
+| App. L.5–L.6 (native C++17 B&B scaling, independent oracle audit) | Tables 68–69; Fig. 14a | `simulated` | `v10_1`, `v11_3` |
 
 ---
 
@@ -257,11 +257,11 @@ dag-cert/
 │   ├── simulated/                   # §3.1 + App. G, J, L (27 suites + passive_uct/ v1 archive)
 │   ├── protein_engineering/         # §3.2 + App. H (10 GB1 & TmTrpB suites)
 │   ├── agentic_workflows/           # §3.3 + App. I (WorFBench offline & live Qwen3-0.6B suites)
-│   └── plots/                       # Generates manuscript Figures 2-15 + detailed suite plots
+│   └── plots/                       # Generates manuscript Figures 2–14 + detailed suite plots
 ├── examples/                        # Standalone library quickstart & domain demos
 ├── tests/                           # 88 unit, parity, library-API & oracle tests (v1--v14)
 ├── results/                         # SHA-256-verified run archives, CSV summaries & manifests
-├── figures/                         # README overview PNG + manuscript Figures 2-15 (vector PDF)
+├── figures/                         # README overview PNG + manuscript Figures 2–14 (vector PDF)
 ├── scripts/fetch_data.py            # Offline verifier & upstream data/model rebuild utility
 ├── lean/                            # Lean 4 + Mathlib formal proofs (status in lean/README.md)
 ├── manuscript/                      # Paper PDF & LaTeX source
@@ -269,7 +269,7 @@ dag-cert/
 ├── .github/workflows/               # CI (Linux and macOS) and PyPI release on version tags
 ├── pyproject.toml                   # Package metadata and optional extras
 ├── CITATION.cff                     # Machine-readable citation metadata
-└── REPRODUCIBILITY.md               # Complete Table 1--69 & Figure 1--15 artifact map
+└── REPRODUCIBILITY.md               # Complete Table 1--69 & Figure 1--14 artifact map
 ```
 
 ---

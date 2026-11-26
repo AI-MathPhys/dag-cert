@@ -1,25 +1,24 @@
-"""Generate every figure of the manuscript (Figures 1-15) as vector PDFs.
+"""Generate every figure of the manuscript (Figures 1-14) as vector PDFs.
 
 Each figure is drawn at its final printed size in the shared ICLR style
 (`paper_style.py`) and reads only the SHA-256-verified archives under `results/`.
 Nothing is hard-coded from the manuscript text: where the paper quotes a number,
 the same number is recomputed here from the archive.
 
-  Fig.  1  fig1_concept_overview.pdf (+ .png)       schematic (worked example of the introduction)
-  Fig.  2  fig2_decision_relevant_information.pdf   exp1, e0
-  Fig.  3  fig3_protein_stopping_regimes.pdf        v14, v13
-  Fig.  4  fig4_acquisition_and_latency.pdf         v12
-  Fig.  5  fig5_overlap_mechanism.pdf               exp1, exp8
-  Fig.  6  fig6_correlation_factorial.pdf           v8_3
-  Fig.  7  fig7_overlap_crossover.pdf               exp8
-  Fig.  8  fig8_inside_witness.pdf                  exp11
-  Fig.  9  supp_protein_credibility_audit.pdf       v14
-  Fig. 10  supp_live_workflow_validation.pdf        v11_2
-  Fig. 11  supp_information_tracking.pdf            v8_2
-  Fig. 12  supp_protein_calibration_robustness.pdf  v8_1
-  Fig. 13  supp_eprocess_safety_and_compute.pdf     v9_3, v9_1
-  Fig. 14  supp_sparse_variance_tracking.pdf        v9_1, v9_2
-  Fig. 15  supp_native_solver_and_workflows.pdf     v10_1, v10_2, v10_3
+  Fig.  1  fig1_concept_overview.pdf (+ .png)       schematic (README banner; the paper uses its own Figure 1)
+  Fig.  2  fig2_main_results.pdf                    exp1, e0 (a-b); v14, v13 (c-e)
+  Fig.  3  fig3_acquisition_and_latency.pdf         v12
+  Fig.  4  fig4_overlap_mechanism.pdf               exp1, exp8
+  Fig.  5  fig5_correlation_factorial.pdf           v8_3
+  Fig.  6  fig6_overlap_crossover.pdf               exp8
+  Fig.  7  fig7_inside_witness.pdf                  exp11
+  Fig.  8  supp_protein_credibility_audit.pdf       v14
+  Fig.  9  supp_live_workflow_validation.pdf        v11_2
+  Fig. 10  supp_information_tracking.pdf            v8_2
+  Fig. 11  supp_protein_calibration_robustness.pdf  v8_1
+  Fig. 12  supp_eprocess_safety_and_compute.pdf     v9_3, v9_1
+  Fig. 13  supp_sparse_variance_tracking.pdf        v9_1, v9_2
+  Fig. 14  supp_native_solver_and_workflows.pdf     v10_1, v10_2, v10_3
 """
 from __future__ import annotations
 
@@ -30,6 +29,7 @@ import sys
 import warnings
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
 from matplotlib.patches import Ellipse, FancyBboxPatch, Patch
@@ -183,11 +183,10 @@ def fig1_concept_overview(out: Path) -> None:
         ps.save(fig, out / "fig1_concept_overview.pdf")
 
 
-def fig2_decision_relevant_information(out: Path) -> None:
+def _draw_mechanism_panels(ax, bx) -> None:
+    """Panels (a)-(b) of Figure 2: structural overlap and the low-value proxy."""
     mean, lo, hi = _overlap_ratio()
     toy = {r["method"]: r for r in _csv(BAY / "e0_and_toy/summary_toy.csv")}
-
-    fig, (ax, bx) = ps.figure(2, height=1.12, scale_height=False, gridspec_kw={"width_ratios": [1.0, 1.0]})
 
     ps.panel(ax, "a", "Shared support changes stopping")
     ax.grid(color=ps.GRID, linewidth=0.5)
@@ -216,7 +215,6 @@ def fig2_decision_relevant_information(out: Path) -> None:
     bx.set_xlim(0, 100)
     bx.set_xticks([0, 25, 50, 75, 100])
     bx.set_xlabel("Queries assigned to the proxy (%)")
-    ps.save(fig, out / "fig2_decision_relevant_information.pdf")
 
 
 PROTEIN_METHODS = (("kg", "KG", BLUE), ("gp_os", "GP-OS", ORANGE), ("cd_joint", "CD-Joint", OURS))
@@ -229,13 +227,13 @@ def _grouped(ax, groups: int, series: int, width: float = 0.8):
     return [base + (i - (series - 1) / 2) * w for i in range(series)], w
 
 
-def fig3_protein_stopping_regimes(out: Path) -> None:
+def _draw_protein_panels(ax, bx, cx, legend_host) -> None:
+    """Panels (c)-(e) of Figure 2: protein campaigns under three stopping rules."""
     v14 = {(r["condition"], r["landscape"], r["method"]): r
            for r in _csv(BAY / "v14_protein_credible_ellipsoid/v14_protein_credible_summary.csv")}
     v13 = {(r["landscape"], r["method"]): r for r in _csv(BAY / "v13_protein_bed_vs_kg/v13_protein_summary.csv")
            if r["stopping_regime"] == "df_emp_bernstein" and abs(float(r["eps"]) - 0.015) < 1e-9}
 
-    fig, (ax, bx, cx) = ps.figure(3, height=1.42, scale_height=False)
     xs3, w3 = _grouped(ax, 2, 3, width=0.78)
 
     for axis, cond, scale, title, ylabel, fmt in (
@@ -253,14 +251,14 @@ def fig3_protein_stopping_regimes(out: Path) -> None:
         axis.set_xticks(range(2))
         axis.set_xticklabels([n for _, n in LANDSCAPES])
         axis.set_ylabel(ylabel)
-    ps.panel(ax, "a", "Joint credible ellipsoid")
-    ps.panel(bx, "b", "Posterior-risk stop")
+    ps.panel(ax, "c", "Joint credible ellipsoid")
+    ps.panel(bx, "d", "Posterior-risk stop")
     ax.set_ylim(0, 29.5)
     ax.set_yticks([0, 10, 20])
     bx.set_ylim(0, 290)
     bx.set_yticks([0, 100, 200])
 
-    ps.panel(cx, "c", "Distribution-free")
+    ps.panel(cx, "e", "Distribution-free")
     ps.ygrid(cx)
     df_methods = PROTEIN_METHODS + (("gp_root_info_df", "GP-Root-Info (DF)", PINK), ("df_os", "DF-OS", REF))
     xs5, w5 = _grouped(cx, 2, 5, width=0.86)
@@ -273,16 +271,26 @@ def fig3_protein_stopping_regimes(out: Path) -> None:
     cx.set_yticks([0, 50, 100])
     cx.set_ylabel("Certified (%)")
 
-    fig.legend([Patch(facecolor=c, edgecolor=ps.EDGE, linewidth=0.6) for _, _, c in df_methods],
-               [n for _, n, _ in df_methods], loc="outside lower center", ncol=len(df_methods),
-               handlelength=0.9, handleheight=0.7, columnspacing=1.0)
-    ps.save(fig, out / "fig3_protein_stopping_regimes.pdf")
+    legend_host.legend([Patch(facecolor=c, edgecolor=ps.EDGE, linewidth=0.6) for _, _, c in df_methods],
+                       [n for _, n, _ in df_methods], loc="outside lower center", ncol=len(df_methods),
+                       handlelength=0.9, handleheight=0.7, columnspacing=1.0)
+
+
+def fig2_main_results(out: Path) -> None:
+    """Figure 2: (a)-(b) decision-relevant information, (c)-(e) protein stopping regimes."""
+    fig = plt.figure(figsize=(ps.TEXT_WIDTH, 2.5))
+    top, bottom = fig.subfigures(2, 1, height_ratios=[1.0, 1.3], hspace=0.04)
+    ax, bx = top.subplots(1, 2)
+    _draw_mechanism_panels(ax, bx)
+    cx, dx, ex = bottom.subplots(1, 3)
+    _draw_protein_panels(cx, dx, ex, bottom)
+    ps.save(fig, out / "fig2_main_results.pdf")
 
 
 # ----------------------------------------------------------------------------
 # Appendix G
 # ----------------------------------------------------------------------------
-def fig4_acquisition_and_latency(out: Path) -> None:
+def fig3_acquisition_and_latency(out: Path) -> None:
     rows = {(r["condition"], r["policy"]): r for r in _csv(BAY / "v12_bed_vs_bo/v12_main64_summary.csv")
             if r["beta_mode"] == "posterior_credible"}
     conds = (("A_indep", "A", "(0, 0)"), ("B_struct", "B", "(.75, 0)"), ("C_stat", "C", "(0, .9)"), ("D_both", "D", "(.75, .9)"))
@@ -327,10 +335,10 @@ def fig4_acquisition_and_latency(out: Path) -> None:
     bx.set_xlabel("Evaluation latency (ms)")
     bx.set_ylabel("Modelled total time (s)")
     bx.legend(loc="upper left", handlelength=1.8)
-    ps.save(fig, out / "fig4_acquisition_and_latency.pdf")
+    ps.save(fig, out / "fig3_acquisition_and_latency.pdf")
 
 
-def fig5_overlap_mechanism(out: Path) -> None:
+def fig4_overlap_mechanism(out: Path) -> None:
     mean, lo, hi = _overlap_ratio()
     er = {float(r["rho"]): r for r in _csv(V4 / "icml_figures_data/fig2a_overlap_sweep.csv")
           if r["suite"] == "overlap_256_box" and r["method"] == "exact_dag_lucb"}
@@ -364,10 +372,10 @@ def fig5_overlap_mechanism(out: Path) -> None:
     bx.set_yticks([0, 4, 8, 12])
     bx.set_xlabel("Support overlap $\\rho$")
     bx.set_ylabel("ER observations ($\\times 10^3$)")
-    ps.save(fig, out / "fig5_overlap_mechanism.pdf")
+    ps.save(fig, out / "fig4_overlap_mechanism.pdf")
 
 
-def fig6_correlation_factorial(out: Path) -> None:
+def fig5_correlation_factorial(out: Path) -> None:
     runs = [r for r in _jsonl(BAY / "v8_exp3_factorial_phase/v8_exp3_phase_runs.jsonl") if abs(r["xi"]) < 1e-12]
     methods = (
         ("indep_box__os", "Empirical-Bernstein OS", REF),
@@ -390,10 +398,10 @@ def fig6_correlation_factorial(out: Path) -> None:
     ax.set_xlim(0, 9000)
     ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:,.0f}"))
     ax.set_xlabel("Median evaluations to certification (lower is better)")
-    ps.save(fig, out / "fig6_correlation_factorial.pdf")
+    ps.save(fig, out / "fig5_correlation_factorial.pdf")
 
 
-def fig7_overlap_crossover(out: Path) -> None:
+def fig6_overlap_crossover(out: Path) -> None:
     rows = {float(r["rho"]): r for r in _csv(V4 / "exp8_external_baselines/summary_2x2_overlap256.csv")}
     cap = 1000.0
     er = [float(rows[r]["exact_dag_lucb_ms"]) for r in RHOS]
@@ -425,10 +433,10 @@ def fig7_overlap_crossover(out: Path) -> None:
     ]
     ax.legend(handles, ["Exact-Regret-DAG-LUCB", "LUCB-micro (marginal)", "LUCB-micro, capped"],
               loc="lower left", borderaxespad=0.6, handlelength=2.0)
-    ps.save(fig, out / "fig7_overlap_crossover.pdf")
+    ps.save(fig, out / "fig6_overlap_crossover.pdf")
 
 
-def fig8_inside_witness(out: Path) -> None:
+def fig7_inside_witness(out: Path) -> None:
     fam = {(r["family"], r["method"]): 100.0 * float(r["cert_rate"])
            for r in _csv(V4 / "exp11_hybrid_and_os/summary_hybrid_by_family.csv")}
     star = {r["method"]: 100.0 * float(r["cert_rate"])
@@ -449,7 +457,7 @@ def fig8_inside_witness(out: Path) -> None:
     ax.set_ylabel("Certified trials (%)")
     h, l = ax.get_legend_handles_labels()
     ps.legend_below(fig, h, l)
-    ps.save(fig, out / "fig8_inside_witness.pdf")
+    ps.save(fig, out / "fig7_inside_witness.pdf")
 
 
 # ----------------------------------------------------------------------------
@@ -822,13 +830,12 @@ def fig15_native_solver_and_workflows(out: Path) -> None:
 
 FIGURES = (
     fig1_concept_overview,
-    fig2_decision_relevant_information,
-    fig3_protein_stopping_regimes,
-    fig4_acquisition_and_latency,
-    fig5_overlap_mechanism,
-    fig6_correlation_factorial,
-    fig7_overlap_crossover,
-    fig8_inside_witness,
+    fig2_main_results,
+    fig3_acquisition_and_latency,
+    fig4_overlap_mechanism,
+    fig5_correlation_factorial,
+    fig6_overlap_crossover,
+    fig7_inside_witness,
     fig9_protein_credibility_audit,
     fig10_live_workflow_validation,
     fig11_information_tracking,
@@ -844,7 +851,7 @@ def generate_all(out_dir: Path) -> None:
     ps.setup()
     for fn in FIGURES:
         fn(out_dir)
-    print(f"Generated {len(FIGURES)} manuscript figure PDFs (Figures 1-15) in {out_dir}")
+    print(f"Generated {len(FIGURES)} manuscript figure PDFs (Figures 1-14) in {out_dir}")
 
 
 def main() -> None:
