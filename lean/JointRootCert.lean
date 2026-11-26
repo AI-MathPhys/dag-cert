@@ -50,3 +50,6 @@ import JointRootCert.FunnelUCT
 import JointRootCert.BernoulliUpper
 import JointRootCert.GaussianTracking
 import JointRootCert.UnknownVarianceCorrect
+import JointRootCert.EngineFinal
+import JointRootCert.RetireFinal
+import JointRootCert.DualCoverFinal

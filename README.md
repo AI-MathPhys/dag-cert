@@ -9,7 +9,7 @@ Installable Python library (`dagcert`), full experimental suite (`experiment/`),
 
 - **Manuscript:** [`manuscript/Joint_cert_manuscript.pdf`](manuscript/Joint_cert_manuscript.pdf) (LaTeX source: [`manuscript/joint_cert_manuscript.tex`](manuscript/joint_cert_manuscript.tex))
 - **Artifact-to-paper map:** [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) maps every table (Tables 1–69) and figure (Figures 1–15) to its archived logs and reproduction command — **100% coverage with zero missing experiments**.
-- **Formal mathematics:** [`lean/`](lean/) contains a Lean 4 formalization of the paper's 62 numbered results (28 proved, 25 partly proved, 9 open), including both main-text theorems; see [`lean/README.md`](lean/README.md) for the status of each.
+- **Formal mathematics:** [`lean/`](lean/) contains a Lean 4 formalization of the paper's 62 numbered results (62 with a proved statement, 0 partly proved, 0 open); see [`lean/README.md`](lean/README.md) for the status of each.
 
 <p align="center">
   <img src="figures/fig1_concept_overview.png" width="94%" alt="Shared outcomes change what can invalidate a root decision"/>
@@ -222,9 +222,7 @@ Pass `--out-dir build/rebuilt_data` to rebuild alongside the bundled files for c
 
 ## Lean 4 Formalizations (`lean/`)
 
-The [`lean/`](lean/) directory holds a Lean 4 + Mathlib formalization of the paper's numbered results, with no `sorry` and no added axioms. Of the 62 results, 59 are proved, 3 are partly proved and 0 are open. [`lean/README.md`](lean/README.md) gives the status of every result, the Lean theorem names, and exactly what each formal statement assumes.
-
-Proved in full or in modular form: both main-text theorems (exact joint ellipsoidal certificate with sparse witnesses; finite-sample cost of CD-Joint), all of Appendix A, the active-sampling bounds of Appendix B, the scalar information projection and tied-star lower bound, the root-PUCT and recursive-PUCT count, coverage and certification-horizon theorems, and trajectory coupling across circuit representations. The partly proved results are missing a small set of probabilistic tools that Mathlib does not have, or a formal cost model for running-time claims.
+The [`lean/`](lean/) directory holds a Lean 4 + Mathlib formalization of the paper's numbered results, with no `sorry` and no added axioms. 62 of the 62 results have a proved Lean statement (0 partly proved, 0 open). [`lean/README.md`](lean/README.md) gives, for every result, the Lean theorem names and exactly how the formal statement relates to the manuscript, a list of hypotheses the manuscript leaves implicit, and the limits of the formalization (for example: algorithms are specified by their selection rules, numerical oracles enter through the paper's contract, and running-time claims hold in an explicit step-counting model).
 
 Build with `cd lean && lake exe cache get && lake build` (Lean toolchain pinned in [`lean/lean-toolchain`](lean/lean-toolchain)).
 
