@@ -1785,14 +1785,14 @@ lemma posExt_of_mem {F : (X → ℝ) × (X → ℝ) → ℝ} {q : (X → ℝ) ×
 
 variable [Nonempty X]
 
-lemma simplex_nonempty (X : Type*) [Fintype X] [Nonempty X] : Nonempty (simplex X) := by
+lemma uvc_simplex_nonempty (X : Type*) [Fintype X] [Nonempty X] : Nonempty (simplex X) := by
   classical
   obtain ⟨x0⟩ := ‹Nonempty X›
   exact ⟨⟨_, single_mem_simplex x0⟩⟩
 
 /-- A dense sequence of designs. -/
 def canonDense (X : Type*) [Fintype X] [Nonempty X] (n : ℕ) : X → ℝ :=
-  haveI := simplex_nonempty X
+  haveI := uvc_simplex_nonempty X
   (TopologicalSpace.denseSeq (simplex X) n).1
 
 lemma canonDense_mem (n : ℕ) : canonDense X n ∈ simplex X := by
@@ -1802,7 +1802,7 @@ lemma canonDense_mem (n : ℕ) : canonDense X n ∈ simplex X := by
 /-- Every design is dominated, up to the factor `1 - t`, by a design of the dense sequence. -/
 lemma canonDense_dom {w : X → ℝ} (hw : w ∈ simplex X) {t : ℝ} (ht : 0 < t) :
     ∃ n, ∀ x, (1 - t) * w x ≤ canonDense X n x := by
-  have := simplex_nonempty X
+  have := uvc_simplex_nonempty X
   set O : Set (simplex X) := ⋂ x, {u : simplex X | (1 - t) * w x < u.1 x ∨ w x = 0} with hO
   have hOopen : IsOpen O := by
     refine isOpen_iInter_of_finite fun x => ?_
@@ -1845,7 +1845,7 @@ with positive variances. -/
 lemma exists_near_opt {Z U : Type*} (J : Finset Z) (hJ : J.Nonempty) (H : Z → Set U)
     (pred : X → U → ℝ) {m v : X → ℝ} (hv : ∀ x, 0 < v x) {e : ℝ} (he : 0 < e) :
     ∃ n, actGameStar J hJ H pred m v ≤ actGame J hJ H pred (canonDense X n) m v + e := by
-  have := simplex_nonempty X
+  have := uvc_simplex_nonempty X
   set S := actGameStar J hJ H pred m v with hS
   have hS0 : 0 ≤ S :=
     (actGame_nonneg (canonDense_mem 0).1 hv).trans
