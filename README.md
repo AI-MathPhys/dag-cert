@@ -9,7 +9,7 @@ Installable Python library (`dagcert`), full experimental suite (`experiment/`),
 
 - **Manuscript:** [`manuscript/Joint_cert_manuscript.pdf`](manuscript/Joint_cert_manuscript.pdf) (LaTeX source: [`manuscript/joint_cert_manuscript.tex`](manuscript/joint_cert_manuscript.tex))
 - **Artifact-to-paper map:** [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) maps every table (Tables 1–69) and figure (Figures 1–15) to its archived logs and reproduction command — **100% coverage with zero missing experiments**.
-- **Formal mathematics:** [`lean/`](lean/) contains accompanying Lean 4 proofs of the decision model, joint-set reduction, exact rectangular certificate, and finite-dimensional minimax duality.
+- **Formal mathematics:** [`lean/`](lean/) contains Lean 4 proofs of 8 of the paper's 62 numbered results, including both main-text theorems; see [`lean/README.md`](lean/README.md) for the status of each.
 
 <p align="center">
   <img src="figures/fig1_concept_overview.png" width="94%" alt="Shared outcomes change what can invalidate a root decision"/>
@@ -222,14 +222,17 @@ Pass `--out-dir build/rebuilt_data` to rebuild alongside the bundled files for c
 
 ## Lean 4 Formalizations (`lean/`)
 
-The [`lean/`](lean/) directory provides Lean 4 + Mathlib formal proofs of the paper's core structural and duality results:
+The [`lean/`](lean/) directory holds Lean 4 + Mathlib proofs of 8 of the paper's 62 numbered results, with no `sorry` and no added axioms: both main-text theorems, the exact regret geometry of Appendix A, and two Appendix B lemmas. [`lean/README.md`](lean/README.md) gives the status of every result and states what each formal statement assumes.
 
-- [`lean/JointRootCert/Basic.lean`](lean/JointRootCert/Basic.lean) — Finite all-MAX search model, root value, regret, and challenger advantage (§2.1, App. A.1).
-- [`lean/JointRootCert/JointSet.lean`](lean/JointRootCert/JointSet.lean) — Joint-set reduction showing only excluded terminals $z \notin S(a)$ govern common-environment regret (Lemma `lem:bay-reduction`, App. A.1).
-- [`lean/JointRootCert/Rectangular.lean`](lean/JointRootCert/Rectangular.lean) — Exact rectangular shared-support certificate `[U⁻(a) - L(a)]_+` and adversarial attainability (Theorem `thm:shared-regret`, App. A.2).
-- [`lean/JointRootCert/Minimax.lean`](lean/JointRootCert/Minimax.lean) — Finite-dimensional minimax duality behind the ellipsoidal certificate, proved directly via Hahn–Banach separation (Theorem `thm:bay-main-dual`, App. A.3).
+- [`Basic.lean`](lean/JointRootCert/Basic.lean), [`JointSet.lean`](lean/JointRootCert/JointSet.lean) — decision model and joint-set reduction (§2.1, Lemma `lem:bay-reduction`).
+- [`Rectangular.lean`](lean/JointRootCert/Rectangular.lean) — exact rectangular shared-support certificate and anytime-valid commitment (Theorem `thm:shared-regret`, Corollary `cor:shared-regret-pac`).
+- [`Minimax.lean`](lean/JointRootCert/Minimax.lean), [`Ellipsoid.lean`](lean/JointRootCert/Ellipsoid.lean), [`Sparse.lean`](lean/JointRootCert/Sparse.lean) — exact joint ellipsoidal certificate with rank(L)+1 sparse witnesses, via Hahn–Banach separation and Carathéodory (Theorem `thm:bay-main-dual`).
+- [`FeatureHull.lean`](lean/JointRootCert/FeatureHull.lean) — feature-hull dominance (Theorem `thm:t2-hull`).
+- [`Acquisition.lean`](lean/JointRootCert/Acquisition.lean) — contrast variance-reduction score (`eq:main-contrast-acquisition`).
+- [`ActiveWidth.lean`](lean/JointRootCert/ActiveWidth.lean) — width lemmas for exact-regret and optimistic-separation sampling (Lemmas `lem:active-width`, `lem:active-os-width`).
+- [`Potential.lean`](lean/JointRootCert/Potential.lean), [`CDJoint.lean`](lean/JointRootCert/CDJoint.lean) — finite-sample cost of safeguarded CD-Joint (Theorem `thm:t4-finite-sample`), proved as a width lemma, a one-step bound and the cumulative cost bound.
 
-Build with `cd lean && ./build.sh` (requires Lean 4 / `lake` matching [`lean/lean-toolchain`](lean/lean-toolchain)).
+Build with `cd lean && lake exe cache get && lake build` (Lean toolchain pinned in [`lean/lean-toolchain`](lean/lean-toolchain)).
 
 ---
 
@@ -258,7 +261,7 @@ dagcert/
 ├── results/                         # SHA-256-verified run archives, CSV summaries & manifests
 ├── figures/                         # README overview PNG + all 7 `supp_*.pdf` manuscript figures
 ├── scripts/fetch_data.py            # Offline verifier & upstream data/model rebuild utility
-├── lean/                            # Lean 4 + Mathlib formal proofs
+├── lean/                            # Lean 4 + Mathlib formal proofs (status in lean/README.md)
 ├── manuscript/                      # Paper PDF & LaTeX source
 ├── reference/tables/                # Reference LaTeX tables for passive UCT archive
 ├── pyproject.toml                   # Package metadata and optional extras

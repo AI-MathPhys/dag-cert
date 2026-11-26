@@ -2,3 +2,10 @@ import JointRootCert.Basic
 import JointRootCert.JointSet
 import JointRootCert.Rectangular
 import JointRootCert.Minimax
+import JointRootCert.Ellipsoid
+import JointRootCert.FeatureHull
+import JointRootCert.Sparse
+import JointRootCert.Acquisition
+import JointRootCert.ActiveWidth
+import JointRootCert.Potential
+import JointRootCert.CDJoint

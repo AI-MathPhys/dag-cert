@@ -39,7 +39,7 @@ lemma isCompact_simplex (ι : Type*) [Fintype ι] : IsCompact (simplex ι) := by
 
 lemma single_mem_simplex [DecidableEq ι] (i : ι) : Pi.single i (1 : ℝ) ∈ simplex ι := by
   refine ⟨fun y => ?_, by simp⟩
-  by_cases h : y = i <;> simp [Pi.single_apply, h]
+  by_cases h : y = i <;> simp [h]
 
 /-- The dual objective `∑_y p_y b_y + β ‖∑_y p_y c_y‖`. -/
 noncomputable def dualObj (b : ι → ℝ) (c : ι → F) (β : ℝ) (p : ι → ℝ) : ℝ :=
@@ -145,14 +145,15 @@ theorem strong_duality [Nonempty ι] (b : ι → ℝ) (c : ι → F) {β : ℝ} 
     have h1 := ha y
     have h2 := ha' y
     simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
-    nlinarith [mul_le_mul_of_nonneg_left h1 hs, mul_le_mul_of_nonneg_left h2 ht]
+    have hvv : v = s * v + t * v := by rw [← add_mul, hst, one_mul]
+    linarith [mul_le_mul_of_nonneg_left h1 hs, mul_le_mul_of_nonneg_left h2 ht]
   have hdisj : Disjoint K T := by
     rw [Set.disjoint_left]
     rintro _ ⟨u, hu, rfl⟩ hT
     obtain ⟨y, hy⟩ := hno' u (by simpa using hu)
     exact absurd (hT y) (not_le.mpr hy)
   obtain ⟨f, s', t', hKs, hst', hTt⟩ :=
-    geometric_hahn_banach_compact_closed hKc hKconv hTcl hTconv hdisj
+    geometric_hahn_banach_compact_closed hKconv hKc hTconv hTcl hdisj
   -- coordinates of the separating functional
   let e : ι → ι → ℝ := fun y j => if y = j then 1 else 0
   let q : ι → ℝ := fun y => f (e y)
