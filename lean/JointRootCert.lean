@@ -28,3 +28,5 @@ import JointRootCert.Completions
 import JointRootCert.Completions2
 import JointRootCert.Completions3
 import JointRootCert.Completions4
+import JointRootCert.BernoulliLimit
+import JointRootCert.Discovery
