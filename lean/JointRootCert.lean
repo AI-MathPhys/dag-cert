@@ -47,3 +47,5 @@ import JointRootCert.DagRetire
 import JointRootCert.RunMerge
 import JointRootCert.CoreCovers
 import JointRootCert.FunnelUCT
+import JointRootCert.BernoulliUpper
+import JointRootCert.GaussianTracking
