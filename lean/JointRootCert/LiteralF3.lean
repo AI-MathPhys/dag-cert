@@ -14,15 +14,20 @@ preprocessing cost is computed by a program (`monAlias`).  This file closes the 
    `IntervalImpl` (build / update / query, each returning its cost), its run `implState`
    along a sequence of terminal updates, its work `implWork` (build, every update, a query
    after the build and after every update) and its exactness `ExactOn`.
+   `Honest`: the class of implementations with honest cost floors (build cost at least the
+   number of root-circuit vertices, update cost at least 1, query cost at least `card A`);
+   `honest_work_ge`, `honest_work_ge_root`: every honest implementation has monitor work at
+   least `Σ size + K + card A·(K+1)`, so at least `m + K + 3` on the `m`-leaf graph (a
+   zero-cost oracle is excluded); `aliasImpl_honest`: the alias monitor is honest.
    `alias_escape`: on the `m`-leaf graph, along every update sequence, the alias outputs are
    the exact root-action interval vectors and equal the full monitor's complete interval
    vectors at every step, and the computed work for `K` updates is `3m + 4K + 4`.
 2. The consequence.  `runUpd`: the terminal updates of the closed-loop run of
    `thm:v2separation` (`histTab` of the history changes at the observed terminal only,
    `updSeq_run`).  `PromotedLB δ α`: the full-monitor lower bound `W ≥ c·m^{1+α} log m` of
-   `v2separation_literal`, claimed for every exact-interval implementation (total work:
-   graph reading and disposal, all rollouts, and the implementation's monitor work, the
-   same charges as `histWork`).  `v2escape_literal`: on that family the alias
+   `v2separation_literal`, claimed for every honest exact-interval implementation (total
+   work: graph reading and disposal, all rollouts, and the implementation's monitor work,
+   the same charges as `histWork`).  `v2escape_literal`: on that family the alias
    implementation is exact, agrees with the full monitor's interval vectors, and its total
    work is at most `(2 C₁ + 7) m`, while the full monitor's is at least `c_F m^{1+α} log m`.
    `not_promotedLB`, `not_promotedMonLB`: the promoted lower bound fails (for the total work
@@ -148,6 +153,56 @@ theorem aliasImpl_work [Fintype A] (circ : A → MaxCirc Z) (x0 : Z → ℝ × �
   simp only [hb, hu, hq, sum_const, card_range, smul_eq_mul, mul_one]
   ring
 
+/-- **Honest cost floors** for an interval implementation on the root circuits `circ`:
+the build reads every vertex of the root circuits (cost at least `Σ_a size(circ a)`, for
+every initial table), every terminal update costs at least one write, and every complete
+query costs at least one read per returned interval (`card A`), from every state.  These
+are lower bounds only: an implementation may charge more. -/
+structure Honest [Fintype A] (I : IntervalImpl A Z) (circ : A → MaxCirc Z) : Prop where
+  build_ge : ∀ x, ∑ a, (circ a).monSize ≤ (I.build x).2
+  update_ge : ∀ z v s, 1 ≤ (I.update z v s).2
+  query_ge : ∀ s, Fintype.card A ≤ (I.query s).2
+
+omit [DecidableEq Z] in
+/-- The floors bite: every honest implementation has monitor work at least
+`Σ_a size(circ a) + K + card A · (K + 1)` for `K` updates. -/
+theorem honest_work_ge [Fintype A] {I : IntervalImpl A Z} {circ : A → MaxCirc Z}
+    (hI : Honest I circ) (x0 : Z → ℝ × ℝ) (u : ℕ → Z × (ℝ × ℝ)) (K : ℕ) :
+    ∑ a, (circ a).monSize + K + Fintype.card A * (K + 1) ≤ implWork I x0 u K := by
+  unfold implWork
+  have h1 := hI.build_ge x0
+  have h2 : ∑ _k ∈ range K, 1
+      ≤ ∑ k ∈ range K, (I.update (u k).1 (u k).2 (implState I x0 u k)).2 :=
+    sum_le_sum (fun k _ => hI.update_ge _ _ _)
+  have h3 : ∑ _k ∈ range (K + 1), Fintype.card A
+      ≤ ∑ k ∈ range (K + 1), (I.query (implState I x0 u k)).2 :=
+    sum_le_sum (fun k _ => hI.query_ge _)
+  simp only [sum_const, card_range, smul_eq_mul, mul_one] at h2 h3
+  rw [mul_comm] at h3
+  omega
+
+/-- The alias monitor is honest: its build cost is the cost returned by `monAlias`, which
+is exactly the number of circuit vertices, its updates cost one write and its queries one
+read per action. -/
+theorem aliasImpl_honest [Fintype A] (circ : A → MaxCirc Z) : Honest (aliasImpl circ) circ where
+  build_ge x := by
+    show ∑ a, (circ a).monSize ≤ ∑ a, (monAlias (circ a)).2
+    simp only [monAlias_cost, le_refl]
+  update_ge _ _ _ := le_refl 1
+  query_ge s := by
+    show Fintype.card A ≤ ∑ a, (aliasRead (s : AliasSt A Z) a).2
+    simp [aliasRead]
+
+/-- On the `m`-leaf graph every honest implementation has monitor work at least
+`m + K + 3` for `K` updates (indeed `3m + 1 + K + 3(K + 1)`). -/
+theorem honest_work_ge_root {m : ℕ} (hm : 1 ≤ m) {I : IntervalImpl (Fin 3) (Fin 3)}
+    (hI : Honest I (monRootCirc m)) (x0 : Fin 3 → ℝ × ℝ) (u : ℕ → Fin 3 × (ℝ × ℝ))
+    (K : ℕ) : m + K + Fintype.card (Fin 3) ≤ implWork I x0 u K := by
+  have h := honest_work_ge hI x0 u K
+  rw [monRootCirc_size hm, Fintype.card_fin] at h
+  rw [Fintype.card_fin]
+  nlinarith
+
 /-- **Gap 1 (`prop:v2escape`, executed alias monitor).**  On the `m`-leaf graph, along
 every initial table `x0` and every sequence `u` of terminal updates:
 
@@ -259,13 +314,14 @@ end Run
 /-- **The promoted lower bound.**  The full-monitor bound `W_full ≥ c·m^{1+α} log m` of
 `thm:v2separation`, claimed for every exact-interval implementation: for all large `m`,
 `g = m^{-α}`, every path rule and tie-breaking, the stopping count `τ` of the closed loop,
-and every implementation that is exact along the run's `τ` terminal updates from the box,
-its total work (`implHistWork`) is at least `c·m^{1+α} log m`. -/
+and every implementation that satisfies the honest cost floors (`Honest`: build reads every
+circuit vertex, updates cost at least one write, queries at least one read per interval)
+and is exact along the run's `τ` terminal updates from the box, its total work (`implHistWork`) is at least `c·m^{1+α} log m`. -/
 def PromotedLB (δ α : ℝ) : Prop :=
   ∃ c : ℝ, 0 < c ∧ ∃ m0 : ℕ, ∀ m : ℕ, m0 ≤ m → ∀ g : ℝ, g = (m : ℝ) ^ (-α) →
     ∀ (rule : ℕ → ℕ → Bool) (pick : Hist → Fin 3), IsPuctPick pick →
     ∀ τ : ℕ, StopsAt m g rule pick δ τ →
-    ∀ I : IntervalImpl (Fin 3) (Fin 3),
+    ∀ I : IntervalImpl (Fin 3) (Fin 3), Honest I (monRootCirc m) →
       ExactOn I (monRootCirc m) box01 (runUpd m g rule pick δ) τ →
       c * ((m : ℝ) ^ (1 + α) * Real.log m) ≤ implHistWork m g rule pick I δ τ
 
@@ -274,7 +330,7 @@ def PromotedMonLB (δ α : ℝ) : Prop :=
   ∃ c : ℝ, 0 < c ∧ ∃ m0 : ℕ, ∀ m : ℕ, m0 ≤ m → ∀ g : ℝ, g = (m : ℝ) ^ (-α) →
     ∀ (rule : ℕ → ℕ → Bool) (pick : Hist → Fin 3), IsPuctPick pick →
     ∀ τ : ℕ, StopsAt m g rule pick δ τ →
-    ∀ I : IntervalImpl (Fin 3) (Fin 3),
+    ∀ I : IntervalImpl (Fin 3) (Fin 3), Honest I (monRootCirc m) →
       ExactOn I (monRootCirc m) box01 (runUpd m g rule pick δ) τ →
       c * ((m : ℝ) ^ (1 + α) * Real.log m) ≤ implWork I box01 (runUpd m g rule pick δ) τ
 
@@ -367,9 +423,9 @@ theorem exists_large {α : ℝ} (hα0 : 0 < α) (K : ℝ) (n0 : ℕ) :
 
 /-- **`prop:v2escape`, second sentence.**  The full-monitor lower bound of
 `thm:v2separation` cannot be promoted to a lower bound on the total work of every
-exact-interval implementation: `PromotedLB δ α` is false for every `δ ∈ (0, 1/2]`,
-`α ∈ (0, 1/2)`.  Witness: the alias implementation, whose total work is `O(m)`
-(`v2escape_literal`). -/
+honest (`Honest`) exact-interval implementation: `PromotedLB δ α` is false for every `δ ∈ (0, 1/2]`,
+`α ∈ (0, 1/2)`.  Witness: the alias implementation, which is honest
+(`aliasImpl_honest`) and whose total work is `O(m)` (`v2escape_literal`). -/
 theorem not_promotedLB {δ α : ℝ} (hδ0 : 0 < δ) (hδ : δ ≤ 1 / 2) (hα0 : 0 < α)
     (hα : α < 1 / 2) : ¬ PromotedLB δ α := by
   rintro ⟨c, hc, m1, HP⟩
@@ -379,7 +435,7 @@ theorem not_promotedLB {δ α : ℝ} (hδ0 : 0 < δ) (hδ : δ ≤ 1 / 2) (hα0 
   let rule : ℕ → ℕ → Bool := fun _ _ => false
   obtain ⟨τ, hstop, -, hex, -, -, hW⟩ :=
     H m (le_trans (le_max_left _ _) hm) _ rfl rule pick hpick
-  have hlb := HP m (le_trans (le_max_right _ _) hm) _ rfl rule pick hpick τ hstop _ hex
+  have hlb := HP m (le_trans (le_max_right _ _) hm) _ rfl rule pick hpick τ hstop _ (aliasImpl_honest _) hex
   have h1 : C * m < c * ((m : ℝ) ^ (1 + α) * Real.log m) := by
     have := mul_lt_mul_of_pos_left hlt hc
     rw [← mul_assoc, mul_div_cancel₀ _ hc.ne'] at this
@@ -391,8 +447,8 @@ theorem not_promotedMonLB {δ α : ℝ} (hδ0 : 0 < δ) (hδ : δ ≤ 1 / 2) (h�
     (hα : α < 1 / 2) : ¬ PromotedMonLB δ α := by
   rintro ⟨c, hc, m1, HP⟩
   refine not_promotedLB hδ0 hδ hα0 hα ⟨c, hc, m1, ?_⟩
-  intro m hm g hg rule pick hpick τ hstop I hex
-  have h := HP m hm g hg rule pick hpick τ hstop I hex
+  intro m hm g hg rule pick hpick τ hstop I hI hex
+  have h := HP m hm g hg rule pick hpick τ hstop I hI hex
   have hle : (implWork I box01 (runUpd m g rule pick δ) τ : ℝ)
       ≤ implHistWork m g rule pick I δ τ := by
     unfold implHistWork
