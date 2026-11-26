@@ -40,3 +40,5 @@ import JointRootCert.GaussianUpper
 import JointRootCert.MonitorWork
 import JointRootCert.UCTWork
 import JointRootCert.ParityGrid
+import JointRootCert.UnknownVarianceTail
+import JointRootCert.UnknownVarianceTracker
