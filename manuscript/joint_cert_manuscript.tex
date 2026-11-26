@@ -450,9 +450,10 @@ guarantees for variance reduction and linear pure exploration
 
 \begin{theorem}[Finite-sample cost of safeguarded CD-Joint]
 \label{thm:t4-finite-sample}
-Assume the fixed-feature, unit-noise model, an anytime-valid
-self-normalized radius $\beta_t$
-(Appendix~\ref{app:bay-additional}), a query dictionary
+Assume the fixed-feature, unit-noise model, a positive,
+nondecreasing, anytime-valid self-normalized radius $\beta_t$
+(Appendix~\ref{app:bay-additional}) with
+$\liminf_{t\to\infty}\beta_t^2\log t/t=0$, a query dictionary
 containing all terminal features, and $0<c_x\le c_{\max}$.
 Let $L_\phi=\max_x\|\phi_x\|_2$ and $\varepsilon>0$.
 On simultaneous confidence coverage, exact CD-Joint returns

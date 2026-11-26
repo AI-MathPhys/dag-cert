@@ -18,7 +18,8 @@ satisfiability of the hypotheses of `cd_joint_literal` with genuine noise.
 * A non-degenerate instance: i.i.d. Rademacher noise on the coin-tossing space `ℕ → Bool`
   (`coinP`, `coinFilt`, `rad`), which is conditionally `1`-sub-Gaussian (`rad_condSubG`), has
   `rad s ω ^ 2 = 1` everywhere (`rad_sq`), and admits adapted runs (`rademacher_hyps`);
-  `cd_joint_literal_rademacher` applies `cd_joint_literal` to it.
+  `cd_joint_literal_rademacher` applies `cd_joint_literal` to it, and
+  `t4_finite_sample_rademacher` discharges every hypothesis of `t4_finite_sample` on it.
 -/
 import JointRootCert.LiteralABC3
 
@@ -150,8 +151,11 @@ an infinite run of Algorithm `alg:cd-joint` on every path (`hrun`).  Then
 
 * on every path the stopping test passes at the stopping time `τ = cdStop` (the procedure
   returns) and the cumulative cost up to `τ` satisfies `eq:t4-bound`;
-* with probability at least `1 - δ` (in particular on the coverage event), every action
-  passing the test at `τ`, hence the returned one, is `ε`-optimal. -/
+* on every path in the simultaneous coverage event
+  (`‖θ* - m_t‖²_{V_t} ≤ β_t²` for all `t`), every action passing the test at `τ`, hence the
+  returned one, is `ε`-optimal (the statement of the manuscript);
+* consequently, with probability at least `1 - δ`, every action passing the test at `τ` is
+  `ε`-optimal. -/
 theorem t4_finite_sample [Nonempty n] [IsProbabilityMeasure μ] {lam δ : ℝ} (hlam : 0 < lam)
     (φ : X → n → ℝ) (cost : X → ℝ) {cmax Lsq ε : ℝ}
     (hcost : ∀ x, 0 < cost x ∧ cost x ≤ cmax)
@@ -174,6 +178,16 @@ theorem t4_finite_sample [Nonempty n] [IsProbabilityMeasure μ] {lam δ : ℝ} (
           Real.log ((design lam φ (fun s => x s ω)
             (cdStop lam φ ι supp ε (fun s => x s ω) (fun t => m t ω)
               (fun t => β t ω))).det / lam ^ Fintype.card n)) ∧
+    (∀ ω, (∀ t, (θs - m t ω) ⬝ᵥ design lam φ (fun s => x s ω) t *ᵥ (θs - m t ω) ≤
+          β t ω ^ 2) →
+      ∀ r : A,
+        cdDualCert (design lam φ (fun s => x s ω)
+            (cdStop lam φ ι supp ε (fun s => x s ω) (fun t => m t ω) (fun t => β t ω)))
+          (fun z => φ (ι z))
+          (m (cdStop lam φ ι supp ε (fun s => x s ω) (fun t => m t ω) (fun t => β t ω)) ω)
+          (β (cdStop lam φ ι supp ε (fun s => x s ω) (fun t => m t ω) (fun t => β t ω)) ω)
+          ε (supp r) →
+        regret (supp r) (hne r) (fun z => φ (ι z) ⬝ᵥ θs) ≤ ε) ∧
     μ {ω | ¬ ∀ r : A,
         cdDualCert (design lam φ (fun s => x s ω)
             (cdStop lam φ ι supp ε (fun s => x s ω) (fun t => m t ω) (fun t => β t ω)))
@@ -181,10 +195,15 @@ theorem t4_finite_sample [Nonempty n] [IsProbabilityMeasure μ] {lam δ : ℝ} (
           (m (cdStop lam φ ι supp ε (fun s => x s ω) (fun t => m t ω) (fun t => β t ω)) ω)
           (β (cdStop lam φ ι supp ε (fun s => x s ω) (fun t => m t ω) (fun t => β t ω)) ω)
           ε (supp r) →
-        regret (supp r) (hne r) (fun z => φ (ι z) ⬝ᵥ θs) ≤ ε} ≤ ENNReal.ofReal δ :=
-  t4_finite_sample_frequently hlam φ cost hcost hφ hε ι supp hne θs x m β hβpos hβmono hcov
+        regret (supp r) (hne r) (fun z => φ (ι z) ⬝ᵥ θs) ≤ ε} ≤ ENNReal.ofReal δ := by
+  have h := t4_finite_sample_frequently hlam φ cost hcost hφ hε ι supp hne θs x m β hβpos
+    hβmono hcov
     (fun ω => (liminf_ereal_eq_zero_iff (u := fun t : ℕ => β t ω ^ 2 * Real.log t / t)
       (radius_ratio_nonneg (fun t => β t ω))).mp (hliminf ω)) hrun
+  refine ⟨h.1, fun ω hcovω r hr => ?_, h.2⟩
+  exact ((cd_joint_infinite_run hlam φ cost hcost hφ hε ι supp hne (fun s => x s ω)
+    (fun t => m t ω) (fun t => β t ω) (fun t => hβpos t ω) (hβmono ω) (hrun ω)).2
+      ⟨_, (h.1 ω).1⟩).2.2 r θs hr (hcovω _)
 
 omit [DecidableEq X] in
 /-- **The radius `eq:ay-radius` satisfies the liminf hypothesis of `t4_finite_sample`** on
@@ -566,6 +585,93 @@ theorem cd_joint_literal_rademacher [Nonempty n] {lam δ B : ℝ} (hlam : 0 < la
     rademacher_hyps lam δ B φ cost ι supp hne hcov hε.le θs
   exact ⟨x, hx, hrun, cd_joint_literal coinFilt one_pos hlam hδ0 hδ1 hB φ cost hcost hφ hε ι
     supp hne θs hθ x hx hη hsub hrun⟩
+
+/-- The ridge estimate on the coin space, driven by Rademacher noise. -/
+noncomputable def coinEst (lam : ℝ) (φ : X → n → ℝ) (θs : n → ℝ)
+    (x : ℕ → (ℕ → Bool) → X) : ℕ → (ℕ → Bool) → n → ℝ :=
+  fun t ω => ridgeEst lam φ θs (fun s => x s ω) (fun s => rad s ω) t
+
+/-- The radius `eq:ay-radius` with `σ = 1` on the coin space. -/
+noncomputable def coinRad (lam δ B : ℝ) (φ : X → n → ℝ) (x : ℕ → (ℕ → Bool) → X) :
+    ℕ → (ℕ → Bool) → ℝ :=
+  fun t ω => ayRadius 1 lam δ B (design lam φ (fun s => x s ω) t)
+
+/-- **`t4_finite_sample` is non-vacuous with genuine noise.**  On the coin-tossing space with
+i.i.d. Rademacher noise (`σ = 1`, `rad s ω ^ 2 = 1`), for every fixed-feature instance whose
+supports cover the terminals, `‖θ*‖ ≤ B`, `0 < δ < 1`, there is an adapted query sequence
+(a causal function of the past noise) such that, with the ridge estimate `coinEst` and the
+radius `coinRad` (`eq:ay-radius`), every hypothesis of `t4_finite_sample` holds (`β`
+positive, nondecreasing, anytime valid, `liminf β_t² log t / t = 0`, `CDRun` on every path),
+and hence its conclusion. -/
+theorem t4_finite_sample_rademacher [Nonempty n] {lam δ B : ℝ} (hlam : 0 < lam)
+    (hδ0 : 0 < δ) (hδ1 : δ < 1) (hB : 0 ≤ B)
+    (φ : X → n → ℝ) (cost : X → ℝ) {cmax Lsq ε : ℝ}
+    (hcost : ∀ x, 0 < cost x ∧ cost x ≤ cmax) (hφ : ∀ x, φ x ⬝ᵥ φ x ≤ Lsq) (hε : 0 < ε)
+    (ι : Z → X) (supp : A → Finset Z) (hne : ∀ a, (supp a).Nonempty)
+    (hcov : ∀ z, ∃ a, z ∈ supp a) (θs : n → ℝ) (hθ : θs ⬝ᵥ θs ≤ B ^ 2) :
+    ∃ x : ℕ → (ℕ → Bool) → X,
+      (∀ s x0, MeasurableSet[coinFilt s] {ω | x s ω = x0}) ∧
+      (∀ t ω, 0 < coinRad lam δ B φ x t ω) ∧
+      (∀ ω, Monotone fun t => coinRad lam δ B φ x t ω) ∧
+      coinP {ω | ∃ t, coinRad lam δ B φ x t ω ^ 2 <
+        (θs - coinEst lam φ θs x t ω) ⬝ᵥ design lam φ (fun s => x s ω) t *ᵥ
+          (θs - coinEst lam φ θs x t ω)} ≤ ENNReal.ofReal δ ∧
+      (∀ ω, Filter.liminf
+        (fun t : ℕ => ((coinRad lam δ B φ x t ω ^ 2 * Real.log t / t : ℝ) : EReal))
+          atTop = 0) ∧
+      (∀ ω, CDRun lam φ cost ι supp ε (fun s => x s ω) (fun t => coinEst lam φ θs x t ω)
+        (fun t => coinRad lam δ B φ x t ω)) ∧
+    -- the conclusion of `t4_finite_sample`
+    ((∀ ω, CDCertified lam φ ι supp ε (fun s => x s ω) (fun t => coinEst lam φ θs x t ω)
+        (fun t => coinRad lam δ B φ x t ω)
+        (cdStop lam φ ι supp ε (fun s => x s ω) (fun t => coinEst lam φ θs x t ω)
+          (fun t => coinRad lam δ B φ x t ω)) ∧
+      ∑ t ∈ range (cdStop lam φ ι supp ε (fun s => x s ω) (fun t => coinEst lam φ θs x t ω)
+          (fun t => coinRad lam δ B φ x t ω)), cost (x t ω) ≤
+        16 * cmax * (1 + Lsq / lam) *
+          coinRad lam δ B φ x (cdStop lam φ ι supp ε (fun s => x s ω)
+            (fun t => coinEst lam φ θs x t ω) (fun t => coinRad lam δ B φ x t ω) - 1)
+            ω ^ 2 / ε ^ 2 *
+          Real.log ((design lam φ (fun s => x s ω)
+            (cdStop lam φ ι supp ε (fun s => x s ω) (fun t => coinEst lam φ θs x t ω)
+              (fun t => coinRad lam δ B φ x t ω))).det / lam ^ Fintype.card n)) ∧
+    (∀ ω, (∀ t, (θs - coinEst lam φ θs x t ω) ⬝ᵥ design lam φ (fun s => x s ω) t *ᵥ
+          (θs - coinEst lam φ θs x t ω) ≤ coinRad lam δ B φ x t ω ^ 2) →
+      ∀ r : A,
+        cdDualCert (design lam φ (fun s => x s ω)
+            (cdStop lam φ ι supp ε (fun s => x s ω) (fun t => coinEst lam φ θs x t ω)
+              (fun t => coinRad lam δ B φ x t ω)))
+          (fun z => φ (ι z))
+          (coinEst lam φ θs x (cdStop lam φ ι supp ε (fun s => x s ω)
+            (fun t => coinEst lam φ θs x t ω) (fun t => coinRad lam δ B φ x t ω)) ω)
+          (coinRad lam δ B φ x (cdStop lam φ ι supp ε (fun s => x s ω)
+            (fun t => coinEst lam φ θs x t ω) (fun t => coinRad lam δ B φ x t ω)) ω)
+          ε (supp r) →
+        regret (supp r) (hne r) (fun z => φ (ι z) ⬝ᵥ θs) ≤ ε) ∧
+    coinP {ω | ¬ ∀ r : A,
+        cdDualCert (design lam φ (fun s => x s ω)
+            (cdStop lam φ ι supp ε (fun s => x s ω) (fun t => coinEst lam φ θs x t ω)
+              (fun t => coinRad lam δ B φ x t ω)))
+          (fun z => φ (ι z))
+          (coinEst lam φ θs x (cdStop lam φ ι supp ε (fun s => x s ω)
+            (fun t => coinEst lam φ θs x t ω) (fun t => coinRad lam δ B φ x t ω)) ω)
+          (coinRad lam δ B φ x (cdStop lam φ ι supp ε (fun s => x s ω)
+            (fun t => coinEst lam φ θs x t ω) (fun t => coinRad lam δ B φ x t ω)) ω)
+          ε (supp r) →
+        regret (supp r) (hne r) (fun z => φ (ι z) ⬝ᵥ θs) ≤ ε} ≤ ENNReal.ofReal δ) := by
+  obtain ⟨x0⟩ : Nonempty X := ⟨ι (Classical.arbitrary Z)⟩
+  have hcmax : 0 ≤ cmax := (hcost x0).1.le.trans (hcost x0).2
+  have hLsq : 0 ≤ Lsq := (dotProduct_self_nonneg' (φ x0)).trans (hφ x0)
+  obtain ⟨-, -, -, x, hx, hrun⟩ := rademacher_hyps lam δ B φ cost ι supp hne hcov hε.le θs
+  obtain ⟨hpos, hmono, hcovP, -⟩ := ayRadius_generic_hyps (μ := coinP) (ε := ε) (cmin := 1)
+    coinFilt one_pos hlam hδ0 hδ1 hB φ hcmax one_pos hLsq hφ θs hθ x hx rad_adapted
+    rad_condSubG
+  have hlim : ∀ ω, Filter.liminf
+      (fun t : ℕ => ((coinRad lam δ B φ x t ω ^ 2 * Real.log t / t : ℝ) : EReal)) atTop = 0 :=
+    fun ω => ayRadius_liminf (σ := 1) hlam hδ0 hδ1 φ hφ (fun s => x s ω)
+  exact ⟨x, hx, hpos, hmono, hcovP, hlim, hrun,
+    t4_finite_sample (μ := coinP) hlam φ cost hcost hφ hε ι supp hne θs x
+      (coinEst lam φ θs x) (coinRad lam δ B φ x) hpos hmono hcovP hlim hrun⟩
 
 end Coin
 
