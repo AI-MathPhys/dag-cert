@@ -30,3 +30,4 @@ import JointRootCert.Completions3
 import JointRootCert.Completions4
 import JointRootCert.BernoulliLimit
 import JointRootCert.Discovery
+import JointRootCert.GaussianStopped
