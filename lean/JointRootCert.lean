@@ -55,3 +55,7 @@ import JointRootCert.RetireFinal
 import JointRootCert.DualCoverFinal
 import JointRootCert.LiteralABC
 import JointRootCert.LiteralABC2
+import JointRootCert.LiteralD2a
+import JointRootCert.LiteralD2b
+import JointRootCert.LiteralD2c
+import JointRootCert.LiteralD2d
