@@ -1,0 +1,60 @@
+{
+  "experiment": "v12_bed_vs_bo",
+  "smoke": false,
+  "elapsed_s": 242.97,
+  "python": "3.12.14",
+  "files": {
+    "v12_pilot_summary.csv": {
+      "sha256": "abf37d6d8827589584b198feaef89a7cc15ac3a1751a2258a2e262475de2b67d",
+      "bytes": 6207
+    },
+    "v12_main64_runs.jsonl": {
+      "sha256": "6751ca9575ce5444077b4ade5dca30298e9332efa5d71a6df9a20bb59611725c",
+      "bytes": 3869554
+    },
+    "v12_main64_summary.csv": {
+      "sha256": "2843dbcac37438ff3fd781a5697b86220dd301b755ee3cd60d654d4f55cda424",
+      "bytes": 6258
+    },
+    "v12_main64_checkpoints.csv": {
+      "sha256": "da287866d1be8cefcda1a258597e9aaf7e50b5011e2042e834ca966b69f08750",
+      "bytes": 17184
+    },
+    "v12_voi16_runs.jsonl": {
+      "sha256": "445529f1c4a52c12863d3c3e6a9493ac1d6672379d781e1586d68778428cb490",
+      "bytes": 1721485
+    },
+    "v12_voi16_summary.csv": {
+      "sha256": "697f1d14f6d1e933797c887064b00ee7cebe545c2c082f80649b95067c418a10",
+      "bytes": 6937
+    },
+    "v12_voi16_checkpoints.csv": {
+      "sha256": "2dae2edbcd64d184e5337564b5fa899970e2a926368ebc1c5677cdf28b8ca7bb",
+      "bytes": 22700
+    },
+    "v12_voi16_mc_audit.json": {
+      "sha256": "e44c3f8181e9d5024c8668bab7cb8e8a75b363b3f6b5683726f10046a8963ed7",
+      "bytes": 1088
+    },
+    "v12_proxy5_runs.jsonl": {
+      "sha256": "d6a3d032fe30d42d5ba6a7f844524d3e71bf95fcfdf19d1db33b90eee1107b2d",
+      "bytes": 8636523
+    },
+    "v12_proxy5_summary.csv": {
+      "sha256": "a8997defc9e2c05a5c5c96e32d1ee84c269b545c1b1b4042d9f8b34eb4929d93",
+      "bytes": 9600
+    },
+    "v12_confirm_freq_runs.jsonl": {
+      "sha256": "60cfb95ad6ca4883b167a10a5c025fc6905f4e67e8d32bb86b4cca1d8ebde602",
+      "bytes": 7642820
+    },
+    "v12_confirm_freq_summary.csv": {
+      "sha256": "9c66be3ed89edfb6a6701f28b35652814f5771ad6311400b753e763341c84f62",
+      "bytes": 12013
+    },
+    "v12_confirm_freq_checkpoints.csv": {
+      "sha256": "d61dcedc4f514bcd2f659bb159a576b66bb4a90960aa6f8779c46ba372e5f363",
+      "bytes": 33614
+    }
+  }
+}

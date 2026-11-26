@@ -1,8 +1,0 @@
-{
-  "title": "Certifying UCT on DAGs: The Costs of Sharing and Pruning",
-  "snapshot_date": "2026-11-14",
-  "source_repository": "https://github.com/Aurelien-Pelissier/fuse",
-  "source_commit": "58fbd2e86031a2d90b289e10d232335f80132772",
-  "requires_source_repository": false,
-  "frozen_kernels_modified": false
-}

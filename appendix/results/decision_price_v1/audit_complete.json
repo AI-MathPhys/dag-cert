@@ -1,9 +1,0 @@
-{
-  "counts": {
-    "bill_checks": 348639,
-    "steps": 622329,
-    "draws": 19870764,
-    "private_checks": 3844
-  },
-  "sha256": "669365ab7994efe9cd0be6e2e35e6490f69ce493110f84c35b1176e9bcb77baa"
-}

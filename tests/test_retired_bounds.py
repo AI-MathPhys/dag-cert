@@ -2,10 +2,10 @@ import math
 import random
 import unittest
 
-from dag_mcts.certified_uct import UCTWork
-from dag_mcts.graph import DAG, feature_lattice, trap
-from dag_mcts.maintenance_replay import Replay, build_trace, run_replay, shield
-from dag_mcts.retired_bounds import CanonicalIntervals, RetiredBounds
+from joint_root_cert._core.certified_uct import UCTWork
+from joint_root_cert.graph import DAG, feature_lattice, trap
+from joint_root_cert._core.maintenance_replay import Replay, build_trace, run_replay, shield
+from joint_root_cert.certificates import CanonicalIntervals, RetiredBounds
 
 
 def full_dp(graph, lower, upper):

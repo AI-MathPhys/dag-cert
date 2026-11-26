@@ -1,0 +1,29 @@
+{
+  "experiment": "v13_protein_bed_vs_kg",
+  "smoke": false,
+  "elapsed_s": 2007.06,
+  "cap": 25000,
+  "delta": 0.05,
+  "eps_list": [
+    0.015,
+    0.01
+  ],
+  "n_gb1_instances": 200,
+  "n_trpb_instances": 210,
+  "total_policy_runs": 12300,
+  "python": "3.12.14",
+  "files": {
+    "v13_protein_runs.jsonl": {
+      "sha256": "28cb0a93a8b5ede6cfeb21991a6e53c5bbc72e1489704bd7fbc8d4d6d395d3f3",
+      "bytes": 6311218
+    },
+    "v13_protein_summary.csv": {
+      "sha256": "3af27e3cf4f345241eadd7426b01c9378b5373610cf4e0817d552e45d532bb67",
+      "bytes": 14230
+    },
+    "v13_protein_per_template.csv": {
+      "sha256": "081cea05896e5e671accce649e2d38ebb9ece890073046b43f8b2655cdf4dab0",
+      "bytes": 42977
+    }
+  }
+}

@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software or reproduce results from the paper, please cite this work."
+title: "Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs"
+type: software
+authors:
+  - family-names: "Pélissier"
+    given-names: "Aurélien"
+repository-code: "https://github.com/AI-MathPhys/joint-root-cert"
+url: "https://github.com/AI-MathPhys/joint-root-cert"
+license: MIT
+version: "1.0.0"
+date-released: "2026-11-26"

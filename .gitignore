@@ -1,6 +1,12 @@
 __pycache__/
 *.py[cod]
+*.so
+*.dylib
+*.dll
+*.egg-info/
+.eggs/
+dist/
 .venv/
 .pytest_cache/
 build/
-dag_mcts/data/worfbench_raw/
+joint_root_cert/benchmarks/data/worfbench_raw/

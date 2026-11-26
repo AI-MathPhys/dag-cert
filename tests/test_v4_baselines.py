@@ -4,13 +4,13 @@ from __future__ import annotations
 import ctypes
 import unittest
 
-from dag_mcts.graph import DAG, Problem
-from dag_mcts.v2_benchmarks import (
+from joint_root_cert import DAG, Problem
+from joint_root_cert.benchmarks import (
     overlap_dag,
     samegame_standard_endgame,
 )
-from dag_mcts.v3_extensions import ActiveDAGLUCBSession
-from dag_mcts.v4_baselines import (
+from joint_root_cert import ActiveDAGLUCBSession
+from joint_root_cert._core.v4_baselines import (
     CppSameGameRunner,
     InsideWitnessDAGLUCBSession,
     LUCBMicroSession,

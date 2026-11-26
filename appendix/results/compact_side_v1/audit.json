@@ -1,9 +1,0 @@
-{
-  "counts": {
-    "valid_certificates": 900,
-    "equal_endpoints_and_logical_bills": 640
-  },
-  "max_regret": 0.0,
-  "distinct_ordered_graphs": 56,
-  "overlap_previous_holdout": 0
-}

@@ -1,10 +1,10 @@
 import unittest
 
-from dag_mcts.graph import DAG, Problem
-from dag_mcts.v2_benchmarks import contiguous_window_dag, overlap_dag, structural_diagnostics
-from dag_mcts.v3_extensions import ActiveDAGLUCBSession
-from dag_mcts.v4_baselines import InsideWitnessDAGLUCBSession
-from dag_mcts.v5_hybrid_and_os import (
+from joint_root_cert import DAG, Problem
+from joint_root_cert.benchmarks import contiguous_window_dag, overlap_dag, structural_diagnostics
+from joint_root_cert import ActiveDAGLUCBSession
+from joint_root_cert.tracking import InsideWitnessDAGLUCBSession
+from joint_root_cert._core.v5_hybrid_and_os import (
     HybridWitnessDAGLUCBSession,
     noncontainment_star_dag,
 )

@@ -1,0 +1,38 @@
+{
+  "experiment": "v14_protein_credible_ellipsoid",
+  "smoke": false,
+  "elapsed_s": 2668.02,
+  "cap": 25000,
+  "delta": 0.05,
+  "eps": 0.015,
+  "mc_draws": 4096,
+  "mc_eta": 0.01,
+  "mc_delta_post": 0.04,
+  "n_gb1_instances": 200,
+  "n_trpb_instances": 210,
+  "total_condition_method_rows": 9430,
+  "conditions": [
+    "A_orig",
+    "B_chi95",
+    "C_chi90",
+    "B_chi95_frozen",
+    "C_chi90_frozen",
+    "E_postrisk",
+    "D_df_eb"
+  ],
+  "python": "3.12.14",
+  "files": {
+    "v14_protein_credible_runs.jsonl": {
+      "sha256": "34afc62f5d8391d65cd251bf04f3321c42383baf63f8d17d16566215bf46362d",
+      "bytes": 6673618
+    },
+    "v14_protein_credible_summary.csv": {
+      "sha256": "1cd68896af8a6770e5fc21b920a1237328f50e47dd50947c168d21737bfee030",
+      "bytes": 12090
+    },
+    "v14_protein_credible_per_template.csv": {
+      "sha256": "7c4a3b6b36238154628ba07674aff62bc6acd81e3b8c5e7d3ee0bd9523b28725",
+      "bytes": 29711
+    }
+  }
+}

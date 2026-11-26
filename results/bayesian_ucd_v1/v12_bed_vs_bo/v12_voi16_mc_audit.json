@@ -1,0 +1,51 @@
+{
+  "base_mc": [
+    32,
+    2048
+  ],
+  "doubled_mc": [
+    64,
+    4096
+  ],
+  "n_audit_instances": 40,
+  "base_ellipsoid_rm": 296.32,
+  "doubled_ellipsoid_rm": 312.6,
+  "rel_diff_ellipsoid_pct": 5.49,
+  "base_mc_risk_rm": 48.52,
+  "doubled_mc_risk_rm": 43.98,
+  "rel_diff_mc_risk_pct": 9.38,
+  "step_states_audited": 200,
+  "step_exact_agree_pct": 56.0,
+  "step_top2_agree_pct": 65.0,
+  "mean_score_corr": 0.5272,
+  "per_condition": [
+    {
+      "condition": "A_indep",
+      "total_states": 50,
+      "exact_agree": 36,
+      "top2_agree": 41,
+      "mean_score_corr": 0.6600366667840489
+    },
+    {
+      "condition": "B_struct",
+      "total_states": 50,
+      "exact_agree": 30,
+      "top2_agree": 32,
+      "mean_score_corr": 0.629324422411541
+    },
+    {
+      "condition": "C_stat",
+      "total_states": 50,
+      "exact_agree": 24,
+      "top2_agree": 29,
+      "mean_score_corr": 0.431508696537201
+    },
+    {
+      "condition": "D_both",
+      "total_states": 50,
+      "exact_agree": 22,
+      "top2_agree": 28,
+      "mean_score_corr": 0.3877398531182763
+    }
+  ]
+}

@@ -5,10 +5,10 @@ import math
 import random
 import unittest
 
-from dag_mcts.certified_uct import UCTWork
-from dag_mcts.graph import DAG, Problem
-from dag_mcts.puct import CertifiedSearchSession, RecursivePUCT, RootPUCT, build_monitor, make_priors
-from dag_mcts.v2_benchmarks import (
+from joint_root_cert._core.certified_uct import UCTWork
+from joint_root_cert import DAG, Problem
+from joint_root_cert.search import CertifiedSearchSession, RecursivePUCT, RootPUCT, build_monitor, make_priors
+from joint_root_cert.benchmarks import (
     contiguous_window_dag,
     overlap_dag,
     puct_noisy_funnel,
@@ -17,7 +17,7 @@ from dag_mcts.v2_benchmarks import (
     samegame_standard_endgame,
     structural_diagnostics,
 )
-from dag_mcts.v2_monitors import (
+from joint_root_cert._core.v2_monitors import (
     ChargedDualCovers,
     DirectGraphRegretMonitor,
     FactorizedRegretMonitor,
@@ -28,7 +28,7 @@ from dag_mcts.v2_monitors import (
     brute_force_exact_regret,
     brute_force_marginal,
 )
-from paper.uct_frontier_families import coded
+from experiment.simulated.passive_uct.uct_frontier_families import coded
 
 
 class V2ExtensionsTests(unittest.TestCase):

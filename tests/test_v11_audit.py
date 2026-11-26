@@ -6,14 +6,14 @@ import unittest
 
 import numpy as np
 
-from dag_mcts.v7_bayesian_ucd import SupportStructure
-from paper.exp_v11_1_protein_validity_ablation import _cp_upper_95, _paired_bootstrap_ci
-from paper.exp_v11_2_live_worfbench_36campaigns import (
+from joint_root_cert import SupportStructure
+from experiment.protein_engineering.exp_validity_ablation import _cp_upper_95, _paired_bootstrap_ci
+from experiment.agentic_workflows.exp_live_qwen3_36campaigns import (
     BASE_SPECS,
     _build_workflow_dag,
     _partition_disjoint_pools,
 )
-from paper.exp_v11_3_independent_oracle_audit import (
+from experiment.simulated.exp_independent_oracle_audit import (
     audit_a_conic_regret_socp,
     audit_b_characteristic_rate_qp,
     audit_c1_v34_profiled_oracles,

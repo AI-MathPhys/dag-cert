@@ -1,10 +1,10 @@
 import unittest
 
-from dag_mcts.graph import DAG,Problem
-from dag_mcts.onpolicy_backup import CompiledCovers,MonitoredUCT
-from paper.audit_uct_backup import direct
-from paper.uct_backup_benchmark import METHODS
-from paper.uct_backup_families import fixture,funnel,wide_core
+from joint_root_cert import DAG,Problem
+from joint_root_cert._core.onpolicy_backup import CompiledCovers,MonitoredUCT
+from experiment.simulated.passive_uct.audit_uct_backup import direct
+from experiment.simulated.passive_uct.uct_backup_benchmark import METHODS
+from experiment.simulated.passive_uct.uct_backup_families import fixture,funnel,wide_core
 
 
 class OnlineBackupTests(unittest.TestCase):

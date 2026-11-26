@@ -4,22 +4,22 @@ from __future__ import annotations
 import random
 import unittest
 
-from dag_mcts.certified_uct import UCTWork
-from dag_mcts.graph import DAG
-from dag_mcts.puct import CertifiedSearchSession
-from dag_mcts.v2_benchmarks import (
+from joint_root_cert._core.certified_uct import UCTWork
+from joint_root_cert import DAG
+from joint_root_cert import CertifiedSearchSession
+from joint_root_cert.benchmarks import (
     contiguous_window_dag,
     overlap_dag,
     puct_root_funnel,
     samegame_standard_endgame,
 )
-from dag_mcts.v2_monitors import NestedIntervals
-from dag_mcts.v3_extensions import (
+from joint_root_cert import NestedIntervals
+from joint_root_cert._core.v3_extensions import (
     ActiveDAGLUCBSession,
     CppKernelRunner,
     SplitMixProblem,
 )
-from paper.uct_frontier_families import coded
+from experiment.simulated.passive_uct.uct_frontier_families import coded
 
 
 class V3StrengtheningTests(unittest.TestCase):

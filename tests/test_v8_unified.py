@@ -5,11 +5,11 @@ import unittest
 
 import numpy as np
 
-from dag_mcts.v5_hybrid_and_os import noncontainment_star_dag
-from dag_mcts.v6_real_world import real_world_problem_diagnostics
-from dag_mcts.v7_bayesian_ucd import LinearFeatureModel, SupportStructure
-from dag_mcts.v7_benchmarks import MisspecifiedLinearDAGProblem, MotivationalProxyDAGProblem, ScalingDAGProblem
-from dag_mcts.v8_unified_experiments import (
+from joint_root_cert.benchmarks import noncontainment_star_dag
+from joint_root_cert.benchmarks import real_world_problem_diagnostics
+from joint_root_cert import LinearFeatureModel, SupportStructure
+from joint_root_cert.benchmarks import MisspecifiedLinearDAGProblem, MotivationalProxyDAGProblem, ScalingDAGProblem
+from joint_root_cert._core.v8_unified_experiments import (
     AdaptiveHardRegimeSession,
     DeconfoundedOverlapCorrelationProblem,
     RegularizedInfoTrackerSession,
