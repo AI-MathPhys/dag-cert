@@ -120,10 +120,10 @@ def fig1_concept_overview(out: Path) -> None:
                     arrowprops=dict(arrowstyle="-|>", color=col, linewidth=1.0, shrinkA=6.5, shrinkB=6.5, mutation_scale=6))
     for key, text, edge in (("root", "start", ps.AXIS), ("a1", "$a_1$", OURS), ("a2", "$a_2$", ps.AXIS),
                             ("z1", "$z_1$", OURS), ("zs", "$z_s$", OURS), ("z2", "$z_2$", ORANGE)):
-        ax.text(*pos[key], text, ha="center", va="center", fontsize=7.5, zorder=4,
+        ax.text(*pos[key], text, ha="center", va="center", fontsize=ps.fs(7.5), zorder=4,
                 bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor=edge, linewidth=0.9))
-    ax.text(0.32, 0.055, "retained by $a_1$", ha="center", va="center", fontsize=6.8)
-    ax.text(0.88, 0.055, "excluded", ha="center", va="center", fontsize=6.8)
+    ax.text(0.32, 0.055, "retained by $a_1$", ha="center", va="center", fontsize=ps.fs(6.8))
+    ax.text(0.88, 0.055, "excluded", ha="center", va="center", fontsize=ps.fs(6.8))
 
     # (b) the certificate -----------------------------------------------------
     ps.panel(bx, "b", "Joint root certificate for $a_1$")
@@ -131,15 +131,15 @@ def fig1_concept_overview(out: Path) -> None:
     for _, y, lo, hi, col in rows:
         bx.plot([lo, hi], [y, y], color=col, linewidth=4.2, solid_capstyle="round", zorder=3)
         bx.annotate(f"{lo:.2f}".lstrip("0"), (lo, y), xytext=(-5, 0), textcoords="offset points", ha="right",
-                    va="center", fontsize=6.4)
+                    va="center", fontsize=ps.fs(6.4))
         bx.annotate(f"{hi:.2f}".lstrip("0"), (hi, y), xytext=(5, 0), textcoords="offset points", ha="left",
-                    va="center", fontsize=6.4)
+                    va="center", fontsize=ps.fs(6.4))
     bx.plot([0.72, 0.72], [-0.45, 2.3], color=OURS, linestyle=(0, (1.5, 2)), linewidth=0.8, zorder=2)
     arrow = dict(arrowstyle="<|-|>", linewidth=0.9, shrinkA=0, shrinkB=0, mutation_scale=5)
     bx.annotate("", xy=(0.95, 1.5), xytext=(0.72, 1.5), arrowprops=dict(color=BAD, **arrow), zorder=4)
-    bx.text(0.69, 1.5, "marginal gap .23", ha="right", va="center", fontsize=6.4, linespacing=1.0)
+    bx.text(0.69, 1.5, "marginal gap .23", ha="right", va="center", fontsize=ps.fs(6.4), linespacing=1.0)
     bx.annotate("", xy=(0.72, 0.5), xytext=(0.55, 0.5), arrowprops=dict(color=OURS, **arrow), zorder=4)
-    bx.text(0.52, 0.5, "certified: .55 < .72", ha="right", va="center", fontsize=6.4,
+    bx.text(0.52, 0.5, "certified: .55 < .72", ha="right", va="center", fontsize=ps.fs(6.4),
             linespacing=1.0)
     bx.set_xlim(0.0, 1.05)
     bx.set_ylim(-0.5, 2.45)
@@ -165,10 +165,10 @@ def fig1_concept_overview(out: Path) -> None:
     for sign in (1.0, -1.0):
         cx.annotate("", xy=centre + sign * 0.115 * g, xytext=centre + sign * 0.33 * g, zorder=6,
                     arrowprops=dict(arrowstyle="-|>", color=INK, linewidth=0.9, shrinkA=0, shrinkB=0, mutation_scale=6))
-    cx.text(0.03, 0.97, "$a_1$ invalid", transform=cx.transAxes, ha="left", va="top", fontsize=6.6)
-    cx.text(0.97, 0.97, "prior", transform=cx.transAxes, ha="right", va="top", fontsize=6.6, color=MUTED)
+    cx.text(0.03, 0.97, "$a_1$ invalid", transform=cx.transAxes, ha="left", va="top", fontsize=ps.fs(6.6))
+    cx.text(0.97, 0.97, "prior", transform=cx.transAxes, ha="right", va="top", fontsize=ps.fs(6.6), color=MUTED)
     cx.text(0.97, 0.03, "queries shrink\ncontrast $g$", transform=cx.transAxes, ha="right", va="bottom",
-            fontsize=6.6, linespacing=1.0)
+            fontsize=ps.fs(6.6), linespacing=1.0)
     cx.set_xlim(0.2, 1.7)
     cx.set_ylim(0.06, 0.92)
     cx.set_aspect("equal", adjustable="datalim")
@@ -187,7 +187,7 @@ def fig2_decision_relevant_information(out: Path) -> None:
     mean, lo, hi = _overlap_ratio()
     toy = {r["method"]: r for r in _csv(BAY / "e0_and_toy/summary_toy.csv")}
 
-    fig, (ax, bx) = ps.figure(2, height=1.3, gridspec_kw={"width_ratios": [1.0, 1.0]})
+    fig, (ax, bx) = ps.figure(2, height=1.12, scale_height=False, gridspec_kw={"width_ratios": [1.0, 1.0]})
 
     ps.panel(ax, "a", "Shared support changes stopping")
     ax.grid(color=ps.GRID, linewidth=0.5)
@@ -200,17 +200,17 @@ def fig2_decision_relevant_information(out: Path) -> None:
     ax.set_ylim(0, 1.12)
     ax.set_yticks([0, 0.5, 1.0])
     ax.set_xlabel("Root-support overlap $\\rho$")
-    ax.set_ylabel("Exact / marginal queries")
+    ax.set_ylabel("Exact / marginal")
 
-    ps.panel(bx, "b", "A low-value proxy is informative")
+    ps.panel(bx, "b", "Queries to a low-value proxy")
     ps.xgrid(bx)
     names = ("Direct witness", "Bayes-IDS", "CD-Joint")
     keys = ("direct_witness_joint", "bayes_ids_joint", "contrast_directed_joint")
     vals = [100.0 * float(toy[k]["mean_proxy_frac"]) for k in keys]
     ys = np.arange(3)[::-1]
-    bx.barh(ys, vals, height=0.56, color=(REF, ORANGE, OURS), linewidth=0, zorder=3)
+    bx.barh(ys, vals, height=0.56, color=(REF, ORANGE, OURS), edgecolor=ps.EDGE, linewidth=0.6, zorder=3)
     for y, v in zip(ys, vals):
-        bx.annotate(f"{v:.1f}%", (v, y), xytext=(3, 0), textcoords="offset points", va="center", fontsize=6.8)
+        bx.annotate(f"{v:.1f}%", (v, y), xytext=(3, 0), textcoords="offset points", va="center", fontsize=ps.fs(6.8))
     bx.set_yticks(ys)
     bx.set_yticklabels(names)
     bx.set_xlim(0, 100)
@@ -235,7 +235,7 @@ def fig3_protein_stopping_regimes(out: Path) -> None:
     v13 = {(r["landscape"], r["method"]): r for r in _csv(BAY / "v13_protein_bed_vs_kg/v13_protein_summary.csv")
            if r["stopping_regime"] == "df_emp_bernstein" and abs(float(r["eps"]) - 0.015) < 1e-9}
 
-    fig, (ax, bx, cx) = ps.figure(3, height=1.22)
+    fig, (ax, bx, cx) = ps.figure(3, height=1.42, scale_height=False)
     xs3, w3 = _grouped(ax, 2, 3, width=0.78)
 
     for axis, cond, scale, title, ylabel, fmt in (
@@ -249,36 +249,33 @@ def fig3_protein_stopping_regimes(out: Path) -> None:
             ps.bars(axis, x, vals, col, width=w3 * 0.9,
                     lo=[float(r["rm_ci95_lo"]) / scale for r in rows],
                     hi=[float(r["rm_ci95_hi"]) / scale for r in rows],
-                    labels=[fmt.format(v) for v in vals], label_size=6.0)
+                    labels=[fmt.format(v) for v in vals], label_size=5.3)
         axis.set_xticks(range(2))
         axis.set_xticklabels([n for _, n in LANDSCAPES])
         axis.set_ylabel(ylabel)
     ps.panel(ax, "a", "Joint credible ellipsoid")
-    ps.panel(bx, "b", "Direct posterior-risk stop")
+    ps.panel(bx, "b", "Posterior-risk stop")
     ax.set_ylim(0, 29.5)
     ax.set_yticks([0, 10, 20])
     bx.set_ylim(0, 290)
     bx.set_yticks([0, 100, 200])
 
-    ps.panel(cx, "c", "Distribution-free stop")
+    ps.panel(cx, "c", "Distribution-free")
     ps.ygrid(cx)
-    df_methods = PROTEIN_METHODS + (("gp_root_info_df", "GP-Root-Info (DF-aware)", PINK), ("df_os", "DF-OS", REF))
+    df_methods = PROTEIN_METHODS + (("gp_root_info_df", "GP-Root-Info (DF)", PINK), ("df_os", "DF-OS", REF))
     xs5, w5 = _grouped(cx, 2, 5, width=0.86)
     for (m, _, col), x in zip(df_methods, xs5):
         vals = [100.0 * float(v13[(land, m)]["cert_rate"]) for land, _ in LANDSCAPES]
-        ps.bars(cx, x, vals, col, width=w5 * 0.9, labels=["" if v > 99.5 else f"{v:.0f}" for v in vals], label_size=6.0)
+        ps.bars(cx, x, vals, col, width=w5 * 0.9, labels=["" if v > 99.5 else f"{v:.0f}" for v in vals], label_size=5.3)
     cx.set_xticks(range(2))
     cx.set_xticklabels([n for _, n in LANDSCAPES])
-    cx.set_ylim(0, 165)
+    cx.set_ylim(0, 118)
     cx.set_yticks([0, 50, 100])
-    cx.set_ylabel("Certified by 25k (%)")
+    cx.set_ylabel("Certified (%)")
 
-    # Legends sit inside the panels: this figure shares a main-text page with Table 4.
-    kw = dict(handlelength=0.9, handleheight=0.7, labelspacing=0.2, borderaxespad=0.0, fontsize=6.6)
-    ax.legend([Patch(color=c) for _, _, c in PROTEIN_METHODS], [n for _, n, _ in PROTEIN_METHODS],
-              loc="upper right", **kw)
-    cx.legend([Patch(color=c) for _, _, c in df_methods[3:]], ["GP-Root-Info (DF-aware)", "DF-OS"],
-              loc="upper center", **kw)
+    fig.legend([Patch(facecolor=c, edgecolor=ps.EDGE, linewidth=0.6) for _, _, c in df_methods],
+               [n for _, n, _ in df_methods], loc="outside lower center", ncol=len(df_methods),
+               handlelength=0.9, handleheight=0.7, columnspacing=1.0)
     ps.save(fig, out / "fig3_protein_stopping_regimes.pdf")
 
 
@@ -304,7 +301,7 @@ def fig4_acquisition_and_latency(out: Path) -> None:
     ax.set_xticks(range(4))
     ax.set_xticklabels([f"{a}\n{b}" for _, a, b in conds])
     ax.set_xlabel("Condition (overlap $\\omega$, correlation $\\rho$)")
-    ax.set_ylabel("Restricted mean evaluations ($\\times 10^3$)")
+    ax.set_ylabel("Mean evaluations ($\\times 10^3$)")
     ax.set_ylim(0, 8.4)
     ax.set_yticks([0, 2, 4, 6, 8])
     ax.legend(loc="upper right", ncol=2)
@@ -384,10 +381,10 @@ def fig6_correlation_factorial(out: Path) -> None:
     for y, (m, _, col) in zip(ys, methods):
         steps = np.array([r["capped_steps"] for r in runs if r["method"] == m], dtype=float)
         med, q25, q75 = np.median(steps), np.percentile(steps, 25), np.percentile(steps, 75)
-        ax.barh(y, med, height=0.56, color=col, linewidth=0, zorder=3)
+        ax.barh(y, med, height=0.56, color=col, edgecolor=ps.EDGE, linewidth=0.6, zorder=3)
         ax.plot([q25, q75], [y, y], color=INK, linewidth=0.7, zorder=4)
         ax.plot([q25, q75], [y, y], linestyle="none", marker="|", color=INK, markersize=3.2, markeredgewidth=0.7, zorder=4)
-        ax.annotate(f"{med:,.0f}", (max(med, q75), y), xytext=(4, 0), textcoords="offset points", va="center", fontsize=6.8)
+        ax.annotate(f"{med:,.0f}", (max(med, q75), y), xytext=(4, 0), textcoords="offset points", va="center", fontsize=ps.fs(6.8))
     ax.set_yticks(ys)
     ax.set_yticklabels([n for _, n, _ in methods])
     ax.set_xlim(0, 9000)
@@ -473,14 +470,14 @@ def fig9_protein_credibility_audit(out: Path) -> None:
         ps.ygrid(ax)
         ps.bars(ax, xs, vals, cols, width=0.58,
                 lo=[float(r["rm_ci95_lo"]) / 1000.0 for r in rs], hi=[float(r["rm_ci95_hi"]) / 1000.0 for r in rs],
-                labels=[f"{v:.1f}k\n{100 * float(r['cert_rate']):.0f}% cert." for v, r in zip(vals, rs)], label_size=6.2)
+                labels=[f"{v:.1f}k\n({100 * float(r['cert_rate']):.0f}%)" for v, r in zip(vals, rs)], label_size=6.2)
         ax.set_xticks(xs)
         ax.set_xticklabels(names)
         ax.set_ylim(0, ymax)
-        ax.set_ylabel("Restricted mean assays ($\\times 10^3$)")
+        ax.set_ylabel("Mean assays ($\\times 10^3$)")
 
     cx = axes[2]
-    ps.panel(cx, "c", "Simultaneous coverage")
+    ps.panel(cx, "c", "Joint coverage")
     ps.ygrid(cx)
     gx, w = _grouped(cx, 2, 3, width=0.78)
     for (m, name, col), x in zip(PROTEIN_METHODS, gx):
@@ -509,8 +506,9 @@ def fig10_live_workflow_validation(out: Path) -> None:
         ps.ygrid(a)
         a.set_xticks(xs)
         a.set_xticklabels(ticks)
+        a.tick_params(axis="x", labelsize=ps.fs(6.2))
 
-    ps.panel(ax, "a", "Certified by 60 evaluations")
+    ps.panel(ax, "a", "Certification")
     vals = [100.0 * float(r["cert_rate"]) for r in rs]
     ps.bars(ax, xs, vals, cols, width=0.58,
             lo=[100.0 * float(r["cert_cp95_lo"]) for r in rs], hi=[100.0 * float(r["cert_cp95_hi"]) for r in rs],
@@ -519,7 +517,7 @@ def fig10_live_workflow_validation(out: Path) -> None:
     ax.set_yticks([0, 25, 50, 75, 100])
     ax.set_ylabel("Campaigns certified (%)")
 
-    ps.panel(bx, "b", "Fresh inference tokens")
+    ps.panel(bx, "b", "Fresh tokens")
     vals = [float(r["med_live_tokens"]) / 1000.0 for r in rs]
     ps.bars(bx, xs, vals, cols, width=0.58,
             lo=[float(r["q25_live_tokens"]) / 1000.0 for r in rs], hi=[float(r["q75_live_tokens"]) / 1000.0 for r in rs],
@@ -527,7 +525,7 @@ def fig10_live_workflow_validation(out: Path) -> None:
     bx.set_ylim(0, 44)
     bx.set_ylabel("Median tokens ($\\times 10^3$)")
 
-    ps.panel(cx, "c", "Held-out task quality")
+    ps.panel(cx, "c", "Held-out quality")
     vals = [float(r["mean_unseen_test_f1"]) for r in rs]
     ps.bars(cx, xs, vals, cols, width=0.58, labels=[f"{v:.3f}" for v in vals])
     cx.set_ylim(0, 0.56)
@@ -548,7 +546,7 @@ def fig11_information_tracking(out: Path) -> None:
 
     fig, (ax, bx, cx) = ps.figure(3, height=1.95)
 
-    ps.panel(ax, "a", "Proxy DAG rate ratio")
+    ps.panel(ax, "a", "Proxy DAG")
     ax.grid(color=ps.GRID, linewidth=0.5)
     deltas = sorted({float(r["delta"]) for r in rows_a}, reverse=True)
     lka = {(float(r["delta"]), r["method"]): float(r["med_norm_ratio"]) for r in rows_a}
@@ -560,12 +558,13 @@ def fig11_information_tracking(out: Path) -> None:
     ps.label(ax, x[-1], 1.0, "lower bound", dy=2, ha="right", size=6.4, color=MUTED)
     ax.set_xticks(x)
     ax.set_xticklabels([f"{d:g}".replace("0.", ".") if d >= 0.001 else "$10^{-4}$" for d in deltas])
+    ax.tick_params(axis="x", labelsize=ps.fs(6.2))
     ax.set_ylim(0, 13)
     ax.set_yticks([0, 4, 8, 12])
     ax.set_xlabel("Confidence level $\\delta$")
     ax.set_ylabel("Median $\\tau\\,/\\,(T^{\\varepsilon}_{*}\\log(1/\\delta))$")
 
-    ps.panel(bx, "b", "Medium Gaussian DAGs")
+    ps.panel(bx, "b", "Gaussian DAGs")
     ps.ygrid(bx)
     scales = sorted({int(r["m_leaves"]) for r in rows_b})
     lkb = {(int(r["m_leaves"]), r["method"]): float(r["med_steps"]) / 1000.0 for r in rows_b}
@@ -575,11 +574,12 @@ def fig11_information_tracking(out: Path) -> None:
         vals = [lkb[(s, m)] for s in scales]
         ps.bars(bx, x, vals, col, width=w * 0.9)
     bx.set_xticks(range(len(scales)))
-    bx.set_xticklabels([f"$M={s}$" for s in scales])
+    bx.set_xticklabels([str(s) for s in scales])
+    bx.set_xlabel("Terminals $M$")
     bx.set_ylim(0, 5.6)
     bx.set_ylabel("Median evaluations ($\\times 10^3$)")
 
-    ps.panel(cx, "c", "Multiple correct answers")
+    ps.panel(cx, "c", "Multiple answers")
     ps.xgrid(cx)
     cx.grid(axis="x", which="major", color=ps.GRID, linewidth=0.5)
     order = ("indep_gauss_os", "cd_joint", "hybrid_cd_tracking", "info_tracking")
@@ -595,13 +595,13 @@ def fig11_information_tracking(out: Path) -> None:
                 markeredgewidth=1.0 if capped else 0.7, markersize=5.2, zorder=4)
         txt = f"{med:,.0f} (cap)" if capped else f"{med:,.0f}"
         cx.annotate(txt, (max(med, q75), y), xytext=(-5 if capped else 5, 6 if capped else 0), textcoords="offset points",
-                    va="center", ha="right" if capped else "left", fontsize=6.6)
+                    va="center", ha="right" if capped else "left", fontsize=ps.fs(6.6))
     cx.set_yticks(ys)
     cx.set_yticklabels(["Indep. OS", "CD-Joint", "Hybrid", "Info-Track"])
     cx.set_ylim(-0.6, len(order) - 0.4)
     cx.set_xlim(20, 6000)
-    _plain_log(cx, "x", (30, 100, 300, 1000, 3000), "{:,.0f}")
-    cx.set_xlabel("Median evaluations (log scale)")
+    _plain_log(cx, "x", (30, 100, 1000), "{:g}")
+    cx.set_xlabel("Median evaluations (log)")
 
     handles = [Line2D([], [], color=style[m][1], marker=style[m][2], markeredgecolor="white", markeredgewidth=0.7)
                for m in order]
@@ -616,7 +616,7 @@ def fig12_protein_calibration_robustness(out: Path) -> None:
 
     fig, (ax, bx, cx) = ps.figure(3, height=1.95)
 
-    ps.panel(ax, "a", "Assays to certification")
+    ps.panel(ax, "a", "Assays to certify")
     ps.ygrid(ax)
     gx, w = _grouped(ax, 2, 2, width=0.7)
     for (m, name, col), x in zip((("indep_os", "Formal DF-OS", REF), ("cd_joint_calibrated", "Calibrated EB+LOO", OURS)), gx):
@@ -635,24 +635,25 @@ def fig12_protein_calibration_robustness(out: Path) -> None:
     ms = ("bayes_post_nominal", "cd_joint_nominal", "cd_joint_calibrated_eb")
     vals = [100.0 * float(c3[m]["false_cert_rate"]) for m in ms]
     ps.bars(bx, np.arange(3), vals, (BAD, ORANGE, OURS), width=0.58, labels=[f"{v:.1f}%" for v in vals])
-    ps.reference(bx, 5.0, "$\\delta=5\\%$")
+    ps.reference(bx, 5.0, "$\\delta=5\\%$", dy=7)
     bx.set_xticks(range(3))
     bx.set_xticklabels(["Nominal\nBayes", "Nominal\nCD-Joint", "EB+LOO"])
+    bx.tick_params(axis="x", labelsize=ps.fs(6.2))
     bx.set_ylim(0, 46)
     bx.set_ylabel("False certificates (%)")
 
-    ps.panel(cx, "c", "Bounded-residual frontier")
+    ps.panel(cx, "c", "Residual frontier")
     cx.grid(color=ps.GRID, linewidth=0.5)
     c4 = [r for r in crows if r["study"] == "C4_xi_eps_frontier"]
     xis = sorted({float(r["xi"]) for r in c4})
     lk4 = {(float(r["xi"]), r["method"]): 100.0 * float(r["cert_rate"]) for r in c4}
     cx.axvline(0.015, color=MUTED, linestyle=(0, (1.5, 2)), linewidth=0.8, zorder=2)
-    cx.annotate("$2\\xi=\\varepsilon$", (0.015, 18), xytext=(3, 0), textcoords="offset points", fontsize=6.6,
+    cx.annotate("$2\\xi=\\varepsilon$", (0.015, 14), xytext=(3, 0), textcoords="offset points", fontsize=ps.fs(6.6),
                 color=MUTED, va="center")
     for m, name, col, mk in (
-        ("indep_os", "Formal DF-OS", REF, "D"),
-        ("cd_joint_hybrid", "Safe hybrid", PINK, "s"),
-        ("cd_joint_robust", "Robust ellipsoid", BLUE, "o"),
+        ("indep_os", "DF-OS", REF, "D"),
+        ("cd_joint_hybrid", "Hybrid", PINK, "s"),
+        ("cd_joint_robust", "Robust", BLUE, "o"),
     ):
         cx.plot(xis, [lk4[(xi, m)] for xi in xis], color=col, marker=mk, markeredgecolor="white", markeredgewidth=0.7,
                 label=name, zorder=4)
@@ -663,7 +664,7 @@ def fig12_protein_calibration_robustness(out: Path) -> None:
     cx.set_yticks([0, 25, 50, 75, 100])
     cx.set_xlabel("Residual bound $\\xi$")
     cx.set_ylabel("Completion rate (%)")
-    cx.legend(loc="center right", bbox_to_anchor=(1.0, 0.56), handlelength=2.0)
+    cx.legend(loc="center right", bbox_to_anchor=(1.0, 0.6), handlelength=2.0)
     ps.save(fig, out / "supp_protein_calibration_robustness.pdf")
 
 
@@ -687,22 +688,25 @@ def fig13_eprocess_safety_and_compute(out: Path) -> None:
     ms = ("neg_ctrl_reset_on_revisit", "v33_preserved_all", "v34_preserved_skip")
     vals = [100.0 * float(r_b[m]["false_cert_rate"]) for m in ms]
     ps.bars(ax, xs, vals, (BAD, BLUE, OURS), width=0.58, labels=[f"{v:.1f}%" for v in vals])
-    ps.reference(ax, 100.0 * float(r_b[ms[0]]["delta"]), "$\\delta=5\\%$")
-    ax.set_xticklabels(["Invalid\nreset", "Preserved\n(V33)", "Preserved\nskip (V34)"])
+    ps.reference(ax, 100.0 * float(r_b[ms[0]]["delta"]), "$\\delta=5\\%$", dy=7)
+    ax.set_xticklabels(["Reset\n(invalid)", "Preserved\n(V33)", "Skip\n(V34)"])
+    ax.tick_params(axis="x", labelsize=ps.fs(6.2))
     ax.set_ylim(0, 47)
     ax.set_ylabel("Null false certificates (%)")
 
     ps.panel(bx, "b", "Hard-switch cohort")
     vals = [r_a[m] for m in ("v33_all_action", "v34_bonferroni_j", "v34_full")]
     ps.bars(bx, xs, vals, (BLUE, ORANGE, OURS), width=0.58, labels=[f"{v:.0f}" for v in vals])
-    bx.set_xticklabels(["Dense\nall-action", "Local\nBonferroni", "Local IUT\n(V34)"])
+    bx.set_xticklabels(["Dense", "Local\nBonferroni", "Local IUT\n(V34)"])
+    bx.tick_params(axis="x", labelsize=ps.fs(6.2))
     bx.set_ylim(0, 520)
     bx.set_ylabel("Median null-component solves")
 
-    ps.panel(cx, "c", "General $d=4$, $K=32$")
+    ps.panel(cx, "c", "$d=4$, $K=32$")
     vals = [d4[m] for m in ("v33_full", "v33_sparse", "v34_full")]
     ps.bars(cx, xs, vals, (BLUE, ORANGE, OURS), width=0.58, labels=[f"{v:.1f} s" for v in vals])
-    cx.set_xticklabels(["Dense\n(V33)", "Sparse\nrefresh", "Sparse+local\n(V34)"])
+    cx.set_xticklabels(["Dense\n(V33)", "Sparse\nrefresh", "Sparse +\nlocal (V34)"])
+    cx.tick_params(axis="x", labelsize=ps.fs(6.2))
     cx.set_ylim(0, 62)
     cx.set_ylabel("Median total compute (s)")
     ps.save(fig, out / "supp_eprocess_safety_and_compute.pdf")
@@ -724,11 +728,11 @@ def fig14_sparse_variance_tracking(out: Path) -> None:
     vals = [k64[m] for m in ms]
     ps.bars(ax, np.arange(4), vals, (BLUE, ORANGE, PINK, OURS), width=0.58, labels=[f"{v:.2f} s" for v in vals])
     ax.set_xticks(range(4))
-    ax.set_xticklabels(["Dense\n(V33)", "Sparse\nonly", "Local\nonly", "Sparse+local\n(V34)"])
+    ax.set_xticklabels(["Dense\n(V33)", "Sparse\nonly", "Local\nonly", "Sparse +\nlocal (V34)"])
     ax.set_ylim(0, 39)
     ax.set_ylabel("Median cold wall time (s)")
 
-    ps.panel(bx, "b", "Heteroscedastic variance stress")
+    ps.panel(bx, "b", "Heteroscedastic stress")
     ps.ygrid(bx)
     profs = ("sig_025_025", "sig_050_200", "sig_025_400", "sig_400_400")
     gx, w = _grouped(bx, 4, 2, width=0.7)
@@ -736,7 +740,7 @@ def fig14_sparse_variance_tracking(out: Path) -> None:
                                   ("v34_vanilla", "Unknown-variance V34", OURS)), gx):
         vals = [lk[(p, m)] for p in profs]
         ps.bars(bx, x, vals, col, width=w * 0.9, labels=[f"{v:.0f}%" for v in vals], legend=name)
-    ps.reference(bx, 5.0, "$\\delta=5\\%$")
+    ps.reference(bx, 5.0, "$\\delta=5\\%$", dy=7)
     bx.set_xticks(range(4))
     bx.set_xticklabels(["(.25, .25)", "(.5, 2)", "(.25, 4)", "(4, 4)"])
     bx.set_ylim(0, 72)
@@ -756,7 +760,7 @@ def fig15_native_solver_and_workflows(out: Path) -> None:
     fig, (ax, bx, cx) = ps.figure(3, height=1.95)
 
     # (a) paired Python / C++ wall time: dumbbells on a log axis (no bars: a log axis has no zero baseline).
-    ps.panel(ax, "a", "Certified B&B wall time")
+    ps.panel(ax, "a", "B&B wall time")
     ax.grid(axis="y", color=ps.GRID, linewidth=0.5)
     ax.tick_params(axis="x", length=0)
     ax.set_yscale("log")
@@ -766,19 +770,21 @@ def fig15_native_solver_and_workflows(out: Path) -> None:
         ax.plot([i], [py], marker="D", color=REF, markeredgecolor="white", markeredgewidth=0.7, markersize=4.6, zorder=4)
         ax.plot([i], [cpp], marker="o", color=OURS, markeredgecolor="white", markeredgewidth=0.7, markersize=5.0, zorder=4)
         ax.annotate(f"{float(r['total_speedup_x']):.0f}$\\times$", (i, np.sqrt(py * cpp)), xytext=(4, 0),
-                    textcoords="offset points", va="center", fontsize=6.6)
+                    textcoords="offset points", va="center", fontsize=ps.fs(6.6))
     ax.set_xticks(range(len(paired)))
-    ax.set_xticklabels([f"$d={r['d']}$\n$K={r['K']}$" for r in paired])
+    ax.set_xticklabels([f"{r['d']}, {r['K']}" for r in paired])
+    ax.set_xlabel("$d$, $K$")
+    ax.tick_params(axis="x", labelsize=ps.fs(6.2))
     ax.set_xlim(-0.5, len(paired) - 0.3)
     ax.set_ylim(0.04, 400)
     _plain_log(ax, "y", (0.1, 1, 10, 100))
-    ax.set_ylabel("Median wall time (s, log scale)")
+    ax.set_ylabel("Median wall time (s)")
     ax.legend([Line2D([], [], linestyle="none", marker="D", color=REF, markeredgecolor="white"),
                Line2D([], [], linestyle="none", marker="o", color=OURS, markeredgecolor="white")],
               ["Python", "C++17"], loc="upper left", ncol=2, borderaxespad=0.0, handletextpad=0.1, columnspacing=0.8)
 
     # (b) projected heteroscedastic GB1: lollipop-free dot plot on a log axis.
-    ps.panel(bx, "b", "Projected heteroscedastic GB1")
+    ps.panel(bx, "b", "Heteroscedastic GB1")
     bx.grid(axis="y", color=ps.GRID, linewidth=0.5)
     bx.tick_params(axis="x", length=0)
     bx.set_yscale("log")
@@ -789,14 +795,15 @@ def fig15_native_solver_and_workflows(out: Path) -> None:
                 markeredgecolor=col if capped else "white", markeredgewidth=1.0 if capped else 0.7, zorder=4)
         ps.label(bx, i, v, f"{v:,.0f}" + ("\n(cap)" if capped else ""), dy=5)
     bx.set_xticks(range(3))
-    bx.set_xticklabels(["Student-$t$\nOS", "Calibrated\nEB+LOO", "V34\n(C++)"])
+    bx.set_xticklabels(["Student-$t$\nOS", "EB+\nLOO", "V34\n(C++)"])
+    bx.tick_params(axis="x", labelsize=ps.fs(6.2))
     bx.set_xlim(-0.6, 2.6)
     bx.set_ylim(100, 400000)
     _plain_log(bx, "y", (100, 1000, 10000, 100000), "{:,.0f}")
     bx.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"$10^{{{int(round(np.log10(v)))}}}$"))
-    bx.set_ylabel("Median assays (log scale)")
+    bx.set_ylabel("Median assays")
 
-    ps.panel(cx, "c", "Eight live campaigns")
+    ps.panel(cx, "c", "Live campaigns")
     ps.ygrid(cx)
     ms = ("indep_os", "cd_joint_hybrid", "cd_joint_calibrated")
     vals = [float(live[m]["med_live_tokens"]) / 1000.0 for m in ms]
@@ -805,7 +812,8 @@ def fig15_native_solver_and_workflows(out: Path) -> None:
     ps.bars(cx, np.arange(3), vals, (REF, PINK, OURS), width=0.58,
             labels=[f"{v:.1f}k\n{c}/{n} cert." for v, c, n in zip(vals, cert, runs)], label_size=6.2)
     cx.set_xticks(range(3))
-    cx.set_xticklabels(["DF-OS", "Hybrid\nEB", "Calibrated\nEB+LOO"])
+    cx.set_xticklabels(["DF-OS", "Hybrid\nEB", "EB+LOO"])
+    cx.tick_params(axis="x", labelsize=ps.fs(6.2))
     cx.set_ylim(0, 92)
     cx.set_yticks([0, 20, 40, 60, 80])
     cx.set_ylabel("Median fresh tokens ($\\times 10^3$)")
