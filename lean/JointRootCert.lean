@@ -18,3 +18,4 @@ import JointRootCert.RootPUCT
 import JointRootCert.RecursivePUCT
 import JointRootCert.BernoulliInfo
 import JointRootCert.UnknownVariance
+import JointRootCert.GaussianInfo
