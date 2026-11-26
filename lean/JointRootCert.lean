@@ -42,3 +42,6 @@ import JointRootCert.UCTWork
 import JointRootCert.ParityGrid
 import JointRootCert.UnknownVarianceTail
 import JointRootCert.UnknownVarianceTracker
+import JointRootCert.HeapImpl
+import JointRootCert.DagRetire
+import JointRootCert.RunMerge
