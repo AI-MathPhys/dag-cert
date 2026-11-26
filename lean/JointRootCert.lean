@@ -19,3 +19,5 @@ import JointRootCert.RecursivePUCT
 import JointRootCert.BernoulliInfo
 import JointRootCert.UnknownVariance
 import JointRootCert.GaussianInfo
+import JointRootCert.StoppedProcess
+import JointRootCert.Assembly
