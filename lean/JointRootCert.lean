@@ -39,3 +39,4 @@ import JointRootCert.GaussianFinite
 import JointRootCert.GaussianUpper
 import JointRootCert.MonitorWork
 import JointRootCert.UCTWork
+import JointRootCert.ParityGrid
