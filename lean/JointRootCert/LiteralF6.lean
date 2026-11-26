@@ -13,9 +13,11 @@ defined explicitly, without any choice over histories:
   wider of the two.
 * `cnt`, `selR`: the run on an episode tape `x : Z × ℕ → ℝ`, with the running-intersection
   Hoeffding box of confidence `δ_j = δ / (j (j + 1))` built from the counts.
-* `stopTime`: the first `t ≤ 2^j` at which some action has exact certificate `≤ ε`, and
-  `2^j + 1` if there is none (timeout).  `epObs = min σ 2^j`, `epFail = {2^j < σ}`,
-  `epRec` the action of least certificate at the stopping time.
+* `stopTime`: the first `t ≤ 2^j` at which some action has exact certificate `≤ ε`
+  (`certAt`) or the box is empty at some terminal, `l z > u z` (`boxEmpty`, confidence
+  failure), and `2^j + 1` if there is none (timeout).  `epObs = min σ 2^j`;
+  `epFail = {2^j < σ} ∪ {box empty at σ}` (timeout or confidence failure, as in the restart
+  wrapper of the manuscript); `epRec` the action of least certificate at the stopping time.
 
 We prove that the stopping count, the number of observations, the queried terminals, the
 recommendation and the failure set are measurable functions of the tape
@@ -158,8 +160,14 @@ noncomputable def recA (l u : Z → ℝ) : A :=
   lArg (fun c => -rectCert (supp c) (hne c) (hpr c) l u) (univ.min' univ_nonempty)
     (univ.sort (· ≤ ·))
 
-/-- The global stopping test: some action has exact certificate at most `ε`. -/
-def stopAt (ε : ℝ) (l u : Z → ℝ) : Prop := ∃ c, rectCert (supp c) (hne c) (hpr c) l u ≤ ε
+/-- The global certification test: some action has exact certificate at most `ε`. -/
+def certAt (ε : ℝ) (l u : Z → ℝ) : Prop := ∃ c, rectCert (supp c) (hne c) (hpr c) l u ≤ ε
+
+/-- Confidence failure: the box is empty at some terminal. -/
+def boxEmpty (l u : Z → ℝ) : Prop := ∃ z, u z < l z
+
+/-- The episode's stopping test: certification or confidence failure. -/
+def stopAt (ε : ℝ) (l u : Z → ℝ) : Prop := certAt supp hne hpr ε l u ∨ boxEmpty l u
 
 /-- When the stopping test fails, `osPick` is a continuing optimistic-separation step. -/
 theorem osPick_step (l u : Z → ℝ) (ε : ℝ)
@@ -239,9 +247,17 @@ lemma recA_meas (a : A) : MeasurableSet {x | recA supp hne hpr (l x) (u x) = a} 
   lArg_meas (F := fun x c => -rectCert (supp c) (hne c) (hpr c) (l x) (u x))
     (fun c => (rectCert_meas supp hne hpr hl hu c).neg) _ (fun _ => MeasurableSet.const _) a
 
+omit [Fintype A] [LinearOrder A] [Nonempty A] in
+lemma boxEmpty_meas : MeasurableSet {x | boxEmpty (l x) (u x)} := by
+  simp only [boxEmpty, Set.ofPred_exists]
+  exact MeasurableSet.iUnion fun z => measurableSet_lt (hu z) (hl z)
+
 omit [Nonempty A] in
 lemma stopAt_meas (ε : ℝ) : MeasurableSet {x | stopAt supp hne hpr ε (l x) (u x)} := by
-  simp only [stopAt, Set.ofPred_exists]
+  unfold stopAt
+  rw [Set.ofPred_or]
+  refine MeasurableSet.union ?_ (boxEmpty_meas hl hu)
+  simp only [certAt, Set.ofPred_exists]
   exact MeasurableSet.iUnion fun c =>
     measurableSet_le (rectCert_meas supp hne hpr hl hu c) measurable_const
 
@@ -321,9 +337,14 @@ noncomputable def epRec (M δ ε : ℝ) (j : ℕ) (x : Z × ℕ → ℝ) : A :=
     (boxHi M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x
       (cnt supp hne hpr M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x (epStop supp hne hpr M δ ε j x)))
 
-/-- Failure set of episode `j`: the cap `2^j` is reached without a certificate. -/
+/-- Failure set of episode `j`: timeout (the cap `2^j` is reached without stopping) or
+confidence failure (the box at the stopping time is empty at some terminal). -/
 def epFail (M δ ε : ℝ) (j : ℕ) : Set (Z × ℕ → ℝ) :=
-  {x | 2 ^ j < epStop supp hne hpr M δ ε j x}
+  {x | 2 ^ j < epStop supp hne hpr M δ ε j x ∨
+    boxEmpty (boxLo M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x
+      (cnt supp hne hpr M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x (epStop supp hne hpr M δ ε j x)))
+      (boxHi M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x
+      (cnt supp hne hpr M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x (epStop supp hne hpr M δ ε j x)))}
 
 /-! ### Measurability -/
 
@@ -420,19 +441,29 @@ theorem epSel_measurableSet (M δ : ℝ) (j t : ℕ) (z : Z) :
     MeasurableSet {x | epSel supp hne hpr M δ j x t = z} :=
   selR_meas supp hne hpr M _ t z
 
+/-- The counts at the stopping time of episode `j` are a measurable function of the tape. -/
+lemma epCnt_meas (M δ ε : ℝ) (j : ℕ) (N : Z → ℕ) :
+    MeasurableSet {x | cnt supp hne hpr M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x
+      (epStop supp hne hpr M δ ε j x) = N} :=
+  measurableSet_sel (fun n => epStop_measurable supp hne hpr M δ ε j (measurableSet_singleton n))
+    (P := fun n x => cnt supp hne hpr M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x n = N)
+    (fun n => cnt_meas supp hne hpr M _ n N)
+
 /-- The failure set of episode `j` is measurable. -/
 theorem epFail_measurableSet (M δ ε : ℝ) (j : ℕ) :
-    MeasurableSet (epFail supp hne hpr M δ ε j) :=
-  epStop_measurable supp hne hpr M δ ε j measurableSet_Ioi
+    MeasurableSet (epFail supp hne hpr M δ ε j) := by
+  unfold epFail
+  rw [Set.ofPred_or]
+  exact (epStop_measurable supp hne hpr M δ ε j measurableSet_Ioi).union
+    (measurableSet_sel (epCnt_meas supp hne hpr M δ ε j)
+      (P := fun N x => boxEmpty (boxLo M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x N)
+        (boxHi M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x N))
+      (fun N => boxEmpty_meas (measurable_boxLo _ _ N) (measurable_boxHi _ _ N)))
 
 /-- The output of episode `j` is a measurable function of the tape. -/
 theorem epRec_measurableSet (M δ ε : ℝ) (j : ℕ) (a : A) :
     MeasurableSet {x | epRec supp hne hpr M δ ε j x = a} := by
-  have hN : ∀ N, MeasurableSet {x | cnt supp hne hpr M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x
-      (epStop supp hne hpr M δ ε j x) = N} := fun N =>
-    measurableSet_sel (fun n => epStop_measurable supp hne hpr M δ ε j (measurableSet_singleton n))
-      (P := fun n x => cnt supp hne hpr M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x n = N)
-      (fun n => cnt_meas supp hne hpr M _ n N)
+  have hN := epCnt_meas supp hne hpr M δ ε j
   exact measurableSet_sel hN (P := fun N x => recA supp hne hpr
       (boxLo M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x N)
       (boxHi M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x N) = a)
@@ -557,12 +588,14 @@ theorem ep_local (M δ ε : ℝ) (j : ℕ) {x x' : Z × ℕ → ℝ}
   have h' : ∀ z i, i < 2 ^ j + 1 → x (z, i) = x' (z, i) := fun z i hi => h z i (by omega)
   have hσ : epStop supp hne hpr M δ ε j x = epStop supp hne hpr M δ ε j x' :=
     stopTime_congr supp hne hpr M _ ε _ h'
-  refine ⟨hσ, by unfold epObs; rw [hσ], ?_, by unfold epFail; simp only [Set.mem_ofPred_eq, hσ],
-    fun t ht => ?_⟩
-  · have hle : epStop supp hne hpr M δ ε j x ≤ 2 ^ j + 1 :=
-      stopTime_le supp hne hpr M (δ / ((j : ℝ) * ((j : ℝ) + 1))) ε (2 ^ j) x
-    obtain ⟨hb, hb'⟩ := boxAt_congr supp hne hpr M (δ / ((j : ℝ) * ((j : ℝ) + 1))) h' hle
-    unfold epRec
+  have hle : epStop supp hne hpr M δ ε j x ≤ 2 ^ j + 1 :=
+    stopTime_le supp hne hpr M (δ / ((j : ℝ) * ((j : ℝ) + 1))) ε (2 ^ j) x
+  obtain ⟨hb, hb'⟩ := boxAt_congr supp hne hpr M (δ / ((j : ℝ) * ((j : ℝ) + 1))) h' hle
+  refine ⟨hσ, by unfold epObs; rw [hσ], ?_, ?_, fun t ht => ?_⟩
+  · unfold epRec
+    rw [hb, hb', ← hσ]
+  · unfold epFail
+    simp only [Set.mem_ofPred_eq]
     rw [hb, hb', ← hσ]
   · obtain ⟨hb, hb'⟩ := boxAt_congr supp hne hpr M (δ / ((j : ℝ) * ((j : ℝ) + 1))) h'
       (t := t) (by omega)
@@ -587,11 +620,23 @@ theorem ep_hrule (M δ ε : ℝ) (j : ℕ) (x : Z × ℕ → ℝ) :
   have hmin := Nat.find_min _ ht
   unfold epSel
   rw [tapeLo_selR, tapeHi_selR]
-  refine osPick_step supp hne hpr _ _ ε (fun c => not_le.mp fun hc => hmin (Or.inr ⟨c, hc⟩))
+  refine osPick_step supp hne hpr _ _ ε (fun c => not_le.mp fun hc => hmin (Or.inr (Or.inl ⟨c, hc⟩)))
 
-theorem ep_hret (M δ ε : ℝ) (j : ℕ) (x : Z × ℕ → ℝ) :
-    epStop supp hne hpr M δ ε j x ≤ 2 ^ j → x ∉ epFail supp hne hpr M δ ε j :=
-  fun h h' => absurd h' (not_lt.mpr h)
+/-- On the coverage event an episode that stops within its cap does not fail: the box
+contains the means, so it is not empty. -/
+theorem ep_hret (M δ ε : ℝ) (j : ℕ) (x : Z × ℕ → ℝ) {m : Z → ℝ}
+    (hc : tapeCovered M (δ / ((j : ℝ) * ((j : ℝ) + 1))) (fun z i => x (z, i))
+      (epSel supp hne hpr M δ j x) m) :
+    epStop supp hne hpr M δ ε j x ≤ 2 ^ j → x ∉ epFail supp hne hpr M δ ε j := by
+  intro h h'
+  rcases h' with h' | ⟨z, hz⟩
+  · exact absurd h' (not_lt.mpr h)
+  · have hcσ := hc (epStop supp hne hpr M δ ε j x)
+    unfold epSel at hcσ
+    rw [tapeLo_selR, tapeHi_selR] at hcσ
+    have h1 := hcσ.1 z
+    have h2 := hcσ.2 z
+    linarith
 
 open Classical in
 theorem ep_hsucc (M δ ε : ℝ) (j : ℕ) (x : Z × ℕ → ℝ) (hx : x ∉ epFail supp hne hpr M δ ε j) :
@@ -606,11 +651,12 @@ theorem ep_hsucc (M δ ε : ℝ) (j : ℕ) (x : Z × ℕ → ℝ) (hx : x ∉ ep
     (boxHi M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x
       (cnt supp hne hpr M (δ / ((j : ℝ) * ((j : ℝ) + 1))) x t)))
     ⟨2 ^ j + 1, Or.inl (Nat.lt_succ_self _)⟩
-  rcases hspec with h | ⟨c, hc⟩
-  · exact absurd h hx
+  rcases hspec with h | ⟨c, hc⟩ | he
+  · exact absurd (Or.inl h) hx
   · unfold epSel
     rw [tapeLo_selR, tapeHi_selR]
     exact (recA_le supp hne hpr _ _ c).trans hc
+  · exact absurd (Or.inr he) hx
 
 end OSRule
 
@@ -625,8 +671,9 @@ linear order, used only for tie-breaking (`[Nonempty A]` follows from the cover;
 instance argument because the definitions use it).
 
 Episode `j` is the explicit optimistic-separation sampler `epSel` on its tape, with Hoeffding
-boxes of confidence `δ / (j (j + 1))`, stopped at the first certificate or after `2^j`
-queries (`epStop`, `epObs`, `epFail`, `epRec`).  For this procedure:
+boxes of confidence `δ / (j (j + 1))`, stopped at the first certificate, at the first empty
+box (confidence failure), or after `2^j` queries (`epStop`, `epObs`, `epRec`); it fails on
+timeout or confidence failure (`epFail`).  For this procedure:
 `E τ < 1600 H_ρ L`, `τ < ∞` almost surely, the event that no episode returns is null, and
 the output is not `ε`-optimal with probability at most `δ`. -/
 theorem active_restart_instance {Z : Type*} [Fintype Z] [LinearOrder Z] [Nonempty Z]
@@ -656,7 +703,7 @@ theorem active_restart_instance {Z : Type*} [Fintype Z] [LinearOrder Z] [Nonempt
     (epRec supp hne hpr M δ ε) (epFail supp hne hpr M δ ε)
     (epFail_measurableSet supp hne hpr M δ ε) (ep_hobs supp hne hpr M δ ε)
     (fun j _ x _ => ep_hrule supp hne hpr M δ ε j x)
-    (fun j _ x _ => ep_hret supp hne hpr M δ ε j x)
+    (fun j _ x hc => ep_hret supp hne hpr M δ ε j x hc)
     (fun j _ x hx => ep_hsucc supp hne hpr M δ ε j x hx)
 
 end LiteralF6
