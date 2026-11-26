@@ -1,0 +1,18 @@
+name = "JointRootCert"
+version = "0.1.0"
+keywords = ["math", "statistics", "decision-theory", "formalization"]
+defaultTargets = ["JointRootCert"]
+
+[leanOptions]
+pp.unicode.fun = true
+autoImplicit = false
+relaxedAutoImplicit = false
+weak.linter.unusedSectionVars = false
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.36.0"
+
+[[lean_lib]]
+name = "JointRootCert"
