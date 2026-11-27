@@ -64,7 +64,7 @@ class CppSameGameRunner:
         import sys
 
         src_bytes = CPP_SG_SOURCE.read_bytes()
-        sha = hashlib.sha256(src_bytes).hexdigest()[:16]
+        sha = hashlib.sha256(b"-ffp-contract=off" + src_bytes).hexdigest()[:16]
         ext = ".dylib" if sys.platform == "darwin" else ".so"
         so_path = Path(tempfile.gettempdir()) / f"dag_mcts_cpp_samegame_{sha}{ext}"
         if not so_path.is_file():
@@ -77,7 +77,7 @@ class CppSameGameRunner:
             tmp_so = so_path.with_name(f"{so_path.stem}_{os.getpid()}.tmp{ext}")
             subprocess.run(
                 [
-                    cxx, "-O3", "-std=c++17", "-Wall", "-Wextra", "-Werror",
+                    cxx, "-O3", "-ffp-contract=off", "-std=c++17", "-Wall", "-Wextra", "-Werror",
                     "-shared", "-fPIC", str(CPP_SG_SOURCE), "-o", str(tmp_so),
                 ],
                 check=True,

@@ -63,7 +63,7 @@ class CppV34BnBRunner:
         import sys
 
         src_bytes = CPP_V34_BNB_SOURCE.read_bytes()
-        sha = hashlib.sha256(src_bytes).hexdigest()[:16]
+        sha = hashlib.sha256(b"-ffp-contract=off" + src_bytes).hexdigest()[:16]
         ext = ".dylib" if sys.platform == "darwin" else ".so"
         so_path = Path(tempfile.gettempdir()) / f"dag_mcts_v34_bnb_{sha}{ext}"
         if not so_path.is_file():
@@ -76,7 +76,7 @@ class CppV34BnBRunner:
             tmp_so = Path(tempfile.gettempdir()) / f"dag_mcts_v34_bnb_{sha}_{os.getpid()}_{int(time.time()*1e6)}.tmp{ext}"
             subprocess.run(
                 [
-                    cxx, "-O3", "-std=c++17", "-Wall", "-Wextra", "-Werror",
+                    cxx, "-O3", "-ffp-contract=off", "-std=c++17", "-Wall", "-Wextra", "-Werror",
                     "-shared", "-fPIC", str(CPP_V34_BNB_SOURCE), "-o", str(tmp_so),
                 ],
                 check=True,

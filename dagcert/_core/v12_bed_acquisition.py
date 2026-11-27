@@ -83,7 +83,7 @@ class _CppV12KGRunner:
         if not cxx:
             return None
         try:
-            sha = hashlib.sha256(_CPP_KG_SOURCE.read_bytes()).hexdigest()[:16]
+            sha = hashlib.sha256(b"-ffp-contract=off" + _CPP_KG_SOURCE.read_bytes()).hexdigest()[:16]
             ext = ".dylib" if sys.platform == "darwin" else ".so"
             so_path = Path(tempfile.gettempdir()) / f"dag_mcts_v12_kg_{sha}{ext}"
             if not so_path.is_file():
@@ -91,7 +91,7 @@ class _CppV12KGRunner:
                 try:
                     subprocess.run(
                         [
-                            cxx, "-O3", "-march=native", "-std=c++17", "-Wall", "-Wextra", "-Werror",
+                            cxx, "-O3", "-ffp-contract=off", "-march=native", "-std=c++17", "-Wall", "-Wextra", "-Werror",
                             "-shared", "-fPIC", str(_CPP_KG_SOURCE), "-o", str(tmp_so),
                         ],
                         check=True,
@@ -100,7 +100,7 @@ class _CppV12KGRunner:
                 except subprocess.CalledProcessError:
                     subprocess.run(
                         [
-                            cxx, "-O3", "-std=c++17", "-Wall", "-Wextra", "-Werror",
+                            cxx, "-O3", "-ffp-contract=off", "-std=c++17", "-Wall", "-Wextra", "-Werror",
                             "-shared", "-fPIC", str(_CPP_KG_SOURCE), "-o", str(tmp_so),
                         ],
                         check=True,
