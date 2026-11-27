@@ -158,6 +158,24 @@ dependencies. The resulting challenge is to characterize the
 joint uncertainty that can invalidate a commitment and to design
 experiments that resolve it efficiently.
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{figures/abstract.png}
+\vspace{-0.7cm}
+\caption{\textbf{Certify the decision, not the outcome.}
+\textbf{(a)} Actions $a_1$ and $a_2$ share the outcome $z_s$;
+committing to $a_1$ excludes only $z_2$.
+\textbf{(b)} Only an excluded outcome can invalidate $a_1$:
+since $0.55<0.72$, $a_1$ is certified while the shared interval
+stays unresolved and the marginal gap of $0.23$ persists.
+\textbf{(c)} CD-Joint (schematic) selects queries that shrink
+the correlated credible ellipsoid along the outside--inside
+contrast $g$ until no plausible environment invalidates $a_1$.}
+\label{fig:concept-overview}
+\end{figure}
+
+\vspace{-0.3cm}
+
 \paragraph{Our contribution.}
 We address these challenges by introducing
 \textbf{Joint Root Certification}, a framework for certifying
@@ -185,13 +203,7 @@ evidence required for certification, enabling shared and
 correlated evidence to be exploited more efficiently.
 
 
-\begin{figure}[t]
-\centering
-\includegraphics{figures/fig1_concept_overview.pdf}
-\vspace{-20pt}
-\caption{\textbf{Certify the decision, not the outcome.} \textbf{(a)} Actions $a_1$ and $a_2$ share the outcome $z_s$; committing to $a_1$ excludes only $z_2$. \textbf{(b)} Only an excluded outcome can invalidate $a_1$: since $0.55<0.72$, $a_1$ is certified while the shared interval stays unresolved and the marginal gap of $0.23$ persists. \textbf{(c)} CD-Joint (schematic) selects queries that shrink the correlated credible ellipsoid along the outside--inside contrast $g$ until no plausible environment invalidates $a_1$.}
-\label{fig:concept-overview}
-\end{figure}
+
 
 
 \section{Decision-Aware Bayesian Experimental Design}
@@ -612,7 +624,7 @@ charge unfinished runs the evaluation cap $B$.
 To isolate acquisition from statistical inference, we compare six
 policies under the same conjugate Gaussian model, root supports,
 paired observation tapes, and joint credible-ellipsoid stopping rule.
-We independently vary overlap and correlation in a full-rank
+We independently vary overlap (Figure~\ref{fig:main-results}a) and correlation in a full-rank
 $M=64$, $K=8$ factorial ($100$ seeds per condition,
 $\varepsilon=.025$, $\delta=.05$, cap $12{,}000$).
 CD-Joint requires $2{,}358$ restricted mean evaluations versus
@@ -683,20 +695,36 @@ of up to $48.5\times$ in median acquisition cost
 (Table~\ref{tab:app-v8-proxy}). Together, these experiments
 illustrate how certification removes unnecessary comparisons,
 while acquisition exploits indirect evidence to resolve those
-that remain (Figure~\ref{fig:main-mechanism}).
+that remain (Figure~\ref{fig:main-results}d--e).
 
 \begin{figure}[t]
 \centering
-\includegraphics{figures/fig2_decision_relevant_information.pdf}
-\vspace{-20pt}
-\caption{\textbf{Two mechanisms of decision-relevant information.}
-\textbf{(a)} Exact versus marginal stopping on identical passive
+\includegraphics{figures/fig2_main_results.pdf}
+\vspace{-12pt}
+\caption{\textbf{Tasks, decision-relevant information, and the role of the stopping rule.}
+\textbf{(a)} Simulated search graphs: each root action reaches private terminals and
+terminals shared by all actions (fraction $\rho$).
+\textbf{(b)} Protein engineering: the first substitution is the root action, and
+different mutation orders reach the same measured variant.
+\textbf{(c)} Agentic workflows: one module per stage gives $3^4=81$ workflows,
+executed by Qwen3-0.6B and scored by graph $F_1$.
+\textbf{(d)} Exact versus marginal stopping on identical passive
 TA-UCT Bernoulli traces, $M=256$
 (Table~\ref{tab:exact-regret-overlap}).
-\textbf{(b)} Measurements assigned to a suboptimal but informative
+\textbf{(e)} Measurements assigned to a suboptimal but informative
 proxy in a separate $M=5,d=3$ correlated experiment
-(Table~\ref{tab:app-e0}).}
-\label{fig:main-mechanism}
+(Table~\ref{tab:app-e0}).
+\textbf{(f--h)} Measured GB1 ($n=200$) and TmTrpB ($n=210$) campaigns,
+$\varepsilon=.015$, $\delta=.05$, $25$k cap; bars show $95\%$ intervals.
+\textbf{(f)} Joint Gaussian credible-ellipsoid stopping.
+\textbf{(g)} Direct working-posterior risk on frozen acquisition
+trajectories.
+\textbf{(h)} Independent-arm anytime-valid confidence sequences;
+DF-aware GP-Root-Info and DF-OS both complete all campaigns
+(Table~\ref{tab:app-v13-regime-b}).
+The working GP is not empirically calibrated at the nominal
+joint coverage level.}
+\label{fig:main-results}
 \end{figure}
 
 
@@ -718,7 +746,8 @@ Using measured four-site GB1 and TmTrpB fitness landscapes
 \citep{wu2016gb1,johnston2024trpb,dallago2021flip},
 we construct canonical DAGs of up to three successive substitutions
 at distinct positions. The first mutation defines the root action,
-while different subsequent mutation orders can reach shared outcomes.
+while different subsequent mutation orders can reach shared outcomes
+(Figure~\ref{fig:main-results}b).
 We simulate noisy assays against published fitness measurements,
 rather than conducting new wet-lab experiments.
 The matched study uses ten GB1 templates ($20$ seeds each;
@@ -740,27 +769,10 @@ $70\%$ versus $63\%$ for GP-OS and $0\%$ for KG.
 The acquisition advantage thus extends to epistatic landscapes
 under the shared working Gaussian model.
 
-\begin{figure}[t]
-\centering
-\includegraphics{figures/fig3_protein_stopping_regimes.pdf}
-\vspace{-20pt}
-\caption{\textbf{Acquisition efficiency depends on the stopping criterion.}
-GB1 ($n=200$) and TmTrpB ($n=210$), $\varepsilon=.015$,
-$\delta=.05$, $25$k cap; bars show $95\%$ intervals.
-\textbf{(a)} Joint Gaussian credible-ellipsoid stopping.
-\textbf{(b)} Direct working-posterior risk on frozen acquisition
-trajectories.
-\textbf{(c)} Independent-arm anytime-valid confidence sequences.
-DF-aware GP-Root-Info and DF-OS both complete all campaigns
-(Table~\ref{tab:app-v13-regime-b}).
-The working GP is not empirically calibrated at the nominal
-joint coverage level.}
-\label{fig:main-protein-bed-vs-kg}
-\end{figure}
 
 \paragraph{Acquisition efficiency depends on the stopping criterion.}
 Changing the evidence required to stop reverses the acquisition
-ranking (Figure~\ref{fig:main-protein-bed-vs-kg}).
+ranking (Figure~\ref{fig:main-results}f--h).
 Under direct posterior-risk stopping, evaluated using a
 time-and-action-uniform Monte Carlo approximation on frozen
 trajectories, KG stops earlier than ellipsoid-directed CD-Joint
@@ -833,7 +845,7 @@ can reach the same configuration, yielding overlapping supports.
 
 We use WorFBench \citep{qiao2025worfbench} with three options
 for each of four configuration stages, producing $3^4=81$
-workflows evaluated by graph-workflow $F_1$.
+workflows evaluated by graph-workflow $F_1$ (Figure~\ref{fig:main-results}c).
 In the offline, replay-accounted study, Optimistic Separation
 (OS) certifies $100\%$ of campaigns using $1{,}937$ median
 evaluations and $0.95$ million accounted tokens, compared with
@@ -907,14 +919,22 @@ The source code accompanying this work, including algorithmic
 implementations, experimental configurations, evaluation
 scripts, numerical verification routines, and Lean
 formalizations, is available at
-\url{https://github.com/AI-MathPhys/joint-root-cert}.
+\url{https://github.com/AI-MathPhys/dag-cert}.
 %
 The supplementary material provides detailed mathematical
 proofs, statistical assumptions, experimental protocols,
 extended results, and computational analyses. The
-\texttt{lean/} directory contains the accompanying formal
-mathematical development, providing an additional avenue
-for assessing the theoretical results.
+\texttt{lean/} directory contains a Lean~4 formalization
+(Lean and Mathlib \texttt{v4.36.0}) of all $62$ numbered
+theorems, lemmas, propositions and corollaries, each proved
+as stated here, with no \texttt{sorry} and no axioms beyond
+Lean's standard \texttt{propext}, \texttt{Classical.choice}
+and \texttt{Quot.sound}. The file
+\texttt{lean/JointRootCert/Manuscript.lean} restates every
+result under its label in this paper, \texttt{lake build}
+reproduces the proofs, a script checks their axioms, and
+\texttt{lean/README.md} records for each result how the
+formal statement models the text.
 
 \begin{thebibliography}{99}
 
@@ -1322,10 +1342,12 @@ agentic workflows, and extended validation studies.
 Part~III addresses computational implementation, numerical certification,
 representation costs, and performance benchmarks.
 
-The mathematical proofs presented below are complemented by Lean
-formalizations provided in the \texttt{lean/} directory of the
-accompanying source repository, offering an additional avenue
-for assessing the theoretical results.
+Every numbered result below is also proved in Lean~4 in the
+\texttt{lean/} directory of the accompanying source repository;
+\texttt{lean/JointRootCert/Manuscript.lean} indexes the formal
+statements by the labels used here, and \texttt{lean/README.md}
+states, result by result, how each formal statement models the
+text.
 
 Throughout, we distinguish observation complexity from computational
 cost, and formal statistical guarantees from empirical assessments
@@ -2097,7 +2119,7 @@ The derivative of $\operatorname{kl}(p,c)$ in $c$ is $(c-p)/(c(1-c))$ and its se
 
 \begin{theorem}[Non-containment tied-star lower bound]
 \label{thm:active-star-lb}
-On the non-containment Bernoulli star family $S_A=\{p,q\}$ and $S_{B_i}=\{p,r_i\}$ ($i=1,\dots,N$) with $\mu_p=\mu_q=1/2$ and $\mu_{r_i}=1/2-g$ ($\Gamma=g$, $0<\varepsilon\le g\le 1/4$, $0<\delta\le 1/4$), every $(\varepsilon,\delta)$-correct, almost surely halting algorithm satisfies
+On the non-containment Bernoulli star family $S_A=\{p,q\}$ and $S_{B_i}=\{p,r_i\}$ ($i=1,\dots,N$) with $\mu_p=\mu_q=1/2$ and $\mu_{r_i}=1/2-g$ ($\Gamma=g$, $0<\varepsilon\le g\le 1/4$, $0<\delta\le 1/4$), every uniformly $(\varepsilon,\delta)$-correct, almost surely halting algorithm satisfies
 \begin{equation}
  \mathbb E_\mu[\tau]\ge\operatorname{kl}(1/2,\delta)
  \min\!\left\{\frac{N}{\operatorname{kl}(1/2-g,1/2+\varepsilon)},
@@ -2105,7 +2127,7 @@ On the non-containment Bernoulli star family $S_A=\{p,q\}$ and $S_{B_i}=\{p,r_i\
  \label{eq:active-star-bound}
 \end{equation}
 matching the $\widetilde O(N/(g+\varepsilon)^2)$ scaling of~\eqref{eq:active-er-bound} when $\varepsilon\le g/\sqrt N$.
-Here $(\varepsilon,\delta)$-correct means that at every Bernoulli parameter $\lambda\in(0,1)^Z$, not only at $\mu$, the algorithm halts and returns an $\varepsilon$-optimal root action with probability at least $1-\delta$; in particular it returns with positive probability under every interior alternative.
+Here uniformly $(\varepsilon,\delta)$-correct means that at every Bernoulli parameter $\lambda\in(0,1)^Z$, not only at $\mu$, the algorithm halts and returns an $\varepsilon$-optimal root action with probability at least $1-\delta$; in particular it returns with positive probability under every interior alternative.
 \end{theorem}
 
 \begin{proof}[Proof of \cref{thm:active-star-lb}]
@@ -3437,8 +3459,11 @@ according to the denominator-free schedule above, and test only the
 selected action by Theorem~\ref{thm:v34-action-local}. Assume the
 verified numerical bounds satisfy the two-nat combined log-enclosure
 contract \eqref{eq:v34-numeric-contract} for each evaluated component,
-and that all numerical oracles (the enclosures and the design oracle
-\eqref{eq:v34-design-contract}) are Borel measurable functions of their inputs.
+and that the design oracle \eqref{eq:v34-design-contract} returns
+designs and displayed scores that are Borel measurable functions of
+the plug-in estimates (the lowest-index switching rule and
+largest-remainder rounding are Borel automatically; no measurability
+of the enclosures is needed).
 Then the procedure is $(\varepsilon,\delta)$-correct without a separate
 fixed-design reference stream or uniqueness assumptions on answers or
 designs. For every rational $s\in(0,1]$, there is a constructive,
@@ -4027,9 +4052,11 @@ $\mathbf1\{\Delta_t\le\varepsilon\}$. The local UCT index is
 Here $N_t(v)$ is the number of previous visits of $v$, $N_t(v,j)$ the
 number of those visits that selected the outgoing edge to $j$, and
 $\overline\mu_t(j)$ the empirical mean of the returns observed through
-that edge. At the root $N_t(v)=t$. The proofs below write
+that edge. At the root $N_t(v)=t$. The proofs below use
 $\log(1+N_t(v))$ (for example $\log(1+t)$ at the root) in place of
-$\log N_t(v)$; the stated results hold for either choice. The
+$\log N_t(v)$, up to the elementary bound $\log T\le\log(1+T)$;
+\cref{thm:onpolicy-uct,thm:ta-core} hold for either choice, and
+\cref{thm:coded-main} is stated with $\log(1+N_t(v))$. The
 exploration constant is $c_{\rm uct}=1$ in
 \cref{thm:onpolicy-uct} and $c_{\rm uct}=2$ in \cref{thm:ta-core}.
 Untried outgoing edges are visited first in their fixed order.
@@ -4073,7 +4100,7 @@ For work accounting along a fixed coupled UCT trajectory with $T$ rollouts, $Q$ 
  \end{aligned}
  \label{eq:ram-work-bounds}
 \end{equation}
-Here $W$ counts monitor work; the allocator's own path traversal (between $T$ and $T(L+1)(D+1)$ operations for a DAG of height $L$) is common to both implementations and charged separately.
+Here $W$ counts monitor work; the allocator's own path traversal (between $T$ and $T(h+1)(D+1)$ operations for a DAG of height $h$) is common to both implementations and charged separately.
 A full-incidence eager implementation must inspect every delivered parent entry when its child changes, giving the relevant message-volume lower bound. None of these observations grants an uncharged reconstruction of obsolete root-action numerical outputs.
 \end{proof}
 
@@ -4090,9 +4117,10 @@ On the bounded out-degree two-exit funnel DAGs of size $\Theta(m)$ defined below
 actions: $b$, a terminal with deterministic reward $4/5$; the near
 rival $a'$, a terminal with deterministic reward $4/5-g$; and the
 dominated funnel $C$. The top vertex of $C$ is a binary split over two
-fans. Each fan is a balanced binary tree of height $\lceil\log_2m\rceil$
-with $m$ bottom-layer vertices, each of which has a single child, the
-fan's exit terminal; the two exits have deterministic rewards $3/20$
+fans. Each fan is a binary tree of height $\lceil\log_2m\rceil$,
+obtained by splitting $m$ into $\lceil m/2\rceil$ and $\lfloor m/2\rfloor$
+recursively, with $m$ unary leaves, each of which has a single child,
+the fan's exit terminal; the two exits have deterministic rewards $3/20$
 and $1/5$. The DAG has $\Theta(m)$ vertices and edges, out-degree at
 most three at the root and at most two elsewhere, and height
 $O(\log m)$; each exit has in-degree $m$, so only the out-degree is
@@ -5233,7 +5261,7 @@ At each step all policies see the same posterior terminal mean vector $m_t$ and 
 
 \begin{figure}[t]
 \centering
-\includegraphics{figures/fig4_acquisition_and_latency.pdf}
+\includegraphics{figures/fig3_acquisition_and_latency.pdf}
 \vspace{-12pt}
 \caption{\textbf{Acquisition efficiency and evaluation-cost crossover.} \textbf{(a)} Matched Gaussian $M=64,K=8$ factorial; both policies use the same posterior and credible-ellipsoid stopping rule, with censored trials charged $12{,}000$ evaluations. Conditions A--D vary support overlap and covariance correlation; condition-level estimates appear in Table~\ref{tab:main-bed-vs-bo}, and error bars show the $95\%$ bootstrap intervals of Appendix~\ref{app:v12-bed}. \textbf{(b)} Derived cost model for the pooled cohort, $\widehat T_p(c)=\bar\tau_p(c+\bar t_{\mathrm{acq},p})$, using the \emph{reported} restricted means and per-step acquisition times (not a new wall-clock measurement). CD-Joint becomes cheaper above approximately $2.6$ ms per evaluation in this model; posterior maintenance, certificate checks and implementation overhead are omitted.}
 \label{fig:main-bed-vs-bo}
@@ -5335,7 +5363,7 @@ Identical ($64\text{--}1024$) & $1.00$ & $1.00 / 0.00$ & $\mathbf{0.000}$ & $100
 
 \begin{figure}[t]
 \centering
-\includegraphics{figures/fig5_overlap_mechanism.pdf}
+\includegraphics{figures/fig4_overlap_mechanism.pdf}
 \vspace{-12pt}
 \caption{\textbf{Effect of action-support overlap at $M=256$.} \textbf{(a)} Exact-versus-marginal \emph{passive} Bernoulli stopping on paired TA-UCT observations (smaller is better; the band spans the two gap settings). \textbf{(b)} Median absolute sample count, with interquartile range, for the active exact-regret sampler ER in the Hoeffding cohort; these are a different experimental condition and are not numerically interchangeable with panel (a) (Tables~\ref{tab:exact-regret-overlap}, \ref{tab:app-external-baselines}).}
 \label{fig:main-overlap-mechanism}
@@ -5476,7 +5504,7 @@ $\xi=0$, $\omega=.75, \rho=.9$ (both) & $5{,}817$ & $1{,}193$ & $2{,}280$ & $1{,
 
 \begin{figure}[t]
 \centering
-\includegraphics{figures/fig6_correlation_factorial.pdf}
+\includegraphics{figures/fig5_correlation_factorial.pdf}
 \vspace{-12pt}
 \caption{\textbf{Comparison of correlation models and acquisition policies.} Controlled $M=64$, $K=8$, $\xi=0$ zero-containment factorial medians from Table~\ref{tab:app-v8-phase}, with interquartile ranges over the $256$ pooled runs. The differences between bounded empirical-Bernstein inference, diagonal Gaussian inference, correlated-GP inference, and CD-Joint are \emph{mechanistic ablations with different model assumptions}; only the final correlated comparison isolates acquisition after the common correlated model.}
 \label{fig:main-correlation-factorial}
@@ -5572,7 +5600,7 @@ Window $256$ (Hoeff.)  & $0.50$ & $507.9 / 687.1$   & $845.4 / 1000^*$  & $\math
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics{figures/fig7_overlap_crossover.pdf}
+\includegraphics{figures/fig6_overlap_crossover.pdf}
 \vspace{-12pt}
 \caption{\textbf{The overlap crossover.} Recorded medians for the $M=256$ Hoeffding cohort. Hollow triangles identify baseline cohorts with capped runs, rather than completed $1000$-ms certification times. Table~\ref{tab:app-external-baselines} compares all samplers and stopping rules.}
 \label{fig:statistical-performance}
@@ -5582,7 +5610,7 @@ Window $256$ (Hoeff.)  & $0.50$ & $507.9 / 687.1$   & $845.4 / 1000^*$  & $\math
 
 \begin{figure}[t]
 \centering
-\includegraphics{figures/fig8_inside_witness.pdf}
+\includegraphics{figures/fig7_inside_witness.pdf}
 \vspace{-12pt}
 \caption{\textbf{Inside-witness robustness.} Certification rates reported in Tables~\ref{tab:app-hybrid-and-star} and~\ref{tab:app-star-eps}. The first three tasks use the synthetic diagnostic budgets; TiedStar uses exact $\varepsilon=0$ and its separate $50{,}000$-observation cap. The safeguard resolves the broad-support and decoy regimes but is not uniformly best on exact tied-star certification.}
 \label{fig:inside-witness}
@@ -5723,7 +5751,7 @@ We evaluate five stopping configurations across the three priority policies (\te
 \centering
 \includegraphics{figures/supp_protein_credibility_audit.pdf}
 \vspace{-12pt}
-\caption{\textbf{Corrected joint-ellipsoid audit on measured protein landscapes.} (a--b) Restricted mean simulated assays under the $\sqrt{\chi^2_{M-1,.95}}$ joint contrast ellipsoid ($25$k cap), with acquisition policies using the same relevant radius; error bars are $95\%$ bootstrap intervals and labels give the certification rate. (c) Empirical simultaneous coverage of the true mean contrast vector at the stopping time for each policy; all bars remain below the nominal $95\%$ reference. Replotted from Table~\ref{tab:app-v14-protein-credible}. Actual root-decision outcomes, direct-risk stopping, and formal distribution-free controls appear in that table and Figure~\ref{fig:main-protein-bed-vs-kg}.}
+\caption{\textbf{Corrected joint-ellipsoid audit on measured protein landscapes.} (a--b) Restricted mean simulated assays under the $\sqrt{\chi^2_{M-1,.95}}$ joint contrast ellipsoid ($25$k cap), with acquisition policies using the same relevant radius; error bars are $95\%$ bootstrap intervals and labels give the certification rate. (c) Empirical simultaneous coverage of the true mean contrast vector at the stopping time for each policy; all bars remain below the nominal $95\%$ reference. Replotted from Table~\ref{tab:app-v14-protein-credible}. Actual root-decision outcomes, direct-risk stopping, and formal distribution-free controls appear in that table and Figure~\ref{fig:main-results}f--h.}
 \label{fig:app-v14-protein-credible}
 \end{figure}
 
