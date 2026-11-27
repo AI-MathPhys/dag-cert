@@ -451,8 +451,8 @@ guarantees for variance reduction and linear pure exploration
 \begin{theorem}[Finite-sample cost of safeguarded CD-Joint]
 \label{thm:t4-finite-sample}
 Assume the fixed-feature, unit-noise model, a positive,
-nondecreasing, anytime-valid self-normalized radius $\beta_t$
-(Appendix~\ref{app:bay-additional}) with
+nondecreasing self-normalized radius $\beta_t$, anytime-valid at
+level $0<\delta<1$ (Appendix~\ref{app:bay-additional}), with
 $\liminf_{t\to\infty}\beta_t^2\log t/t=0$, a query dictionary
 containing all terminal features, and $0<c_x\le c_{\max}$.
 Let $L_\phi=\max_x\|\phi_x\|_2$ and $\varepsilon>0$.
@@ -1602,7 +1602,7 @@ For independent terminal observations, Exact-Regret-DAG-LUCB (ER) selects an act
  b_t\in\arg\max_a[U_t(a)-\max_{z\in B_a}l_t(z)].
  \label{eq:safeguard-gate}
 \end{equation}
-Here $w_t(z)=u_t(z)-l_t(z)$, $p_t$ is an optimistic inside witness and $b_t$ is the OS sampling action. With $\Delta_z=\mu_*-\mu_z$ and $\Gamma=\max_a[V(a)-\max_{z\in B_a}\mu_z]$, define $n_{M,\delta}(r)=\min\{n\ge1:2\sqrt{\log(4Mn^2/\delta)/(2n)}<r\}$. Its explicit inversion is
+Here $w_t(z)=u_t(z)-l_t(z)$, $p_t$ is an optimistic inside witness, the lower-confidence candidate $y_t\in\arg\max_{z\in S(a_t)}l_t(z)$ maximizes the lower endpoint over the support of the current action $a_t$ (so $l_t(y_t)=L_t(a_t)$), and $b_t$ is the OS sampling action. With $\Delta_z=\mu_*-\mu_z$ and $\Gamma=\max_a[V(a)-\max_{z\in B_a}\mu_z]$, define $n_{M,\delta}(r)=\min\{n\ge1:2\sqrt{\log(4Mn^2/\delta)/(2n)}<r\}$. Its explicit inversion is
 \begin{equation}
  n_{M,\delta}(r)\le\left\lceil\frac{32}{r^2}\log\frac{32M}{\delta r^2}\right\rceil\quad(0<r\le1).
  \label{eq:active-inversion}
@@ -1723,7 +1723,7 @@ After $n_{M,\delta}(\rho_z)$ observations the nesting and width inversion bound 
 \paragraph{Expected observations and restarts.}
 The high-probability sample guarantee does not automatically upper-bound the expected stopping time of the unrestarted rule. To obtain a comparable expected-time statement, a wrapper restarts the optimistic-separation policy in independent fresh episodes $j\ge1$, using confidence $\delta_j=\delta/[j(j+1)]$ and a cap of $2^j$ observations per episode. A timeout or confidence failure starts a new episode without output, and a successful exact certificate returns the action. Old samples are not silently reused as new observations.
 \begin{theorem}[Certified restart bound]\label{thm:active-restart}
-Let $0<\delta\le1/4$, $\Gamma+\varepsilon>0$, $\rho_z=d_z/2$, $H_\rho=\sum_z\rho_z^{-2}$, $\rho_{\min}=\min_z\rho_z$, and $L=\log(128M/(\delta\rho_{\min}^2))$. The restarted procedure is almost surely terminating and $(\varepsilon,\delta)$-correct, with
+Let $0<\delta\le1/4$, $0\le\varepsilon\le1$, $\Gamma+\varepsilon>0$, $\rho_z=d_z/2$ (so $\rho_z\le1$ for $[0,1]$-valued rewards, and $|Z|=M$ as in \cref{sec:model}), $H_\rho=\sum_z\rho_z^{-2}$, $\rho_{\min}=\min_z\rho_z$, and $L=\log(128M/(\delta\rho_{\min}^2))$. The restarted procedure is almost surely terminating and $(\varepsilon,\delta)$-correct, with
 \[
  \mathbb E_\mu[\tau_{\mathrm{rest}}]\le1600\,H_\rho L.
 \]
@@ -1889,6 +1889,7 @@ and predictable betting parameter
 \qquad
 \psi_E(\lambda)=-\ln(1-\lambda)-\lambda.
 \end{equation}
+Here $0<\delta<2M$ (automatic for $\delta<1$), so that $\ln(2M/\delta)>0$ and $\lambda_{z,i}>0$.
 By the exponential inequality for bounded martingale differences~\citep{howard,bettingmeans}, both
 \begin{equation}
 M_{z,n}^\pm(\mu_z)=\exp\!\left(\pm\sum_{i=1}^n\lambda_{z,i}(X_{z,i}-\mu_z)-\sum_{i=1}^n(X_{z,i}-\widehat\mu_{z,i-1})^2\psi_E(\lambda_{z,i})\right)
@@ -2096,7 +2097,7 @@ The derivative of $\operatorname{kl}(p,c)$ in $c$ is $(c-p)/(c(1-c))$ and its se
 
 \begin{theorem}[Non-containment tied-star lower bound]
 \label{thm:active-star-lb}
-On the non-containment Bernoulli star family $S_A=\{p,q\}$ and $S_{B_i}=\{p,r_i\}$ ($i=1,\dots,N$) with $\mu_p=\mu_q=1/2$ and $\mu_{r_i}=1/2-g$ ($\Gamma=g$, $0<\varepsilon\le g\le 1/4$, $\delta\le 1/4$), every $(\varepsilon,\delta)$-correct, almost surely halting algorithm satisfies
+On the non-containment Bernoulli star family $S_A=\{p,q\}$ and $S_{B_i}=\{p,r_i\}$ ($i=1,\dots,N$) with $\mu_p=\mu_q=1/2$ and $\mu_{r_i}=1/2-g$ ($\Gamma=g$, $0<\varepsilon\le g\le 1/4$, $0<\delta\le 1/4$), every $(\varepsilon,\delta)$-correct, almost surely halting algorithm satisfies
 \begin{equation}
  \mathbb E_\mu[\tau]\ge\operatorname{kl}(1/2,\delta)
  \min\!\left\{\frac{N}{\operatorname{kl}(1/2-g,1/2+\varepsilon)},
@@ -2104,6 +2105,7 @@ On the non-containment Bernoulli star family $S_A=\{p,q\}$ and $S_{B_i}=\{p,r_i\
  \label{eq:active-star-bound}
 \end{equation}
 matching the $\widetilde O(N/(g+\varepsilon)^2)$ scaling of~\eqref{eq:active-er-bound} when $\varepsilon\le g/\sqrt N$.
+Here $(\varepsilon,\delta)$-correct means that at every Bernoulli parameter $\lambda\in(0,1)^Z$, not only at $\mu$, the algorithm halts and returns an $\varepsilon$-optimal root action with probability at least $1-\delta$; in particular it returns with positive probability under every interior alternative.
 \end{theorem}
 
 \begin{proof}[Proof of \cref{thm:active-star-lb}]
@@ -2540,7 +2542,7 @@ it does not establish a graph-uniform finite-confidence constant factor.
 \subsubsection{Discovery costs beyond asymptotic information rates}
 \begin{proposition}[A support-margin versus information tradeoff]
 \label{prop:ast-gap-tradeoff}
-Let $0<h<g\le1/4$, with terminals $p,s,r_1,\ldots,r_N$, supports
+Let $0<h<g\le1/4$ and $N\ge1$, with terminals $p,s,r_1,\ldots,r_N$, supports
 $S_A=\{p,s\}$ and $S_B=\{p,r_1,\ldots,r_N\}$, and means
 $\mu_p=1/2$, $\mu_s=1/2-h$, $\mu_{r_i}=1/2-g$.
 Both actions are optimal and neither support contains the other.
@@ -3434,7 +3436,9 @@ $e_k=(k+1)^{-1}$ and hysteresis $h_k=(k+1)^{-1/2}$. Allocate each batch
 according to the denominator-free schedule above, and test only the
 selected action by Theorem~\ref{thm:v34-action-local}. Assume the
 verified numerical bounds satisfy the two-nat combined log-enclosure
-contract \eqref{eq:v34-numeric-contract} for each evaluated component.
+contract \eqref{eq:v34-numeric-contract} for each evaluated component,
+and that all numerical oracles (the enclosures and the design oracle
+\eqref{eq:v34-design-contract}) are Borel measurable functions of their inputs.
 Then the procedure is $(\varepsilon,\delta)$-correct without a separate
 fixed-design reference stream or uniqueness assumptions on answers or
 designs. For every rational $s\in(0,1]$, there is a constructive,
@@ -3615,7 +3619,8 @@ $\bar Y_{i,x}$, centered variance
 $\check v_{i,x}=r_{i,x}^{-1}\sum_\ell(Y_{i,x\ell}-\bar Y_{i,x})^2$,
 and the predictable estimates $\widehat\mu_{x,i-1},\widehat v_{x,i-1}$
 are each within $\rho\le\min\{1,v_{\min}/8\}$ of their corresponding
-true mean or variance. Then for every action and unscreened component,
+true mean or variance. Then for every action and unscreened component
+with nonempty null set $\mathcal H_{a,z}\ne\emptyset$,
 \begin{equation}
  \left|\frac1{R_i}\log\frac{q_i(Y_i)}{U_{a,z,i}(Y_i)}-
  \mathsf C_{a,z}(\widetilde w_i;\mu,v)\right|
@@ -3852,8 +3857,18 @@ Here $Q_x$ is the explicit Gaussian tail in
 \eqref{eq:v34-concentration-tail}; the first term protects all
 future adaptive \emph{prefix} estimates, the second protects all
 future fresh \emph{batch} statistics, and the third protects every
-later refresh at its shrinking $h_k$ scale. A union bound over
-intrinsic tapes and conditional fresh batches therefore gives
+later refresh at its shrinking $h_k$ scale. The batch of type $x$
+read at index $i$ is the segment of the intrinsic tape of $x$ that
+starts after the $n_{x,i-1}$ earlier observations and has length
+$r_{i,x}\ge b_i$; both are $\mathcal F_{i-1}$-measurable. Conditionally
+on $\mathcal F_{i-1}$, this segment is therefore a batch of $r_{i,x}$
+fresh iid $N(\mu_x,v_x)$ draws, so its statistics violate the $\rho$
+condition with conditional probability at most
+$Q_x(r_{i,x},\rho)\le Q_x(b_i,\rho)$, since $Q_x(\cdot,\rho)$ is
+nonincreasing on $n\ge n_0(x,\rho)$. Taking expectations gives the
+second term without a union over deterministic tape segments.
+A union bound over the prefix events on the intrinsic tapes, these
+conditionally fresh batch events and the refresh events therefore gives
 \begin{equation}
  \Pr\bigl(\tau_\delta>N_j\bigr)\le\min\{1,p_j\},
  \quad j\ge j_1:\ (C_*-2\eta)N_j\ge\log(K/\delta).
@@ -4009,6 +4024,14 @@ $\mathbf1\{\Delta_t\le\varepsilon\}$. The local UCT index is
                     \sqrt{\frac{\log N_t(v)}{N_t(v,j)}}.
  \label{eq:uct-index}
 \end{equation}
+Here $N_t(v)$ is the number of previous visits of $v$, $N_t(v,j)$ the
+number of those visits that selected the outgoing edge to $j$, and
+$\overline\mu_t(j)$ the empirical mean of the returns observed through
+that edge. At the root $N_t(v)=t$. The proofs below write
+$\log(1+N_t(v))$ (for example $\log(1+t)$ at the root) in place of
+$\log N_t(v)$; the stated results hold for either choice. The
+exploration constant is $c_{\rm uct}=1$ in
+\cref{thm:onpolicy-uct} and $c_{\rm uct}=2$ in \cref{thm:ta-core}.
 Untried outgoing edges are visited first in their fixed order.
 
 \begin{proposition}[Safe permanent retirement]
@@ -4020,7 +4043,7 @@ $u_t(j)<\max_{k\in E_{\rm live}(v)\setminus\{j\}}l_t(k)$;
 and (ii) a marginal leader-and-stop monitor can retire root action $b$
 once $U_t(b)<\max_{a\ne b,\,a\text{ active}}L_t(a)$.
 The first rule preserves protected numerical intervals. The second
-preserves the lower-bound leader and marginal stopping bit, but not
+preserves the lower-bound leader and, for $\varepsilon\ge0$, the marginal stopping bit, but not
 necessarily the numerical marginal gap. Neither rule changes the
 original graph used by a passive traversal policy.
 \end{proposition}
@@ -4042,7 +4065,7 @@ Fix a time $t$ with nonempty nested box $\mathcal B_t$. For any active vertex $v
 
 Graph-Eager updates all original parent keys; protected-root Graph-Selective updates only live parent keys and retires admissible dominated incidences; flat supports and dyadic covers evaluate the unchanged support MAX functions. By the preceding invariance, these four numerical implementations return the same root-action interval vector and the same leader and stopping bit on a fixed terminal state, provided protected outputs remain maintained. The bandit allocator traverses the unmodified original DAG and reads no monitor-private incidence lists. Induct on the sampled path and reward tape: equal histories yield identical TA-UCT edge choices, identical intrinsic terminal indices, identical interval updates, and identical subsequent queries. This proves the numerical coupling assertion. The same argument applies to decision-only implementations when the controller reads only the leader-and-stop interface.
 
-For work accounting along a fixed coupled UCT trajectory with $T$ rollouts, $Q$ root queries, maximum out-degree $D$, $S_0$ full-incidence changed-endpoint deliveries, $S$ live deliveries, and $R$ permanent retirements, initialization and disposal require $O(|V|+|E|)$ operations. Along a changed-endpoint propagation wave, each active incidence delivery costs $O(\log(2+D))$ for indexed heap maintenance. A strictly dominated incidence is unlinked and removed at most once, contributing $O(R\log(2+D))$ in total; each unprotected orphan's outgoing list is released at most once. Adding terminal-local updates and $O(K)$ per root query yields
+For work accounting along a fixed coupled UCT trajectory with $T$ rollouts, $Q$ root queries, maximum out-degree $D$, $S_0$ full-incidence changed-endpoint deliveries, $S$ live deliveries, and $R$ permanent retirements, initialization and disposal require $O(|V|+|E|)$ operations; in particular each gate's indexed heap is built bottom-up in time linear in its out-degree. Along a changed-endpoint propagation wave, each active incidence delivery costs $O(\log(2+D))$ for indexed heap maintenance. No topological order is needed to schedule a wave: keep the changed gates on a stack; popping a gate delivers its new endpoint to each parent (one indexed-heap key update), compares the parent's heap maximum with its stored endpoint, and stores and pushes the parent if that endpoint changes. Each rollout changes a single terminal endpoint, so either every changed gate moves up to the new terminal value or every changed gate held the old terminal value and moves down; hence each gate endpoint changes at most once per wave, directly to its final value, and a wave costs $O(1)$ plus $O(\log(2+D))$ per delivery. A strictly dominated incidence is unlinked and removed at most once, contributing $O(R\log(2+D))$ in total; each unprotected orphan's outgoing list is released at most once. Adding terminal-local updates and $O(K)$ per root query yields
 \begin{equation}
  \begin{aligned}
   W_{\mathrm{eager}}&=O(|V|+|E|+T+QK+S_0\log(2+D)),\\
@@ -4050,18 +4073,31 @@ For work accounting along a fixed coupled UCT trajectory with $T$ rollouts, $Q$ 
  \end{aligned}
  \label{eq:ram-work-bounds}
 \end{equation}
+Here $W$ counts monitor work; the allocator's own path traversal (between $T$ and $T(L+1)(D+1)$ operations for a DAG of height $L$) is common to both implementations and charged separately.
 A full-incidence eager implementation must inspect every delivered parent entry when its child changes, giving the relevant message-volume lower bound. None of these observations grants an uncharged reconstruction of obsolete root-action numerical outputs.
 \end{proof}
 
 
 \begin{theorem}[Selective vs.\ eager maintenance separations on UCT and Root-PUCT funnels]
 \label{thm:onpolicy-uct}\label{thm:selective-separation}\label{thm:ta-funnel}\label{thm:puct-main}
-On bounded-degree two-exit funnel DAGs of size $\Theta(m)$ under local UCT ($g_m=\tfrac14 m^{-1/16}$), decision-selective maintenance performs $O(m)$ total work whereas full-incidence eager propagation incurs $\Omega(m\log m)$ on the identical sample path. Under fixed-prior Root-PUCT ($g_m=m^{-\alpha}$, $0<\alpha<1/2$), both monitors stop after $\Theta(m^{2\alpha}\log^2 m)$ rollouts, with selective work $\Theta(m)$ versus $\Theta(m^{1+\alpha}\log m)$ for eager propagation.
+On the bounded out-degree two-exit funnel DAGs of size $\Theta(m)$ defined below under local UCT ($g_m=\tfrac14 m^{-1/16}$), decision-selective maintenance performs $O(m)$ total work whereas full-incidence eager propagation incurs $\Omega(m\log m)$ on the identical sample path. Under fixed-prior Root-PUCT ($g_m=m^{-\alpha}$, $0<\alpha<1/2$), both monitors stop after $\Theta(m^{2\alpha}\log^2 m)$ rollouts, with selective work $\Theta(m)$ versus $\Theta(m^{1+\alpha}\log m)$ for eager propagation.
 \end{theorem}
 
 \subsubsection{Proof of Theorem~\ref{thm:selective-separation} (Dominated-Funnel Separation)}
 
 \begin{proof}
+\emph{The two-exit funnel of width $m\ge1$.} The root has three
+actions: $b$, a terminal with deterministic reward $4/5$; the near
+rival $a'$, a terminal with deterministic reward $4/5-g$; and the
+dominated funnel $C$. The top vertex of $C$ is a binary split over two
+fans. Each fan is a balanced binary tree of height $\lceil\log_2m\rceil$
+with $m$ bottom-layer vertices, each of which has a single child, the
+fan's exit terminal; the two exits have deterministic rewards $3/20$
+and $1/5$. The DAG has $\Theta(m)$ vertices and edges, out-degree at
+most three at the root and at most two elsewhere, and height
+$O(\log m)$; each exit has in-degree $m$, so only the out-degree is
+bounded.
+
 We first establish a general logarithmic lower bound on edge visits at any fixed-degree UCB node.
 
 \medskip\noindent\textbf{Step 1: Logarithmic fairness of local UCB allocation.}
@@ -4097,8 +4133,17 @@ $\Omega(m^{1/8})\le\tau\le O(m)$, in particular $\log\tau=\Theta(\log m)$. The c
 \medskip\noindent\textbf{Step 4: Total work comparison ($O(m)$ vs.\ $\Omega(m \log m)$).}
 Because $N_C(\tau) = \Theta(\log \tau) = \Theta(\log m)$, the TA-UCT allocator continues to route $\Theta(\log m)$ rollouts through the dominated funnel $C$ after the constant cutoff $t_0$. Each such revisit strictly decreases the real-valued upper confidence bound $u_t(x)$ of the visited funnel exit $x$, triggering an upward propagation wave to at least $m/2$ bottom-layer parents in the eager monitor and forcing $\Omega(m \log m)$ total edge updates. By contrast, after the $O(m)$ recursive release at $t_0$, the selective monitor has zero active parents subscribed to the funnel exits; each post-cutoff revisit traverses a root-to-leaf path of length $O(\log m)$ in the binary selection tree of $C$, updates only the terminal interval of $x$, and immediately halts backup propagation in $O(1)$ monitor work. Summing initialization $O(m)$, pre-cutoff waves $O(m)$, post-cutoff allocator traversals $O(\tau+\log m\log\tau)=O(m)$, and disposal $O(m)$ yields $O(m)$ total work for \emph{Selective}.
 
-Finally, on the alternating ladder of size $m$, each of the $\Theta(\log m)$ post-cutoff visits to the dominated ladder traverses a depth-$\Theta(m)$ shared chain. Eager graph maintenance and flat $O(m)$-support scans pay $\Omega(m \log m)$, whereas \emph{Selective} retires the ladder at $t_0 = O(1)$ and pays $O(m)$ total monitor work. Because alternating terminal parity creates $\Theta(m)$ disjoint runs at every ladder depth, constructing all internal dyadic covers requires $\Omega(m^2)$ work.
 \end{proof}
+
+\noindent\emph{Remark (not part of \cref{thm:onpolicy-uct}).} Dyadic
+covers can be costly on related families. In an alternating ladder of
+size $m$, lay out the terminals in rung order, the two terminals of
+rung $i$ at positions $2i$ and $2i+1$, and let the depth-$j$ vertex of
+one rail have support $\{2i:j\le i<m\}$, the terminals of its own
+parity at the rungs below it. That support has $m-j$ disjoint runs, so
+any dyadic covers of the supports at depths $j<m$ store at least
+$m^2/2$ blocks in total, and constructing all internal dyadic covers
+requires $\Omega(m^2)$ work.
 
 \subsubsection{Proof of Theorem~\ref{thm:ta-core} (Wide Common-Core Support Separation)}
 
@@ -4413,7 +4458,7 @@ traverse any fixed deterministic legal path rule that takes work linear
 in the path length and is independent of monitor internals. For example,
 use the first child at each binary node. A local fixed-prior PUCT rule
 with fixed tie-breaking is also permissible if its initialization and
-updates take constant work per visited bounded-degree vertex; its
+updates take constant work per visited bounded out-degree vertex; its
 choices cannot change the terminal reached. This theorem analyzes
 root PUCT, not arbitrary nonstationary PUCT value propagation.
 
@@ -4522,8 +4567,8 @@ No strict local child dominance exists at these unary nodes, or at
 the binary fanout nodes whose two child functions are identical.
 Hence the full monitor has at least $mH_m$ deliveries. Conversely,
 a $z$ update reaches only $O(m)$ original incidences; batched
-reverse-topological recomputation costs $O(m)$ on this bounded-degree
-graph. The affected-ancestor set and an appropriate order can, for
+reverse-topological recomputation costs $O(m)$ on this bounded out-degree
+graph ($z$ has in-degree $m$). The affected-ancestor set and an appropriate order can, for
 example, be obtained by a reverse-edge depth-first traversal in time
 linear in that set and its incidences. An $A$ or $B$ update reaches
 only the root. The full work is therefore bounded above by
@@ -4935,7 +4980,7 @@ finite integer $t$.
 \label{cor:v35poly}
 For any fixed finite graph, fixed positive priors and fixed
 $\delta$, the sufficient continuation horizon is polynomial in
-$\varepsilon^{-1}$ (with a logarithmic factor); the crude exponent
+$\varepsilon^{-1}$ for $0<\varepsilon\le1/e$ (with a logarithmic factor); the crude exponent
 can be taken as $2^{H+1}$ up to logarithms and the explicit
 initial threshold. No uniform polynomial in $H$ or
 inverse minimum prior is claimed.
@@ -6873,7 +6918,7 @@ Because the $\max$ operator is associative and idempotent and the root-action or
 
 \subsubsection{Cost accounting for discovery and maintenance}
 
-For any monitor circuit representation $R$, let $P_R$ denote its total upfront compilation and initialization work, and let $n_R$, $e_R$, and $D_R \ge 2$ denote its gate count, incidence count, and maximum gate degree. Let $F_{t-1}^R$ and $F_t^R$ denote the sets of root-reachable active incidences immediately before and after rollout $t$'s backup wave, respectively, and let $b_t^R(v) \in \{0,1,2\}$ denote the number of interval endpoints of gate $v$ that change under exact evaluation of rollout $t$'s terminal update. Define the cumulative pre-update and post-update delivery volumes through stopping time $\tau$:
+For any monitor circuit representation $R$, let $P_R$ denote its total upfront compilation and initialization work, and let $n_R$, $e_R$, and $D_R \ge 2$ denote its gate count, incidence count, and maximum gate degree. The gates of $R$ (leaves included) are indexed $0,\ldots,n_R-1$; every child of a gate is itself a gate of $R$, no gate lists the same child twice, and the $K$ root actions are distinct gates, as the dedicated output gates above make them. Let $F_{t-1}^R$ and $F_t^R$ denote the sets of root-reachable active incidences immediately before and after rollout $t$'s backup wave, respectively, and let $b_t^R(v) \in \{0,1,2\}$ denote the number of interval endpoints of gate $v$ that change under exact evaluation of rollout $t$'s terminal update. Define the cumulative pre-update and post-update delivery volumes through stopping time $\tau$:
 \begin{equation}
 \label{eq:s-plus-minus}
 S_R^+ \;=\; \sum_{t=1}^{\tau} \sum_{v \in V_R} b_t^R(v)\, d_{F_{t-1}^R}^-(v), \qquad
@@ -6888,7 +6933,7 @@ Under the shared indexed-heap update and strict dominance retirement engine, the
 \label{eq:prop-rep-upper}
 W_R \;=\; O\!\left(H + P_R + n_R + e_R + \bigl(S_R^+ + e_R\bigr)\log D_R\right).
 \end{equation}
-Conversely, any compiled representation $C$ executing this incidence-delivery contract incurs at least $\Omega(P_C + S_C^-)$ scalar operations, even with online incidence retirement and shared terminal evidence. Consequently, direct graph maintenance $G$ achieves an asymptotic total-work advantage over compiled representation $C$ whenever
+Conversely, any compiled representation $C$ executing this incidence-delivery contract (it keeps one key cell per live incidence and endpoint, current at the end of every wave, and writes at most one cell per scalar operation) incurs at least $\Omega(P_C + S_C^-)$ scalar operations, even with online incidence retirement and shared terminal evidence. Consequently, direct graph maintenance $G$ achieves an asymptotic total-work advantage over compiled representation $C$ whenever
 \begin{equation}
 \label{eq:representation-condition}
 H + P_G + n_G + e_G + \bigl(S_G^+ + e_G\bigr)\log D_G \;=\; o\!\left(P_C + S_C^-\right). \tag{R}
@@ -6896,7 +6941,7 @@ H + P_G + n_G + e_G + \bigl(S_G^+ + e_G\bigr)\log D_G \;=\; o\!\left(P_C + S_C^-
 \end{proposition}
 
 \begin{proof}
-Upfront compiler passes cost $P_R$, and each of the $n_R$ gates and $e_R$ incidences is allocated and disposed of once in $O(n_R + e_R)$ time. Retiring an incidence $(v,c)$ performs one $O(\log D_R)$ heap deletion and $O(1)$ list unlinks, and each of the $e_R$ incidences is retired at most once, contributing $O(e_R \log D_R)$. As proved in Proposition~\ref{prop:ta-coupled}, a single terminal update changes each gate endpoint at most once per wave; each changed endpoint of $v$ is delivered only along incidences in $F_{t-1}^R$, performing at most one $O(\log D_R)$ heap update per delivery and stopping whenever a parent's endpoint pair is unchanged. Summing over $t \le \tau$ yields $O(S_R^+ \log D_R)$. Conversely, every changed endpoint of $v$ must be delivered to every parent incidence that remains live in $F_t^R$ at the conclusion of the wave, requiring at least $\Omega(P_C + S_C^-)$ operations.
+Upfront compiler passes cost $P_R$, and each of the $n_R$ gates and $e_R$ incidences is allocated and disposed of once in $O(n_R + e_R)$ time. Retiring an incidence $(v,c)$ performs one $O(\log D_R)$ heap deletion and $O(1)$ list unlinks, and each of the $e_R$ incidences is retired at most once, contributing $O(e_R \log D_R)$. As in the proof of Proposition~\ref{prop:ta-coupled}, each rollout changes a single terminal, so every changed gate endpoint moves monotonically (all upward or all downward) to its final value; hence, even without topological processing, a single terminal update changes each gate endpoint at most once per wave; each changed endpoint of $v$ is delivered only along incidences in $F_{t-1}^R$, performing at most one $O(\log D_R)$ heap update per delivery and stopping whenever a parent's endpoint pair is unchanged. Summing over $t \le \tau$ yields $O(S_R^+ \log D_R)$. Conversely, every changed endpoint of $v$ must be delivered to every parent incidence that remains live in $F_t^R$ at the conclusion of the wave, requiring at least $\Omega(P_C + S_C^-)$ operations.
 \end{proof}
 
 Condition~\eqref{eq:representation-condition} captures both upfront compilation ($P_R$) and cumulative online maintenance ($S_R^\pm$). In particular, a sparse final frontier $F_\tau^R$ does not imply net savings if $P_R$ or the pre-retirement delivery volume $S_R^+$ is large.

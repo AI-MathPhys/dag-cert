@@ -96,26 +96,16 @@ Toolchain `leanprover/lean4:v4.36.0`, Mathlib `v4.36.0` (pinned in `lake-manifes
 - Running-time claims use an explicit step-counting model (`CostModel.lean`): a program returns its result together with a cost computed by the same recursion. Indexed heaps are a primitive charged `⌈log₂ m⌉ + 1` per key update.
 - Samplers in the lower-bound results are deterministic functions of the observed history; probabilities and expectations for unbounded runs are limits over a finite horizon.
 
-## Hypotheses the manuscript leaves implicit
+## Hypotheses the manuscript left implicit
 
-Found while formalizing; none makes a stated result false.
+Found while formalizing; none made a stated result false. On 2026-11-27 all of them were written into the manuscript:
 
-- `thm:active-restart` uses `ρ_z ≤ 1` and `M ≥ |Z|`.
-- Safe permanent retirement preserves the stopping bit only for `ε ≥ 0`.
-- `thm:active-star-lb` needs the return probability to be positive under interior alternatives.
-- `prop:ast-gap-tradeoff` needs `N ≥ 1`.
-- The Safeguarded-LCB width argument needs the lower-confidence candidate to maximise the lower endpoint over the support.
-- The empirical-Bernstein betting parameter needs `δ < 2M`.
-- `thm:t4-finite-sample` needs `δ < 1`; `cor:v35poly` is proved for `ε ≤ 1/e`.
-- `prop:representation-cost`: the proof's claim that each gate endpoint changes at most once per wave holds without topological processing only because each rollout changes a single terminal (each changed gate then moves monotonically to its final value); the manuscript does not say so. The "incidence-delivery contract" is never defined; a definition is one key cell per live incidence and endpoint, kept current at the end of every wave, with one cell written per scalar operation. The printed bound is proved literally with this reading.
-- `lem:v34-batch-comparison` needs the null set to be nonempty; the second term of `eq:v34-explicit-tail` uses that the tail is nonincreasing in the batch size, since batches have random size at least `b_i`.
-- `thm:v34-adaptive`: the proof's union bound combines per-query intrinsic tapes with conditionally fresh batches; on intrinsic tapes the batch term needs either a conditional argument or an extra factor counting segments.
-- The "alternating ladder" in the last paragraph of the proof of `thm:onpolicy-uct` is never defined.
-- `thm:v34-adaptive` needs the numerical oracles to be Borel measurable.
-- `thm:t4-finite-sample` said CD-Joint returns for any anytime-valid self-normalized radius; that is false without a growth condition (`cd_growth_necessary`: a radius growing like `√t` never certifies). The manuscript was corrected on 2026-11-26 to require a positive, nondecreasing radius with `liminf β_t² log t / t = 0`, which `eq:ay-radius` satisfies (`ayRadius_liminf`).
-- `eq:uct-index` uses `N_t(v)`, which is never defined; the proofs use `log(1+t)`, `log T` and `log(m/2)`, with `c_uct = 1` for the funnel and `c = 2` for the common core. The text should define `N_t(v)` as the number of previous visits of `v`, fix one log argument, and state `c_uct` per theorem.
-- The two-exit funnel family of `thm:onpolicy-uct` is never defined, and "bounded-degree" (also in the Root-PUCT construction) should read "bounded out-degree": the exits have in-degree `m`.
-- The `eq:ram-work-bounds` display in the proof of `prop:uct-coupling` has no supporting scheduling argument; the proved bound has initialisation `O(|V| + |E| log D)` and an extra `log(2+L)` per delivery.
+- side conditions added to the statements: `0<δ<1` for the CD-Joint radius; `0≤ε≤1` in `thm:active-restart` (with `ρ_z≤1` and `|Z|=M` noted as following from the model); `0<δ<2M` for the empirical-Bernstein betting parameter; `0<δ` and correctness at every interior alternative in `thm:active-star-lb`; `N≥1` in `prop:ast-gap-tradeoff`; Borel measurable numerical oracles in `thm:v34-adaptive`; a nonempty null set in `lem:v34-batch-comparison`; `ε≥0` for preservation of the stopping bit; `0<ε≤1/e` in `cor:v35poly`; the Safeguarded-LCB lower-confidence candidate maximises the lower endpoint over the support;
+- definitions added: `N_t(v)`, `N_t(v,j)` and the log argument of `eq:uct-index` (both readings are proved) with `c_uct` per theorem; the two-exit funnel family of `thm:onpolicy-uct`; "bounded out-degree" in place of "bounded-degree"; the incidence-delivery contract of `prop:representation-cost`, and that its gates are indexed `0..n−1`, children are gates, child lists have no repetitions and root actions are distinct gates;
+- proof steps repaired: the conditional fresh-batch argument in `thm:v34-adaptive` (each batch is a tape segment chosen by the past, so no union over segments is needed); the single-terminal monotonicity behind "at most once per wave" in `prop:representation-cost`; the wave scheduling argument for `eq:ram-work-bounds` in `prop:uct-coupling`, with `W` read as monitor work;
+- the unproved "alternating ladder" work claims at the end of the proof of `thm:onpolicy-uct` were removed; the dyadic-cover lower bound that Lean proves (`ladder_cover_lower`) is kept as a remark outside the theorem.
+
+Two statements were false as printed and were corrected earlier with the author's approval: `cor:v2countscales` (now `t ≥ 2K`) and `thm:t4-finite-sample` (now a nondecreasing radius with `liminf β_t² log t / t = 0`; `cd_growth_necessary` shows a radius growing like `√t` never certifies).
 
 ## Result-by-result status
 
