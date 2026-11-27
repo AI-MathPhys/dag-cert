@@ -98,3 +98,4 @@ import JointRootCert.LiteralF1
 import JointRootCert.LiteralF6
 import JointRootCert.LiteralF4
 import JointRootCert.LiteralG1
+import JointRootCert.LiteralG2
