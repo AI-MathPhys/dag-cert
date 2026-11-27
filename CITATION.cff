@@ -8,5 +8,5 @@ authors:
 repository-code: "https://github.com/AI-MathPhys/dag-cert"
 url: "https://github.com/AI-MathPhys/dag-cert"
 license: MIT
-version: "1.0.0"
-date-released: "2026-11-26"
+version: "1.0.1"
+date-released: "2026-11-27"
