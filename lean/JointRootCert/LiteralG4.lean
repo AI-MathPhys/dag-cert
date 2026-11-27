@@ -28,10 +28,16 @@ with arbitrary initial contents (`Mem`); nothing assumes zero-initialised memory
    (simulation) relation: with ghost lists, mapping `dst` over the child lists and `src` over
    the parent lists gives the child and parent lists of the engine's circuit; `readback`:
    following the pointers reads them back exactly.  `AbsR.retire` / `AbsR.release`: the
-   linked operations represent `retireDag` / `releaseDag`.  The circuit field of the engine
-   state is kept as a ghost equal to the readback at every time (`simL_all`,
-   `representation_cost_upper_Lin` 2); the waves read parent lists from it, which is reading
-   the linked list (already charged per parent by `dlv`).  The structure is built by
+   linked operations represent `retireDag` / `releaseDag`.  The waves also run on the linked
+   structure: a popped gate is compared with `N` and its linked parent list is walked by
+   executed pointer steps (`dlvW`, `dlvL`: head read, then per record the null test, the
+   `src` read and the `nx` read, 3 units plus the delivery; 1 for the final null test), and
+   the leaf test of the wave entry is the executed `g < N`, `C.hd x = 0` read (`leafL`,
+   `targetL`, 2 units charged separately); `waveDL_eq`: via `AbsR` the result is that of
+   `waveDX`, at most 4 times its cost.  The circuit field of the engine state is a ghost
+   equal to the readback at every time (`simL_all`, `representation_cost_upper_Lin` 2), read
+   by no executed step of the rollouts, queries or disposal (it fixes the proof-only fuel
+   `relFuel`).  The structure is built by
    `buildLin` (phases A, B, D) from arbitrary contents, in `15 · live + 10 N + 3` executed
    units (`buildLin_spec`); this needs the children of `G0` to be gates (`< N`), a hypothesis
    (`hcl`) of the final theorems (`Dag.WF` states it only for parents).
@@ -46,7 +52,8 @@ with arbitrary initial contents (`Mem`); nothing assumes zero-initialised memory
    is `RetireFinal.qOut` (`qOutL_eq`).
 4. **Heap fuel.**  `stepOK` mirrors every heap call of a rollout (both waves: every
    `updateKey`; the retirement pass: every `delete`) and asserts that each of their sifts
-   stops by its own test within the fuel `⌈log₂ n⌉`; `hlOK` does the same for every heapify
+   stops by its own test within the fuel `⌈log₂ n⌉` (the linked waves execute the same calls
+   on the same states as `waveDX`, `dlvL_eq`, `waves_eqX`); `hlOK` does the same for every heapify
    of the initialisation.  `sifts_done`: they hold for every rollout of the run (all heaps
    of the engine are valid heaps, from `SimQ`, and remain so inside every pass).  Queries,
    cascades and the disposal execute no sift.
@@ -60,11 +67,11 @@ in `XD`: `τ, N, live ≤ XD` and `1 ≤ N`.  The term `11 K` comes, as in `Lite
 construction of the count table from the `K` root actions; `XD` contains `K` only through
 the query scans `Q · K`.
 
-Kept from `LiteralG2` (not conventions of the list above): the fuels of the wave loop
-(`N + 2`) and of the cascade (`relFuel`), for which `LiteralG2` proves that the loops reach
-their exit tests (`waveDone`, `doneR`; `loopDX` and `releaseLoopL` take the same branches as
-`loopDR` and `releaseLoopG`); the traversal fuel `M + 1`, proved not to bind here
-(`relTrav_eq`, `travE_eq`).
+Fuels: the wave loop (`N + 2`), the cascade (`relFuel`) and the traversals (`M + 1`) never
+bind: `loopDL_fuel`, `waveDL_fuel` (from `LiteralG2.waveDone`), `releaseLoopL_fuel`,
+`releaseLoopL_relFuel` (from `LiteralG2.relFuel_done`), `relTrav_eq`, `travE_eq`, `dlvW_eq`,
+`AbsR.trav_fuel`; run level: `waves_fuel`, `casc_fuel`, `qcasc_fuel`, `trav_fuel_run`, all in
+`representation_cost_upper_Lin`.
 -/
 
 import JointRootCert.LiteralG2
@@ -660,6 +667,7 @@ structure AbsR (L : Lin) (G : Dag) (lc lp : ℕ → List ℕ) : Prop where
   bdc : ∀ g e, e ∈ lc g → e ≤ L.M
   bdp : ∀ g e, e ∈ lp g → e ≤ L.M
   cnd : ∀ g, (G.children g).Nodup
+  nEq : L.N = G.N
 
 /-- The linked structure represents `G` for some ghost lists. -/
 def Abs (L : Lin) (G : Dag) : Prop := ∃ lc lp, AbsR L G lc lp
@@ -719,7 +727,7 @@ theorem AbsR.retire (h : AbsR L G lc lp) (hG : G.WF) {e : ℕ} (he : e ∈ lc (L
   obtain ⟨c1, -, -⟩ := h.c.unlink he
   obtain ⟨p1, -, -⟩ := h.p.unlink hep
   refine ⟨c1, p1, fun g => ?_, fun g => ?_, fun e' => ?_, fun g x hx => ?_, fun g x hx => ?_,
-    fun g => ?_⟩
+    fun g => ?_, h.nEq⟩
   · show _ = if g = L.src e then (G.children g).filter (· ≠ L.dst e) else G.children g
     by_cases hg : g = L.src e
     · subst hg
@@ -787,7 +795,7 @@ theorem AbsR.release (h : AbsR L G lc lp) (hG : G.WF) (g : ℕ) (st : List ℕ) 
   refine ⟨⟨⟨fun g' hg' => ?_, fun g' => ?_, fun g' => ?_, fun g' x hx => ?_, fun g' x hx => ?_,
       fun g' hg' => ?_⟩,
     t1, fun g' => ?_, fun c => ?_, fun e => ?_, fun g' x hx => ?_, fun g' x hx => ?_,
-    fun g' => ?_⟩, by rw [t2, h.ch], by rw [← hlen]; exact t3, by rw [← hlen]; exact t4⟩
+    fun g' => ?_, h.nEq⟩, by rw [t2, h.ch], by rw [← hlen]; exact t3, by rw [← hlen]; exact t4⟩
   · show Function.update L.C.hd g 0 g' = _
     by_cases hg : g' = g
     · subst hg; rw [Function.update_self, Function.update_self]; rfl
@@ -1436,19 +1444,294 @@ open Finset CostEngines DagRetire EngineFinal RetireFinal LiteralK3 LiteralE7a L
 open LiteralF4 LiteralG2
 open HeapImpl (Heap HEState SimE Rep findMax updateKey targetH)
 
+/-! ## 6b. The waves on the linked parent lists -/
+
+section WavesL
+
+variable {α : Type*} [LinearOrder α] [OrderBot α]
+
+/-- **Deliveries of `g` along its linked parent list**, from the record `e` (fuel `f`; it
+never binds, `dlvW_eq`): null test, read the parent `src e`, deliver (`dlvOne`, its own
+cost), read the next pointer (3 units plus the delivery); 1 for the final null test. -/
+def dlvW (L : Lin) (g : ℕ) (y : α) : ℕ → ℕ → HEState α → List ℕ → HEState α × List ℕ × ℕ
+  | 0, _, s, st => (s, st, 0)
+  | f + 1, e, s, st =>
+    if e = 0 then (s, st, 1)
+    else ((dlvW L g y f (L.P.nx e) (dlvOne g y (L.src e) s st).1 (dlvOne g y (L.src e) s st).2.1).1,
+      (dlvW L g y f (L.P.nx e) (dlvOne g y (L.src e) s st).1 (dlvOne g y (L.src e) s st).2.1).2.1,
+      (dlvOne g y (L.src e) s st).2.2 + 3
+        + (dlvW L g y f (L.P.nx e) (dlvOne g y (L.src e) s st).1
+          (dlvOne g y (L.src e) s st).2.1).2.2)
+
+/-- **Deliveries of a popped gate**: compare it with `N` (1); if `g < N`, read the head of its
+parent list and walk it (`dlvW`); otherwise it has no parent (1 more unit). -/
+def dlvL (L : Lin) (g : ℕ) (y : α) (s : HEState α) (st : List ℕ) : HEState α × List ℕ × ℕ :=
+  if g < L.N then
+    ((dlvW L g y (L.M + 1) (L.P.hd g) s st).1, (dlvW L g y (L.M + 1) (L.P.hd g) s st).2.1,
+      (dlvW L g y (L.M + 1) (L.P.hd g) s st).2.2 + 1)
+  else (s, st, 2)
+
+lemma dlvW_eq (L : Lin) (g : ℕ) (y : α) : ∀ (l : List ℕ) (f p : ℕ) (s : HEState α) (st : List ℕ),
+    Seg L.P.nx L.P.pv p l 0 → (∀ x ∈ l, 0 < x) → l.length < f →
+    dlvW L g y f (l.headD 0) s st = ((dlvX g y (l.map L.src) s st).1,
+      (dlvX g y (l.map L.src) s st).2.1, (dlvX g y (l.map L.src) s st).2.2 + 3 * l.length) := by
+  intro l
+  induction l with
+  | nil =>
+    intro f p s st _ _ hf
+    obtain ⟨f, rfl⟩ : ∃ f', f = f' + 1 := ⟨f - 1, by simp at hf; omega⟩
+    rfl
+  | cons x xs ih =>
+    intro f p s st hs hpos hf
+    obtain ⟨f, rfl⟩ : ∃ f', f = f' + 1 := ⟨f - 1, by simp at hf; omega⟩
+    obtain ⟨_, h2, h3⟩ := hs
+    have hx : x ≠ 0 := (hpos x List.mem_cons_self).ne'
+    have e1 := ih f x (dlvOne g y (L.src x) s st).1 (dlvOne g y (L.src x) s st).2.1 h3
+      (fun z hz => hpos z (List.mem_cons_of_mem _ hz)) (by simp at hf; omega)
+    show dlvW L g y (f + 1) x s st = _
+    rw [dlvW, if_neg hx, h2, e1, List.map_cons, dlvX]
+    refine Prod.ext rfl (Prod.ext rfl ?_)
+    simp only [List.length_cons]
+    ring
+
+lemma dlvOne_cost (g : ℕ) (y : α) (p : ℕ) (s : HEState α) (st : List ℕ) :
+    1 ≤ (dlvOne g y p s st).2.2 := by
+  unfold dlvOne; split_ifs <;> simp
+
+lemma dlvX_cost (g : ℕ) (y : α) : ∀ (ps : List ℕ) (s : HEState α) (st : List ℕ),
+    ps.length + 1 ≤ (dlvX g y ps s st).2.2 := by
+  intro ps
+  induction ps with
+  | nil => intro s st; exact le_rfl
+  | cons p ps ih =>
+    intro s st
+    have h1 := ih (dlvOne g y p s st).1 (dlvOne g y p s st).2.1
+    have h2 := dlvOne_cost g y p s st
+    show _ ≤ (dlvOne g y p s st).2.2 + (dlvX g y ps (dlvOne g y p s st).1 (dlvOne g y p s st).2.1).2.2
+    simp only [List.length_cons]; omega
+
+variable {L : Lin} {G : Dag} {lc lp : ℕ → List ℕ}
+
+/-- **The linked deliveries are the deliveries to `G.parents g`**, at `3` more units per
+parent and `1` for the bound test. -/
+lemma dlvL_eq (h : AbsR L G lc lp) (g : ℕ) (y : α) (s : HEState α) (st : List ℕ) :
+    dlvL L g y s st = ((dlvX g y (G.parents g) s st).1, (dlvX g y (G.parents g) s st).2.1,
+      (dlvX g y (G.parents g) s st).2.2 + 3 * (G.parents g).length + 1) := by
+  unfold dlvL
+  by_cases hg : g < L.N
+  · rw [if_pos hg, h.p.hd g hg]
+    have hlen : (lp g).length < L.M + 1 := Nat.lt_succ_of_le (length_le_of_bound _ _ (h.p.nd g)
+      (fun z hz => ⟨h.p.pos g z hz, h.bdp g z hz⟩))
+    have hm : (lp g).map L.src = G.parents g := h.pa g
+    have hl : (lp g).length = (G.parents g).length := by rw [← hm, List.length_map]
+    rw [dlvW_eq L g y (lp g) _ 0 s st (h.p.seg g) (h.p.pos g) hlen, hm, hl]
+  · rw [if_neg hg]
+    have : G.parents g = [] := by rw [← h.pa g, h.p.emp g (by omega)]; rfl
+    rw [this]; rfl
+
+/-- The traversal fuel `M + 1` never binds. -/
+lemma AbsR.trav_fuel (h : AbsR L G lc lp) {g : ℕ} (hg : g < L.N) (j : ℕ) :
+    travE L.C.nx (L.M + 1 + j) (L.C.hd g) = travE L.C.nx (L.M + 1) (L.C.hd g) ∧
+    travE L.P.nx (L.M + 1 + j) (L.P.hd g) = travE L.P.nx (L.M + 1) (L.P.hd g) := by
+  have hc : (lc g).length < L.M + 1 := Nat.lt_succ_of_le
+    (length_le_of_bound _ _ (h.c.nd g) (fun z hz => ⟨h.c.pos g z hz, h.bdc g z hz⟩))
+  have hp : (lp g).length < L.M + 1 := Nat.lt_succ_of_le
+    (length_le_of_bound _ _ (h.p.nd g) (fun z hz => ⟨h.p.pos g z hz, h.bdp g z hz⟩))
+  rw [h.c.hd g hg, h.p.hd g hg]
+  refine ⟨?_, ?_⟩
+  · rw [travE_eq _ _ _ _ _ (h.c.seg g) (h.c.pos g) hc,
+      travE_eq _ _ _ _ _ (h.c.seg g) (h.c.pos g) (by omega)]
+  · rw [travE_eq _ _ _ _ _ (h.p.seg g) (h.p.pos g) hp,
+      travE_eq _ _ _ _ _ (h.p.seg g) (h.p.pos g) (by omega)]
+
+/-- **The stack loop on the linked parent lists** (as `loopDX`, deliveries by `dlvL`). -/
+def loopDL (L : Lin) : ℕ → HEState α → List ℕ → HEState α × ℕ × List ℕ
+  | 0, s, _ => (s, 0, [])
+  | _ + 1, s, [] => (s, 1, [])
+  | f + 1, s, g :: st =>
+    ((loopDL L f (dlvL L g (s.val g) s st).1 (dlvL L g (s.val g) s st).2.1).1,
+     2 + (dlvL L g (s.val g) s st).2.2
+       + (loopDL L f (dlvL L g (s.val g) s st).1 (dlvL L g (s.val g) s st).2.1).2.1,
+     g :: (loopDL L f (dlvL L g (s.val g) s st).1 (dlvL L g (s.val g) s st).2.1).2.2)
+
+lemma loopDL_eq (h : AbsR L G lc lp) : ∀ (f : ℕ) (s : HEState α) (st : List ℕ),
+    (loopDL L f s st).1 = (loopDX G f s st).1 ∧ (loopDL L f s st).2.2 = (loopDX G f s st).2.2 ∧
+    (loopDX G f s st).2.1 ≤ (loopDL L f s st).2.1 ∧
+    (loopDL L f s st).2.1 ≤ 4 * (loopDX G f s st).2.1 := by
+  intro f
+  induction f with
+  | zero => intro s st; exact ⟨rfl, rfl, le_rfl, Nat.zero_le _⟩
+  | succ f ih =>
+    intro s st
+    cases st with
+    | nil => exact ⟨rfl, rfl, le_rfl, by show 1 ≤ 4 * 1; omega⟩
+    | cons g st =>
+      rw [loopDL, loopDX, dlvL_eq h]
+      obtain ⟨i1, i2, i3, i4⟩ := ih (dlvX g (s.val g) (G.parents g) s st).1
+        (dlvX g (s.val g) (G.parents g) s st).2.1
+      have hc := dlvX_cost g (s.val g) (G.parents g) s st
+      dsimp only
+      refine ⟨i1, by rw [i2], by omega, by omega⟩
+
+/-- **The fuel of the linked stack loop never binds**: when the loop of `LiteralF4.loopDR`
+reaches its empty-stack exit within fuel `f` (`LiteralG2.doneD`), any larger fuel gives the
+same result. -/
+theorem loopDL_fuel (h : AbsR L G lc lp) : ∀ (f : ℕ) (s : HEState α) (st : List ℕ),
+    doneD G f s st → ∀ j, loopDL L (f + j) s st = loopDL L f s st := by
+  intro f
+  induction f with
+  | zero => intro s st hd; exact (hd : False).elim
+  | succ f ih =>
+    intro s st hd j
+    rw [Nat.add_right_comm]
+    cases st with
+    | nil => rfl
+    | cons g st =>
+      have hs : (dlvL L g (s.val g) s st).1 = (dlv g (s.val g) (G.parents g) s st).1 ∧
+          (dlvL L g (s.val g) s st).2.1 = (dlv g (s.val g) (G.parents g) s st).2.1 := by
+        rw [dlvL_eq h, dlvX_eq]; exact ⟨rfl, rfl⟩
+      rw [loopDL, loopDL, hs.1, hs.2, ih _ _ hd j]
+
+/-- **Executed leaf test**: compare the gate with `N` and read the head of its child list
+(2 units). -/
+def leafL (L : Lin) (g : ℕ) : Bool := !(decide (g < L.N)) || decide (L.C.hd g = 0)
+
+/-- The target value of a gate with the executed leaf test. -/
+def targetL (L : Lin) (x : ℕ) (y : α) (s : HEState α) (g : ℕ) : α :=
+  if leafL L g = true then (if g = x then y else s.val g) else findMax (s.hp g)
+
+lemma leafL_iff (h : AbsR L G lc lp) (g : ℕ) : leafL L g = true ↔ G.children g = [] := by
+  unfold leafL
+  by_cases hg : g < L.N
+  · have := (h.tests hg).1
+    simp only [hg, decide_true, Bool.not_true, Bool.false_or, decide_eq_true_eq]
+    constructor
+    · intro h0; by_contra hc; exact (this.2 hc) h0
+    · intro hc; by_contra h0; exact (this.1 h0) hc
+  · simp only [hg, decide_false, Bool.not_false, Bool.true_or, true_iff]
+    rw [← h.ch g, h.c.emp g (by omega)]; rfl
+
+lemma targetL_eq (h : AbsR L G lc lp) (x : ℕ) (y : α) (s : HEState α) (g : ℕ) :
+    targetL L x y s g = targetH G x y s g := by
+  unfold targetL targetH
+  by_cases hc : G.children g = []
+  · rw [if_pos ((leafL_iff h g).2 hc), if_pos hc]
+  · rw [if_neg (fun h' => hc ((leafL_iff h g).1 h')), if_neg hc]
+
+/-- **The wave on the linked structure** with fuel `F`: the executed leaf test (2), the
+comparison of the target with the stored value (1); if it differs, store it and run the
+stack loop `loopDL` from `[x]`. -/
+def waveDLf (L : Lin) (F x : ℕ) (y : α) (s : HEState α) : HEState α × ℕ × List ℕ :=
+  if targetL L x y s x = s.val x then (s, 3, [])
+  else ((loopDL L F ⟨Function.update s.val x (targetL L x y s x), s.hp⟩ [x]).1,
+    3 + (loopDL L F ⟨Function.update s.val x (targetL L x y s x), s.hp⟩ [x]).2.1,
+    (loopDL L F ⟨Function.update s.val x (targetL L x y s x), s.hp⟩ [x]).2.2)
+
+/-- The wave of the linked engine: fuel `N + 2`. -/
+def waveDL (L : Lin) (x : ℕ) (y : α) (s : HEState α) : HEState α × ℕ × List ℕ :=
+  waveDLf L (L.N + 2) x y s
+
+/-- **The linked wave computes `waveDX`** (state and record), at most 4 times its cost. -/
+lemma waveDL_eq (h : AbsR L G lc lp) (x : ℕ) (y : α) (s : HEState α) :
+    (waveDL L x y s).1 = (waveDX G x y s).1 ∧ (waveDL L x y s).2.2 = (waveDX G x y s).2.2 ∧
+    (waveDX G x y s).2.1 ≤ (waveDL L x y s).2.1 ∧ (waveDL L x y s).2.1 ≤ 4 * (waveDX G x y s).2.1 := by
+  unfold waveDL waveDLf waveDX
+  rw [targetL_eq h, h.nEq]
+  by_cases hc : targetH G x y s x = s.val x
+  · rw [if_pos hc, if_pos hc]; exact ⟨rfl, rfl, by dsimp only; omega, by dsimp only; omega⟩
+  · rw [if_neg hc, if_neg hc]
+    obtain ⟨i1, i2, i3, i4⟩ := loopDL_eq h (G.N + 2)
+      ⟨Function.update s.val x (targetH G x y s x), s.hp⟩ [x]
+    exact ⟨i1, i2, by dsimp only; omega, by dsimp only; omega⟩
+
+lemma waveDL_DR (h : AbsR L G lc lp) (x : ℕ) (y : α) (s : HEState α) :
+    (waveDL L x y s).1 = (waveDR G x y s).1 ∧ (waveDL L x y s).2.2 = (waveDR G x y s).2.2 ∧
+    (waveDR G x y s).2.1 ≤ (waveDL L x y s).2.1 ∧ (waveDL L x y s).2.1 ≤ 8 * (waveDR G x y s).2.1 := by
+  obtain ⟨a1, a2, a3, a4⟩ := waveDL_eq h x y s
+  obtain ⟨b1, b2, b3, b4⟩ := waveDX_eq G x y s
+  exact ⟨a1.trans b1, a2.trans b2, b3.trans a3, by omega⟩
+
+/-- **The fuel of the linked wave never binds** when `LiteralG2.waveDone` holds. -/
+theorem waveDL_fuel (h : AbsR L G lc lp) (x : ℕ) (y : α) (s : HEState α) (hd : waveDone G x y s)
+    (j : ℕ) : waveDLf L (L.N + 2 + j) x y s = waveDL L x y s := by
+  unfold waveDL waveDLf
+  rw [targetL_eq h, h.nEq]
+  by_cases hc : targetH G x y s x = s.val x
+  · rw [if_pos hc, if_pos hc]
+  · rw [if_neg hc, if_neg hc, loopDL_fuel h _ _ _ (hd.resolve_left hc) j]
+
+end WavesL
+
+/-! ## 6c. The fuel of the linked cascade never binds -/
+
+section CascFuel
+
+variable {α : Type*} [LinearOrder α] [OrderBot α]
+
+lemma relTest_iff (prot : ℕ → Bool) (g : ℕ) (x : HRState α × Lin) {lc lp : ℕ → List ℕ}
+    (hr : AbsR x.2 x.1.G lc lp) :
+    (g < x.2.N ∧ x.2.C.hd g ≠ 0 ∧ x.2.P.hd g = 0 ∧ prot g = false) ↔
+      (x.1.G.children g ≠ [] ∧ x.1.G.parents g = [] ∧ prot g = false) := by
+  by_cases hgN : g < x.2.N
+  · obtain ⟨t1, t2⟩ := hr.tests hgN
+    rw [t1, t2]; exact ⟨fun h => h.2, fun h => ⟨hgN, h⟩⟩
+  · refine ⟨fun h => absurd h.1 hgN, fun h => ?_⟩
+    exfalso
+    obtain ⟨c, hcm⟩ := List.exists_mem_of_ne_nil _ h.1
+    have hlc : c ∈ (lc g).map x.2.dst := by rw [hr.ch g]; exact hcm
+    rw [hr.c.emp g (by omega)] at hlc
+    exact List.not_mem_nil hlc
+
+/-- **The fuel of the linked cascade never binds**: when the cascade of `LiteralG2`
+reaches its empty-stack exit within fuel `f` (`doneR`), any larger fuel gives the same
+result. -/
+theorem releaseLoopL_fuel (prot : ℕ → Bool) : ∀ (f : ℕ) (st : List ℕ) (x : HRState α × Lin),
+    Abs x.2 x.1.G → x.1.G.WF → doneR prot f st x.1 →
+    ∀ j, releaseLoopL prot (f + j) st x = releaseLoopL prot f st x := by
+  intro f
+  induction f with
+  | zero => intro st x _ _ hd; exact (hd : False).elim
+  | succ f ih =>
+    intro st x h hG hd j
+    rw [Nat.add_right_comm]
+    cases st with
+    | nil => rfl
+    | cons g st =>
+      obtain ⟨lc, lp, hr⟩ := h
+      have hiff := relTest_iff prot g x hr
+      rw [doneR] at hd
+      rw [releaseLoopL, releaseLoopL]
+      by_cases hc : g < x.2.N ∧ x.2.C.hd g ≠ 0 ∧ x.2.P.hd g = 0 ∧ prot g = false
+      · rw [if_pos hc, if_pos hc]
+        rw [if_pos (hiff.1 hc)] at hd
+        obtain ⟨g1, -, g3, g4, -, -⟩ := relGate_spec g st x hr hG hc.1
+        rw [ih _ _ g1 g3 (by rw [g4]; exact hd) j]
+      · rw [if_neg hc, if_neg hc]
+        rw [if_neg (fun h' => hc (hiff.2 h'))] at hd
+        rw [ih st x ⟨lc, lp, hr⟩ hG hd j]
+
+/-- With the fuel `relFuel` the linked cascade's fuel never binds, on every state whose
+linked structure represents a well-formed circuit. -/
+theorem releaseLoopL_relFuel (prot : ℕ → Bool) (st : List ℕ) (x : HRState α × Lin)
+    (h : Abs x.2 x.1.G) (hG : x.1.G.WF) (j : ℕ) :
+    releaseLoopL prot (relFuel x.1.G st + j) st x = releaseLoopL prot (relFuel x.1.G st) st x :=
+  releaseLoopL_fuel prot _ st x h hG (relFuel_done prot st x.1 hG) j
+
+end CascFuel
+
 /-! ## 7. One rollout and one query of the linked engine -/
 
 section Steps
 
 variable {α : Type*} [LinearOrder α] [OrderBot α]
 
-/-- **One rollout of the linked engine**: the two recording waves (`waveDX`), the merge
+/-- **One rollout of the linked engine**: the two recording waves on the linked parent lists (`waveDL`), the merge
 (`mergeMX`), the candidate records read from the linked parent lists (`candTrav`), the
 retirement pass (`retireListL`), the stack of the cascade (`dstAll`) and the cascade
 (`releaseLoopL`, fuel as in `LiteralG2`, proved not to bind there). -/
 def relStepL (prot : ℕ → Bool) (u : ℕ × α × α) (s : GS α) (L : Lin) : (GS α × Lin) × ℕ :=
-  let wl := waveDX s.q.r.G u.1 u.2.1 s.q.r.lo
-  let wh := waveDX s.q.r.G u.1 u.2.2 s.q.r.hi
+  let wl := waveDL L u.1 u.2.1 s.q.r.lo
+  let wh := waveDL L u.1 u.2.2 s.q.r.hi
   let mg := mergeMX s.marks wl.2.2 wh.2.2
   let ct := candTrav L mg.1
   let rl := retireListL ct.1 (⟨s.q.r.G, wl.1, wh.1⟩, L)
@@ -1466,21 +1749,21 @@ theorem relStepL_eq (prot : ℕ → Bool) (u : ℕ × α × α) (s : GS α) (L :
     Abs (relStepL prot u s L).1.2 (relStepP prot u s).1.q.r.G ∧ Stat L (relStepL prot u s L).1.2 ∧
     (relStepP prot u s).2 ≤ (relStepL prot u s L).2 ∧
     (relStepL prot u s L).2 ≤ 11 * (relStepP prot u s).2 + 6 := by
-  obtain ⟨wl1, wl2, wl3, wl4⟩ := waveDX_eq s.q.r.G u.1 u.2.1 s.q.r.lo
-  obtain ⟨wh1, wh2, wh3, wh4⟩ := waveDX_eq s.q.r.G u.1 u.2.2 s.q.r.hi
-  obtain ⟨mg1, mg2, mg3⟩ := mergeMX_eq s.marks (waveDX s.q.r.G u.1 u.2.1 s.q.r.lo).2.2
-    (waveDX s.q.r.G u.1 u.2.2 s.q.r.hi).2.2
-  have hm : (mergeMX s.marks (waveDX s.q.r.G u.1 u.2.1 s.q.r.lo).2.2
-      (waveDX s.q.r.G u.1 u.2.2 s.q.r.hi).2.2).1 = (mergeG u s).1 := by
+  obtain ⟨wl1, wl2, wl3, wl4⟩ := waveDL_DR h u.1 u.2.1 s.q.r.lo
+  obtain ⟨wh1, wh2, wh3, wh4⟩ := waveDL_DR h u.1 u.2.2 s.q.r.hi
+  obtain ⟨mg1, mg2, mg3⟩ := mergeMX_eq s.marks (waveDL L u.1 u.2.1 s.q.r.lo).2.2
+    (waveDL L u.1 u.2.2 s.q.r.hi).2.2
+  have hm : (mergeMX s.marks (waveDL L u.1 u.2.1 s.q.r.lo).2.2
+      (waveDL L u.1 u.2.2 s.q.r.hi).2.2).1 = (mergeG u s).1 := by
     rw [mg1, wl2, wh2]; rfl
-  have hm2 : (mergeMX s.marks (waveDX s.q.r.G u.1 u.2.1 s.q.r.lo).2.2
-      (waveDX s.q.r.G u.1 u.2.2 s.q.r.hi).2.2).2.1 = (mergeG u s).2.1 := by
+  have hm2 : (mergeMX s.marks (waveDL L u.1 u.2.1 s.q.r.lo).2.2
+      (waveDL L u.1 u.2.2 s.q.r.hi).2.2).2.1 = (mergeG u s).2.1 := by
     rw [mg2, wl2, wh2]; rfl
-  have hm3 : (mergeMX s.marks (waveDX s.q.r.G u.1 u.2.1 s.q.r.lo).2.2
-      (waveDX s.q.r.G u.1 u.2.2 s.q.r.hi).2.2).2.2 = (mergeG u s).2.2 + 3 := by
+  have hm3 : (mergeMX s.marks (waveDL L u.1 u.2.1 s.q.r.lo).2.2
+      (waveDL L u.1 u.2.2 s.q.r.hi).2.2).2.2 = (mergeG u s).2.2 + 3 := by
     rw [mg3, wl2, wh2]; rfl
-  have hw : (⟨s.q.r.G, (waveDX s.q.r.G u.1 u.2.1 s.q.r.lo).1,
-      (waveDX s.q.r.G u.1 u.2.2 s.q.r.hi).1⟩ : HRState α) = wR u s.q.r := by
+  have hw : (⟨s.q.r.G, (waveDL L u.1 u.2.1 s.q.r.lo).1,
+      (waveDL L u.1 u.2.2 s.q.r.hi).1⟩ : HRState α) = wR u s.q.r := by
     rw [wl1, wh1]; rfl
   obtain ⟨c1, c2, c3, c4, c5⟩ := candTrav_spec h (mergeG u s).1
   set ids := (candTrav L (mergeG u s).1).1 with hids
@@ -1514,6 +1797,47 @@ theorem relStepL_eq (prot : ℕ → Bool) (u : ℕ × α × α) (s : GS α) (L :
   refine ⟨by rw [l1], l2, r3.trans l3, ?_, ?_⟩
   · rw [d2, e1, e2]; omega
   · rw [d2, e1, e2]; omega
+
+/-- The stack and the state with which the cascade of a rollout of the linked engine starts
+(after the retirement pass). -/
+def cascIn (u : ℕ × α × α) (s : GS α) (L : Lin) : List ℕ × (HRState α × Lin) :=
+  ((dstAll L (candTrav L (mergeMX s.marks (waveDL L u.1 u.2.1 s.q.r.lo).2.2
+      (waveDL L u.1 u.2.2 s.q.r.hi).2.2).1).1).1,
+   (retireListL (candTrav L (mergeMX s.marks (waveDL L u.1 u.2.1 s.q.r.lo).2.2
+      (waveDL L u.1 u.2.2 s.q.r.hi).2.2).1).1
+    (⟨s.q.r.G, (waveDL L u.1 u.2.1 s.q.r.lo).1, (waveDL L u.1 u.2.2 s.q.r.hi).1⟩, L)).1)
+
+/-- The cascade of a rollout is `releaseLoopL` from `cascIn` with fuel `relFuel`. -/
+lemma relStepL_casc (prot : ℕ → Bool) (u : ℕ × α × α) (s : GS α) (L : Lin) :
+    relStepL prot u s L = ((⟨⟨(releaseLoopL prot (relFuel (cascIn u s L).2.1.G (cascIn u s L).1)
+        (cascIn u s L).1 (cascIn u s L).2).1.1, s.q.act⟩,
+      (mergeMX s.marks (waveDL L u.1 u.2.1 s.q.r.lo).2.2 (waveDL L u.1 u.2.2 s.q.r.hi).2.2).2.1⟩,
+      (releaseLoopL prot (relFuel (cascIn u s L).2.1.G (cascIn u s L).1)
+        (cascIn u s L).1 (cascIn u s L).2).1.2), (relStepL prot u s L).2) := rfl
+
+lemma cascIn_spec (u : ℕ × α × α) (s : GS α) (L : Lin) {lc lp : ℕ → List ℕ}
+    (h : AbsR L s.q.r.G lc lp) (hG : s.q.r.G.WF) (hnd : (candG u s).Nodup) :
+    Abs (cascIn u s L).2.2 (cascIn u s L).2.1.G ∧ (cascIn u s L).2.1.G.WF := by
+  obtain ⟨-, wl2, -, -⟩ := waveDL_DR h u.1 u.2.1 s.q.r.lo
+  obtain ⟨-, wh2, -, -⟩ := waveDL_DR h u.1 u.2.2 s.q.r.hi
+  obtain ⟨mg1, -, -⟩ := mergeMX_eq s.marks (waveDL L u.1 u.2.1 s.q.r.lo).2.2
+    (waveDL L u.1 u.2.2 s.q.r.hi).2.2
+  have hm : (mergeMX s.marks (waveDL L u.1 u.2.1 s.q.r.lo).2.2
+      (waveDL L u.1 u.2.2 s.q.r.hi).2.2).1 = (mergeG u s).1 := by
+    rw [mg1, wl2, wh2]; rfl
+  obtain ⟨-, c2, c3, -, -⟩ := candTrav_spec h (mergeG u s).1
+  have hcand : (candTrav L (mergeG u s).1).1.map (pr L) = candG u s := c2
+  have hnd' : (candTrav L (mergeG u s).1).1.Nodup := by rw [← hcand] at hnd; exact hnd.of_map _
+  unfold cascIn
+  rw [hm]
+  obtain ⟨r1, r2, -, -, -⟩ := retireListL_spec (candTrav L (mergeG u s).1).1
+    (⟨s.q.r.G, (waveDL L u.1 u.2.1 s.q.r.lo).1, (waveDL L u.1 u.2.2 s.q.r.hi).1⟩, L) lc lp
+    (by exact h) hG hnd' c3
+  simp only at r1 r2
+  refine ⟨r2, ?_⟩
+  rw [r1]
+  exact (retireListG_G _ (⟨s.q.r.G, (waveDL L u.1 u.2.1 s.q.r.lo).1,
+    (waveDL L u.1 u.2.2 s.q.r.hi).1⟩ : HRState α) hG).1
 
 /-- **One query of the linked engine**: the executed leader scan (`leadScanX`); if there is
 a leader, the executed stop scan (`stopScanX`), the executed retirement scan (`retScanX`),
@@ -2442,7 +2766,7 @@ theorem buildLin_spec (G : Dag) (hG : G.WF) (hnd : ∀ g, (G.children g).Nodup)
     refine ⟨⟨fun g hg => ?_, fun g => ?_, fun g => ?_, fun g e he => ?_, fun g e he => ?_,
       fun g hg => ?_⟩, ⟨fun g hg => ?_, fun g => ?_, fun g => ?_, fun g e he => ?_,
       fun g e he => ?_, fun g hg => ?_⟩, fun g => ?_, fun g => ?_, fun e => ?_, fun g e he => ?_,
-      fun g e he => ?_, hnd⟩
+      fun g e he => ?_, hnd, rfl⟩
     -- child lists
     · show Bp.1.2.hd g = (lcF G g).headD 0
       unfold lcF; rw [if_pos hg]; exact (f5 g (Nat.zero_le _) hg).2
@@ -2696,14 +3020,17 @@ and by its retirement pass terminates within its fuel (the cascade and the merge
 no sift). -/
 def stepOK (u : ℕ × α × α) (s : GS α) (L : Lin) : Prop :=
   waveOK s.q.r.G u.1 u.2.1 s.q.r.lo ∧ waveOK s.q.r.G u.1 u.2.2 s.q.r.hi ∧
-  retOK (candTrav L (mergeMX s.marks (waveDX s.q.r.G u.1 u.2.1 s.q.r.lo).2.2
-      (waveDX s.q.r.G u.1 u.2.2 s.q.r.hi).2.2).1).1
-    (⟨s.q.r.G, (waveDX s.q.r.G u.1 u.2.1 s.q.r.lo).1, (waveDX s.q.r.G u.1 u.2.2 s.q.r.hi).1⟩, L)
+  retOK (candTrav L (mergeMX s.marks (waveDL L u.1 u.2.1 s.q.r.lo).2.2
+      (waveDL L u.1 u.2.2 s.q.r.hi).2.2).1).1
+    (⟨s.q.r.G, (waveDL L u.1 u.2.1 s.q.r.lo).1, (waveDL L u.1 u.2.2 s.q.r.hi).1⟩, L)
 
-lemma step_ok (u : ℕ × α × α) (s : GS α) (L : Lin) (hl : AllInv s.q.r.lo) (hh : AllInv s.q.r.hi) :
+lemma step_ok (u : ℕ × α × α) (s : GS α) (L : Lin) {lc lp : ℕ → List ℕ}
+    (h : AbsR L s.q.r.G lc lp) (hl : AllInv s.q.r.lo) (hh : AllInv s.q.r.hi) :
     stepOK u s L := by
   obtain ⟨w1, w2⟩ := wave_ok s.q.r.G u.1 u.2.1 s.q.r.lo hl
   obtain ⟨v1, v2⟩ := wave_ok s.q.r.G u.1 u.2.2 s.q.r.hi hh
+  rw [← (waveDL_eq h u.1 u.2.1 s.q.r.lo).1] at w2
+  rw [← (waveDL_eq h u.1 u.2.2 s.q.r.hi).1] at v2
   exact ⟨w1, v1, retire_ok _ _ w2 v2⟩
 
 /-- Mirror of `LiteralE7a.heapLoop` (the bottom-up heapify of the initialisation). -/
@@ -2733,12 +3060,117 @@ theorem sifts_done (hL : Abs L0 R.G0) :
     (∀ (cs : List ℕ) (k : ℕ → α), hlOK cs.length (HeapB.ofKeys cs k)) := by
   refine ⟨fun t => ?_, fun cs k => hl_ok _ _⟩
   obtain ⟨i1, i2, -⟩ := simL_all (m0 := m0) (c0 := c0) (φ := φ) (ε := ε) hL t
-  obtain ⟨p1, -, -⟩ := hpreL_eq t ⟨i1, i2⟩
+  obtain ⟨p1, p2, -⟩ := hpreL_eq t ⟨i1, i2⟩
+  rw [← p1] at p2
+  obtain ⟨lc, lp, hr⟩ := p2
   have hs : (hpreL R m0 c0 φ ε L0 t).x.s.q = hpreR R t := by
     rw [p1, (stepP R m0 c0 t).1]; exact (hpreG_q R m0 t (simG_all R m0 t).1).1
   have hsim := (simR_all R t).2
   rw [← hs] at hsim
-  exact step_ok _ _ _ (fun p => (hsim.r.lo.hp p).inv) (fun p => (hsim.r.hi.hp p).inv)
+  exact step_ok _ _ _ hr (fun p => (hsim.r.lo.hp p).inv) (fun p => (hsim.r.hi.hp p).inv)
+
+lemma pre_facts (hL : Abs L0 R.G0) (t : ℕ) :
+    ∃ lc lp, AbsR (hpreL R m0 c0 φ ε L0 t).L (hpreL R m0 c0 φ ε L0 t).x.s.q.r.G lc lp ∧
+      (hpreL R m0 c0 φ ε L0 t).x.s.q.r.G.WF ∧
+      (candG (R.u (t + 1)) (hpreL R m0 c0 φ ε L0 t).x.s).Nodup ∧
+      (hpreL R m0 c0 φ ε L0 t).x.s.q = hpreR R t := by
+  obtain ⟨i1, i2, -⟩ := simL_all (m0 := m0) (c0 := c0) (φ := φ) (ε := ε) hL t
+  obtain ⟨p1, p2, -⟩ := hpreL_eq t ⟨i1, i2⟩
+  rw [← p1] at p2
+  obtain ⟨lc, lp, hr⟩ := p2
+  have hs : (hpreP R m0 c0 t).s = hpreG R m0 t := (stepP R m0 c0 t).1
+  have hwf : (hpreP R m0 c0 t).s.q.r.G.WF := by rw [hs]; exact hpreG_wf R m0 t
+  have hnd : (candG (R.u (t + 1)) (hpreP R m0 c0 t).s).Nodup := by
+    obtain ⟨-, -, s3, s4, -⟩ := stepG R m0 t
+    rw [hs, s3]; exact s4
+  have hq : (hpreP R m0 c0 t).s.q = hpreR R t := by
+    rw [hs]; exact (hpreG_q R m0 t (simG_all R m0 t).1).1
+  rw [← p1] at hwf hnd hq
+  exact ⟨lc, lp, hr, hwf, hnd, hq⟩
+
+/-- Run-level: the two linked waves of rollout `t + 1` give the same result with any larger
+fuel. -/
+theorem waves_fuel (hL : Abs L0 R.G0) (t j : ℕ) :
+    waveDLf (hpreL R m0 c0 φ ε L0 t).L ((hpreL R m0 c0 φ ε L0 t).L.N + 2 + j) (R.u (t + 1)).1
+        (R.u (t + 1)).2.1 (hpreL R m0 c0 φ ε L0 t).x.s.q.r.lo
+      = waveDL (hpreL R m0 c0 φ ε L0 t).L (R.u (t + 1)).1 (R.u (t + 1)).2.1
+        (hpreL R m0 c0 φ ε L0 t).x.s.q.r.lo ∧
+    waveDLf (hpreL R m0 c0 φ ε L0 t).L ((hpreL R m0 c0 φ ε L0 t).L.N + 2 + j) (R.u (t + 1)).1
+        (R.u (t + 1)).2.2 (hpreL R m0 c0 φ ε L0 t).x.s.q.r.hi
+      = waveDL (hpreL R m0 c0 φ ε L0 t).L (R.u (t + 1)).1 (R.u (t + 1)).2.2
+        (hpreL R m0 c0 φ ε L0 t).x.s.q.r.hi := by
+  obtain ⟨lc, lp, hr, -, -, hq⟩ := pre_facts (m0 := m0) (c0 := c0) (φ := φ) (ε := ε) hL t
+  have d1 := (stepG R m0 t).2.2.2.2.2.2.1
+  have d2 := (stepG R m0 t).2.2.2.2.2.2.2.1
+  rw [← hq] at d1 d2
+  exact ⟨waveDL_fuel hr _ _ _ d1 j, waveDL_fuel hr _ _ _ d2 j⟩
+
+/-- Run-level: the linked waves of rollout `t + 1` compute the states of `waveDX`. -/
+theorem waves_eqX (hL : Abs L0 R.G0) (t : ℕ) :
+    (waveDL (hpreL R m0 c0 φ ε L0 t).L (R.u (t + 1)).1 (R.u (t + 1)).2.1
+        (hpreL R m0 c0 φ ε L0 t).x.s.q.r.lo).1
+      = (waveDX (hpreL R m0 c0 φ ε L0 t).x.s.q.r.G (R.u (t + 1)).1 (R.u (t + 1)).2.1
+        (hpreL R m0 c0 φ ε L0 t).x.s.q.r.lo).1 ∧
+    (waveDL (hpreL R m0 c0 φ ε L0 t).L (R.u (t + 1)).1 (R.u (t + 1)).2.2
+        (hpreL R m0 c0 φ ε L0 t).x.s.q.r.hi).1
+      = (waveDX (hpreL R m0 c0 φ ε L0 t).x.s.q.r.G (R.u (t + 1)).1 (R.u (t + 1)).2.2
+        (hpreL R m0 c0 φ ε L0 t).x.s.q.r.hi).1 := by
+  obtain ⟨lc, lp, hr, -, -, -⟩ := pre_facts (m0 := m0) (c0 := c0) (φ := φ) (ε := ε) hL t
+  exact ⟨(waveDL_eq hr _ _ _).1, (waveDL_eq hr _ _ _).1⟩
+
+/-- Run-level: the cascade of rollout `t + 1` gives the same result with any larger fuel. -/
+theorem casc_fuel (hL : Abs L0 R.G0) (t j : ℕ) :
+    releaseLoopL (pidx (hpreL R m0 c0 φ ε L0 t).x.cnt)
+        (relFuel (cascIn (R.u (t + 1)) (hpreL R m0 c0 φ ε L0 t).x.s
+          (hpreL R m0 c0 φ ε L0 t).L).2.1.G
+          (cascIn (R.u (t + 1)) (hpreL R m0 c0 φ ε L0 t).x.s (hpreL R m0 c0 φ ε L0 t).L).1 + j)
+        (cascIn (R.u (t + 1)) (hpreL R m0 c0 φ ε L0 t).x.s (hpreL R m0 c0 φ ε L0 t).L).1
+        (cascIn (R.u (t + 1)) (hpreL R m0 c0 φ ε L0 t).x.s (hpreL R m0 c0 φ ε L0 t).L).2
+      = releaseLoopL (pidx (hpreL R m0 c0 φ ε L0 t).x.cnt)
+        (relFuel (cascIn (R.u (t + 1)) (hpreL R m0 c0 φ ε L0 t).x.s
+          (hpreL R m0 c0 φ ε L0 t).L).2.1.G
+          (cascIn (R.u (t + 1)) (hpreL R m0 c0 φ ε L0 t).x.s (hpreL R m0 c0 φ ε L0 t).L).1)
+        (cascIn (R.u (t + 1)) (hpreL R m0 c0 φ ε L0 t).x.s (hpreL R m0 c0 φ ε L0 t).L).1
+        (cascIn (R.u (t + 1)) (hpreL R m0 c0 φ ε L0 t).x.s (hpreL R m0 c0 φ ε L0 t).L).2 := by
+  obtain ⟨lc, lp, hr, hwf, hnd, -⟩ := pre_facts (m0 := m0) (c0 := c0) (φ := φ) (ε := ε) hL t
+  obtain ⟨c1, c2⟩ := cascIn_spec _ _ _ hr hwf hnd
+  exact releaseLoopL_relFuel _ _
+    (cascIn (R.u (t + 1)) (hpreL R m0 c0 φ ε L0 t).x.s (hpreL R m0 c0 φ ε L0 t).L).2 c1 c2 j
+
+lemma run_facts (hL : Abs L0 R.G0) (t : ℕ) :
+    ∃ lc lp, AbsR (hrunL R m0 c0 φ ε L0 t).L (hrunL R m0 c0 φ ε L0 t).x.s.q.r.G lc lp ∧
+      (hrunL R m0 c0 φ ε L0 t).x.s.q.r.G.WF ∧ (hrunL R m0 c0 φ ε L0 t).L.N = L0.N := by
+  obtain ⟨i1, i2, i3⟩ := simL_all (m0 := m0) (c0 := c0) (φ := φ) (ε := ε) hL t
+  have hwf0 : (hrunP R m0 c0 t).s.q.r.G.WF := by
+    rw [(simP_all R m0 c0 t).1]; exact hrunG_wf R m0 t
+  rw [← i1] at i2 hwf0
+  obtain ⟨lc, lp, hr⟩ := i2
+  exact ⟨lc, lp, hr, hwf0, i3.1⟩
+
+/-- Run-level: every query cascade (from the state after `t` rollouts) gives the same result
+with any larger fuel. -/
+theorem qcasc_fuel (hL : Abs L0 R.G0) (t j : ℕ) (prot : ℕ → Bool) (st : List ℕ) :
+    releaseLoopL prot (relFuel (hrunL R m0 c0 φ ε L0 t).x.s.q.r.G st + j) st
+        ((hrunL R m0 c0 φ ε L0 t).x.s.q.r, (hrunL R m0 c0 φ ε L0 t).L)
+      = releaseLoopL prot (relFuel (hrunL R m0 c0 φ ε L0 t).x.s.q.r.G st) st
+        ((hrunL R m0 c0 φ ε L0 t).x.s.q.r, (hrunL R m0 c0 φ ε L0 t).L) := by
+  obtain ⟨lc, lp, hr, hwf, -⟩ := run_facts (m0 := m0) (c0 := c0) (φ := φ) (ε := ε) hL t
+  exact releaseLoopL_relFuel prot st
+    ((hrunL R m0 c0 φ ε L0 t).x.s.q.r, (hrunL R m0 c0 φ ε L0 t).L) ⟨lc, lp, hr⟩ hwf j
+
+/-- Run-level: the traversals of the linked lists of every gate `< N` read the same lists
+with any larger fuel. -/
+theorem trav_fuel_run (hL : Abs L0 R.G0) (hN : L0.N = R.G0.N) (t j g : ℕ) (hg : g < R.G0.N) :
+    travE (hrunL R m0 c0 φ ε L0 t).L.C.nx ((hrunL R m0 c0 φ ε L0 t).L.M + 1 + j)
+        ((hrunL R m0 c0 φ ε L0 t).L.C.hd g)
+      = travE (hrunL R m0 c0 φ ε L0 t).L.C.nx ((hrunL R m0 c0 φ ε L0 t).L.M + 1)
+        ((hrunL R m0 c0 φ ε L0 t).L.C.hd g) ∧
+    travE (hrunL R m0 c0 φ ε L0 t).L.P.nx ((hrunL R m0 c0 φ ε L0 t).L.M + 1 + j)
+        ((hrunL R m0 c0 φ ε L0 t).L.P.hd g)
+      = travE (hrunL R m0 c0 φ ε L0 t).L.P.nx ((hrunL R m0 c0 φ ε L0 t).L.M + 1)
+        ((hrunL R m0 c0 φ ε L0 t).L.P.hd g) := by
+  obtain ⟨lc, lp, hr, -, hN'⟩ := run_facts (m0 := m0) (c0 := c0) (φ := φ) (ε := ε) hL t
+  exact hr.trav_fuel (by rw [hN', hN]; exact hg) j
 
 end HeapRunR
 
@@ -2924,6 +3356,11 @@ only for parents), any stop rule `φ, ε`, any initial array contents `μ`.  Con
    of the engine's circuit for every gate `< N`;
 3. the query outputs (executed leader and stop scans) are `RetireFinal.qOut`;
 4. every sift executed in every rollout, and in every heapify, terminates within its fuel;
+   **the fuels of the linked loops never bind**: in every rollout both linked waves
+   (`waveDL`, fuel `N + 2`; they compute the states of `waveDX`, which `stepOK` mirrors) and
+   the cascade (`releaseLoopL` from `cascIn` with `relFuel`, `relStepL_casc`), every query
+   cascade, and the traversals of every gate's linked lists (fuel `M + 1`) give the same
+   results with any larger fuel;
 5. the construction of the incidence structure represents `G0` and costs
    `15 · live + 10 N + 3`; after the final disposal no incidence is left;
 6. `S^+ ≤ WrollL` and `WP ≤ WL ≤ 11 · WP + 10 τ + 15 · live + 12 N + 13`;
@@ -2952,6 +3389,40 @@ theorem representation_cost_upper_Lin (hcl : ∀ p c, c ∈ R.G0.children p → 
       = qOut φ ε R.K (fun i => (runL R μ φ ε t).x.s.q.r.lo.val (R.rt i))
           (fun i => (runL R μ φ ε t).x.s.q.r.hi.val (R.rt i)) (runL R μ φ ε t).x.s.q.act) ∧
     (∀ t, stepOK (R.u (t + 1)) (preLt R μ φ ε t).x.s (preLt R μ φ ε t).L) ∧
+    (∀ t j, waveDLf (preLt R μ φ ε t).L ((preLt R μ φ ε t).L.N + 2 + j) (R.u (t + 1)).1
+          (R.u (t + 1)).2.1 (preLt R μ φ ε t).x.s.q.r.lo
+        = waveDL (preLt R μ φ ε t).L (R.u (t + 1)).1 (R.u (t + 1)).2.1 (preLt R μ φ ε t).x.s.q.r.lo ∧
+      waveDLf (preLt R μ φ ε t).L ((preLt R μ φ ε t).L.N + 2 + j) (R.u (t + 1)).1
+          (R.u (t + 1)).2.2 (preLt R μ φ ε t).x.s.q.r.hi
+        = waveDL (preLt R μ φ ε t).L (R.u (t + 1)).1 (R.u (t + 1)).2.2 (preLt R μ φ ε t).x.s.q.r.hi) ∧
+    (∀ t, (waveDL (preLt R μ φ ε t).L (R.u (t + 1)).1 (R.u (t + 1)).2.1
+          (preLt R μ φ ε t).x.s.q.r.lo).1
+        = (waveDX (preLt R μ φ ε t).x.s.q.r.G (R.u (t + 1)).1 (R.u (t + 1)).2.1
+          (preLt R μ φ ε t).x.s.q.r.lo).1 ∧
+      (waveDL (preLt R μ φ ε t).L (R.u (t + 1)).1 (R.u (t + 1)).2.2
+          (preLt R μ φ ε t).x.s.q.r.hi).1
+        = (waveDX (preLt R μ φ ε t).x.s.q.r.G (R.u (t + 1)).1 (R.u (t + 1)).2.2
+          (preLt R μ φ ε t).x.s.q.r.hi).1) ∧
+    (∀ t j, releaseLoopL (pidx (preLt R μ φ ε t).x.cnt)
+          (relFuel (cascIn (R.u (t + 1)) (preLt R μ φ ε t).x.s (preLt R μ φ ε t).L).2.1.G
+            (cascIn (R.u (t + 1)) (preLt R μ φ ε t).x.s (preLt R μ φ ε t).L).1 + j)
+          (cascIn (R.u (t + 1)) (preLt R μ φ ε t).x.s (preLt R μ φ ε t).L).1
+          (cascIn (R.u (t + 1)) (preLt R μ φ ε t).x.s (preLt R μ φ ε t).L).2
+        = releaseLoopL (pidx (preLt R μ φ ε t).x.cnt)
+          (relFuel (cascIn (R.u (t + 1)) (preLt R μ φ ε t).x.s (preLt R μ φ ε t).L).2.1.G
+            (cascIn (R.u (t + 1)) (preLt R μ φ ε t).x.s (preLt R μ φ ε t).L).1)
+          (cascIn (R.u (t + 1)) (preLt R μ φ ε t).x.s (preLt R μ φ ε t).L).1
+          (cascIn (R.u (t + 1)) (preLt R μ φ ε t).x.s (preLt R μ φ ε t).L).2) ∧
+    (∀ t j (prot : ℕ → Bool) (st : List ℕ),
+      releaseLoopL prot (relFuel (runL R μ φ ε t).x.s.q.r.G st + j) st
+          ((runL R μ φ ε t).x.s.q.r, (runL R μ φ ε t).L)
+        = releaseLoopL prot (relFuel (runL R μ φ ε t).x.s.q.r.G st) st
+          ((runL R μ φ ε t).x.s.q.r, (runL R μ φ ε t).L)) ∧
+    (∀ t j g, g < R.G0.N →
+      travE (runL R μ φ ε t).L.C.nx ((runL R μ φ ε t).L.M + 1 + j) ((runL R μ φ ε t).L.C.hd g)
+          = travE (runL R μ φ ε t).L.C.nx ((runL R μ φ ε t).L.M + 1) ((runL R μ φ ε t).L.C.hd g) ∧
+      travE (runL R μ φ ε t).L.P.nx ((runL R μ φ ε t).L.M + 1 + j) ((runL R μ φ ε t).L.P.hd g)
+          = travE (runL R μ φ ε t).L.P.nx ((runL R μ φ ε t).L.M + 1) ((runL R μ φ ε t).L.P.hd g)) ∧
     (∀ (cs : List ℕ) (k : ℕ → α), hlOK cs.length (HeapB.ofKeys cs k)) ∧
     AbsR (L0 R μ) R.G0 (lcF R.G0) (lpF R.G0) ∧
     (buildLin R.G0 μ.B0 μ.C0 μ.P0 μ.T0).2 = 15 * live R.G0 + 10 * R.G0.N + 3 ∧
@@ -2978,6 +3449,11 @@ theorem representation_cost_upper_Lin (hcl : ∀ p c, c ∈ R.G0.children p → 
   obtain ⟨x1, -, x3, -⟩ := initX_eq R μ.m0 μ.c0
   refine ⟨⟨by rw [initPassBX_eq]; rfl, by rw [initPassBX_eq]; rfl, x1.symm, x3.symm⟩,
     fun t => ?_, fun t g hg => ?_, fun t => qOutL_eq _ _ _ _ _, (sifts_done (m0 := μ.m0) (c0 := μ.c0) (φ := φ) (ε := ε) hL).1,
+    fun t j => waves_fuel (m0 := μ.m0) (c0 := μ.c0) (φ := φ) (ε := ε) hL t j,
+    fun t => waves_eqX (m0 := μ.m0) (c0 := μ.c0) (φ := φ) (ε := ε) hL t,
+    fun t j => casc_fuel (m0 := μ.m0) (c0 := μ.c0) (φ := φ) (ε := ε) hL t j,
+    fun t j prot st => qcasc_fuel (m0 := μ.m0) (c0 := μ.c0) (φ := φ) (ε := ε) hL t j prot st,
+    fun t j g hg => trav_fuel_run (m0 := μ.m0) (c0 := μ.c0) (φ := φ) (ε := ε) hL l2 t j g hg,
     (sifts_done (m0 := μ.m0) (c0 := μ.c0) (φ := φ) (ε := ε) hL).2, l1, l4, fun p => ?_, ?_, (WL_bounds μ φ ε hcl).1, (WL_bounds μ φ ε hcl).2,
     WL_le μ φ ε hcl, WL_le_query μ φ ε hcl, WL_le_inj μ φ ε hcl⟩
   · obtain ⟨i1, -, -⟩ := simL_all (m0 := μ.m0) (c0 := μ.c0) (φ := φ) (ε := ε) hL t
