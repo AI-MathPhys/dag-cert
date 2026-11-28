@@ -1,0 +1,25 @@
+{
+  "experiment": "v16_growing_deep_proteins",
+  "smoke": false,
+  "elapsed_s": 1405.3,
+  "python": "3.12.14",
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "files": {
+    "config.json": {
+      "sha256": "e51d1ce601f0dfe090163fe940a5179a306d9cd6a19cace2c1ed81b8bee6de65",
+      "bytes": 1667
+    },
+    "v16_growing_deep_proteins_records.csv": {
+      "sha256": "73dcff38e92ca3cc1e4ec90f1c836814e972065523b081575a59e187bb6ec172",
+      "bytes": 94188
+    },
+    "v16_growing_deep_proteins_records.parquet": {
+      "sha256": "7c8208c2241535e22d0eacd4d1711951d6454e563fc06cce2b6ad06229116272",
+      "bytes": 41152
+    },
+    "v16_growing_deep_proteins_summary.csv": {
+      "sha256": "45c6138cf7dc4f4ebd6e90f9b411013fa1b39b073ab38ab11e33db07b7ae9577",
+      "bytes": 6417
+    }
+  }
+}

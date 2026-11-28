@@ -43,12 +43,35 @@ class SuiteSpec:
     out_flag: str             # "--out-dir" | "--out"
     description: str
     legacy_hash_checks: tuple[tuple[str, str], ...] = ()
+    extra_args: tuple[str, ...] = ()
 
 
 SUITES: tuple[SuiteSpec, ...] = (
     # =========================================================================
-    # 1. SIMULATED EXPERIMENTS (Section 3.1 + Appendices G, J, L)
+    # 1. SIMULATED EXPERIMENTS (Section 3.1 + Appendices G, J, L, M, N)
     # =========================================================================
+    SuiteSpec(
+        "v17_phasea", "simulated", "experiment/exp_v17_margin_aware.py",
+        "results/bayesian_ucd_v1/v17_ma_cd_joint_phasea", "files_map", "--out-dir",
+        "Margin-Aware CD-Joint Phase A disjoint dev validation (3,030 runs across 5 benchmarks; App. M)",
+        extra_args=("--phase", "A"),
+    ),
+    SuiteSpec(
+        "v17_phaseb", "simulated", "experiment/exp_v17_margin_aware.py",
+        "results/bayesian_ucd_v1/v17_ma_cd_joint_phaseb", "files_map", "--out-dir",
+        "Margin-Aware CD-Joint Phase B full expanded evaluation (30,300 runs across 5 benchmarks + trajectories; App. M)",
+        extra_args=("--phase", "B"),
+    ),
+    SuiteSpec(
+        "v16_scale", "simulated", "experiment/simulated/exp_v16_growing_scaling.py",
+        "results/bayesian_ucd_v1/v16_growing_scaling", "files_map", "--out-dir",
+        "Growing Implicit DAGs Suite 1: commuting scaling to |Z|=52.2M & formal O(D) vs Omega(2^D) separation (1,220 runs; App. N)",
+    ),
+    SuiteSpec(
+        "v16_fs", "simulated", "experiment/simulated/exp_v16_growing_feature_selection.py",
+        "results/bayesian_ucd_v1/v16_growing_feature_selection", "files_map", "--out-dir",
+        "Growing Implicit DAGs Suite 2: combinatorial feature selection vs Best-Leaf up to |Z|=3.80M (480 runs; App. N)",
+    ),
     SuiteSpec(
         "v15_synth", "simulated", "experiment/simulated/exp_v15_synthetic_7method_and_ablations.py",
         "results/bayesian_ucd_v1/v15_synthetic_7method", "files_map", "--out-dir",
@@ -195,8 +218,13 @@ SUITES: tuple[SuiteSpec, ...] = (
         "Graph representation comparison & runtime selector (Tables 66-67)",
     ),
     # =========================================================================
-    # 2. PROTEIN ENGINEERING (Section 3.2 + Appendix H: GB1 & TmTrpB)
+    # 2. PROTEIN ENGINEERING (Section 3.2 + Appendices H, N: GB1 & TmTrpB)
     # =========================================================================
+    SuiteSpec(
+        "v16_prot", "protein_engineering", "experiment/protein_engineering/exp_v16_growing_deep_proteins.py",
+        "results/bayesian_ucd_v1/v16_growing_deep_proteins", "files_map", "--out-dir",
+        "Growing Implicit DAGs Suite 3: 10-site deep protein mutagenesis up to |Z|=2.41B calibrated to GB1/TmTrpB (700 runs; App. N)",
+    ),
     SuiteSpec(
         "v15_prot", "protein_engineering", "experiment/protein_engineering/exp_v15_protein_7method.py",
         "results/bayesian_ucd_v1/v15_protein_7method", "files_map", "--out-dir",
@@ -254,8 +282,13 @@ SUITES: tuple[SuiteSpec, ...] = (
         "BO correlation & misspecification control study (archived)",
     ),
     # =========================================================================
-    # 3. AGENTIC WORKFLOWS (Section 3.3 + Appendix I: WorFBench & Live Qwen3-0.6B)
+    # 3. AGENTIC WORKFLOWS (Section 3.3 + Appendices I, N: WorFBench, Live Qwen3 & 8-stage Growing)
     # =========================================================================
+    SuiteSpec(
+        "v16_mve", "agentic_workflows", "experiment/agentic_workflows/exp_v16_growing_measure_vs_expand.py",
+        "results/bayesian_ucd_v1/v16_growing_measure_vs_expand", "files_map", "--out-dir",
+        "Growing Implicit DAGs Suite 4: Measure-vs-Expand eta Pareto on 8-stage workflows (4^8=65.5k) & 20 SameGame boards (740 runs; App. N)",
+    ),
     SuiteSpec(
         "v15_worf", "agentic_workflows", "experiment/agentic_workflows/exp_v15_worfbench_7method.py",
         "results/bayesian_ucd_v1/v15_worfbench_7method", "files_map", "--out-dir",
@@ -385,7 +418,7 @@ def cmd_verify(_args: argparse.Namespace) -> None:
 
     print(
         f"PASS: Verified SHA-256 integrity across passive-UCT v1 ({len(v1_man['files'])} files) "
-        f"and all {len(SUITES)} experiment suites (v2--v15, zero gaps)."
+        f"and all {len(SUITES)} experiment suites (v2--v17, zero gaps)."
     )
 
 
@@ -396,12 +429,10 @@ def cmd_test(_args: argparse.Namespace) -> None:
 def cmd_summaries(args: argparse.Namespace) -> None:
     targets = _select_suites(args.domain, args.only)
     for s in targets:
-        if s.key.startswith("exp"):
-            # Extension scripts accept --summarize-only where implemented
-            src_txt = (ROOT / s.script).read_text(encoding="utf-8")
-            if "--summarize-only" not in src_txt:
-                continue
-        _run_py([s.script, "--summarize-only"])
+        src_txt = (ROOT / s.script).read_text(encoding="utf-8")
+        if "--summarize-only" not in src_txt:
+            continue
+        _run_py([s.script, *s.extra_args, "--summarize-only"])
     print(f"PASS: Regenerated summaries for {len(targets)} target suite(s).")
 
 
@@ -440,7 +471,7 @@ def _select_suites(domain: str, only: str | None) -> list[SuiteSpec]:
 def cmd_benchmark(args: argparse.Namespace) -> None:
     targets = _select_suites(args.domain, args.only)
     for s in targets:
-        extra: list[str] = []
+        extra: list[str] = list(s.extra_args)
         if args.smoke:
             extra.extend(["--smoke", s.out_flag, str(Path(args.smoke_dir) / s.key)])
         print(f"\n>>> Running [{s.domain}] {s.key}: {s.script} {' '.join(extra)}", flush=True)
@@ -455,8 +486,8 @@ def main() -> None:
     sub = ap.add_subparsers(dest="command", required=True)
 
     sub.add_parser("list", help="List all paper experiment suites grouped by domain")
-    sub.add_parser("verify", help="Cryptographically verify SHA-256 manifests for ALL v1--v14 suites")
-    sub.add_parser("test", help="Run full pytest verification suite (library API + v1--v14 tests)")
+    sub.add_parser("verify", help="Cryptographically verify SHA-256 manifests for ALL v1--v17 suites")
+    sub.add_parser("test", help="Run full pytest verification suite (library API + v1--v17 tests)")
 
     p_sum = sub.add_parser("summaries", help="Regenerate CSV summaries from archived JSONL logs")
     p_sum.add_argument("--domain", choices=("all", "simulated", "protein_engineering", "agentic_workflows"), default="all")

@@ -877,6 +877,8 @@ ALL_EXTENDED_POLICIES = (
     "gp_root_info",
     "cd_joint_no_safeguard",
     "cd_joint_single_witness",
+    "ma_cd_joint",
+    "ma_cd_joint_safe",
 )
 
 
@@ -995,6 +997,9 @@ class MatchedModelBEDSession:
         self.safeguard_activations = 0
         self.mixture_support_sum = 0
         self.mixture_steps = 0
+        self.inside_support_queries = 0
+        self.ma_used_steps = 0
+        self.mandatory_cd_steps = 0
 
         # Secondary MC posterior-risk stopping diagnostic (with 99% Clopper-Pearson control)
         self.mc_risk_certified = False
@@ -1308,6 +1313,38 @@ class MatchedModelBEDSession:
                     g_vec[y_opt] = -1.0
                 vred = self.posterior.contrast_variance_reduction(g_vec)
                 chosen = int(np.argmax(vred / costs))
+
+        elif self.policy in ("ma_cd_joint", "ma_cd_joint_safe"):
+            from dagcert.margin_aware import select_margin_aware_query
+
+            cached_rc = None
+            if self._cert_by_action:
+                kb = int(next(iter(self._cert_by_action.keys())))
+                cached_rc = (kb, self._cert_by_action[kb])
+            sel = select_margin_aware_query(
+                supports=self.support_struct,
+                leaf_to_actions=self._leaf_to_actions,
+                posterior=self.posterior,
+                certifier=self.certifier,
+                beta=beta,
+                epsilon=self.epsilon,
+                step_idx=int(self.calls),
+                safe=(self.policy == "ma_cd_joint_safe"),
+                cd_stop_if_above_eps=False,
+                cached_root_cert=cached_rc,
+                root_selection_mode="mean_tiebreak",
+            )
+            self.mixture_steps += 1
+            self.mixture_support_sum += int(sel.mixture_support)
+            if sel.safeguard_triggered:
+                self.safeguard_activations += 1
+            if sel.mandatory_cd_step:
+                self.mandatory_cd_steps += 1
+            if sel.used_ma_query:
+                self.ma_used_steps += 1
+            if sel.inside_support:
+                self.inside_support_queries += 1
+            chosen = int(sel.arm)
 
         elif self.policy == "bayesian_voi":
             # Fresh antithetic CRN normal matrix per step, shared across ALL M candidates

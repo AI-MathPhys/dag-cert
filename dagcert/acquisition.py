@@ -24,6 +24,16 @@ from dagcert._core.v12_bed_acquisition import (
 )
 from dagcert.certificates import check_ellipsoid_stopping
 from dagcert.graph import DAG, SearchDAG
+from dagcert.margin_aware import (
+    GAUSS_HERMITE_9_NODES,
+    GAUSS_HERMITE_9_WEIGHTS,
+    MarginAwareSelection,
+    build_query_shortlist,
+    build_witness_pool,
+    compute_exact_standardized_margin,
+    compute_mechanistic_snapshot,
+    select_margin_aware_query,
+)
 from dagcert.posteriors import (
     chi2_credible_beta,
     contrast_rank_of_kernel,
@@ -158,6 +168,46 @@ def select_gp_arm_with_beta(
         sg = posterior.sigma_mat @ g
         dv = (sg * sg) / (posterior.obs_var + np.maximum(1e-18, np.diag(posterior.sigma_mat)))
         return int(np.argmax(dv / costs))
+
+    if policy == "cd_joint_single_witness":
+        y_opt = int(np.argmax(u_ell))
+        containers = leaf_to_actions[y_opt]
+        b_t = max(containers, key=lambda b: (float(np.max(means[supports.supports[b]])), -b))
+        sup = supports.supports[b_t]
+        comp = supports.complements[b_t]
+        if len(comp) == 0:
+            return y_opt
+        diag_all = np.maximum(1e-18, np.diag(posterior.sigma_mat))
+        sig_sc = posterior.sigma_mat[sup[:, None], comp[None, :]]
+        q_mat = np.sqrt(np.maximum(1e-18, diag_all[comp][None, :] + diag_all[sup][:, None] - 2.0 * sig_sc))
+        vert_scores = (means[comp][None, :] - means[sup][:, None]) + beta * q_mat
+        best_y_pos = np.argmin(vert_scores, axis=0)
+        vert_ub = vert_scores[best_y_pos, np.arange(len(comp))]
+        worst_c = int(np.argmax(vert_ub))
+        z_t = int(comp[worst_c])
+        y_w = int(sup[int(best_y_pos[worst_c])])
+        g = np.zeros(m, dtype=np.float64)
+        g[z_t] = 1.0
+        g[y_w if float(means[z_t] - means[y_w]) <= 0.5 * epsilon else y_opt] = -1.0
+        sg = posterior.sigma_mat @ g
+        dv = (sg * sg) / (posterior.obs_var + diag_all)
+        return int(np.argmax(dv / costs))
+
+    if policy in ("ma_cd_joint", "ma_cd_joint_safe"):
+        sel = select_margin_aware_query(
+            supports=supports,
+            leaf_to_actions=leaf_to_actions,
+            posterior=posterior,
+            certifier=certifier,
+            beta=beta,
+            epsilon=epsilon,
+            step_idx=max(0, int(step) - 1),
+            safe=(policy == "ma_cd_joint_safe"),
+            cd_stop_if_above_eps=cd_stop_if_above_eps,
+            root_selection_mode="ucb_lcb_sep",
+            use_cpp=use_cpp,
+        )
+        return sel.arm
 
     raise ValueError(f"Unknown policy: {policy!r}")
 
@@ -329,10 +379,34 @@ class NoisyGPEIPolicy(AcquisitionPolicy):
         return select_gp_arm_with_beta("gp_ei", supports, l2a, posterior, certifier, 1.0, epsilon, step, delta)
 
 
+class MACDJointPolicy(AcquisitionPolicy):
+    """Margin-Aware Contrast-Directed Joint Acquisition (MA-CD-Joint)."""
+
+    name = "ma_cd_joint"
+
+    def select(self, posterior, supports, certifier, *, beta=None, epsilon=0.02, step=1, delta=0.05, leaf_to_actions=None):
+        b = posterior.beta() if beta is None else float(beta)
+        l2a = leaf_to_actions if leaf_to_actions is not None else _build_leaf_to_actions(supports)
+        return select_gp_arm_with_beta("ma_cd_joint", supports, l2a, posterior, certifier, b, epsilon, step, delta)
+
+
+class MACDJointSafePolicy(AcquisitionPolicy):
+    """Safe Alternating Margin-Aware Contrast-Directed Joint Acquisition (MA-CD-Joint-Safe)."""
+
+    name = "ma_cd_joint_safe"
+
+    def select(self, posterior, supports, certifier, *, beta=None, epsilon=0.02, step=1, delta=0.05, leaf_to_actions=None):
+        b = posterior.beta() if beta is None else float(beta)
+        l2a = leaf_to_actions if leaf_to_actions is not None else _build_leaf_to_actions(supports)
+        return select_gp_arm_with_beta("ma_cd_joint_safe", supports, l2a, posterior, certifier, b, epsilon, step, delta)
+
+
 def make_policy(name: str, seed: int = 0) -> AcquisitionPolicy:
     """Instantiate a named Bayesian acquisition policy."""
     registry: dict[str, Callable[[], AcquisitionPolicy]] = {
         "cd_joint": CDJointPolicy,
+        "ma_cd_joint": MACDJointPolicy,
+        "ma_cd_joint_safe": MACDJointSafePolicy,
         "kg": CorrelatedKGPolicy,
         "gp_os": GPOSPolicy,
         "bayesian_voi": lambda: BayesianVOIPolicy(seed=seed),
@@ -609,12 +683,21 @@ __all__ = [
     "CDJointPolicy",
     "CertificationResult",
     "CorrelatedKGPolicy",
+    "GAUSS_HERMITE_9_NODES",
+    "GAUSS_HERMITE_9_WEIGHTS",
     "GPOSPolicy",
     "GPTSPolicy",
     "GPUCBPolicy",
+    "MACDJointPolicy",
+    "MACDJointSafePolicy",
+    "MarginAwareSelection",
     "MatchedModelBEDSession",
     "NoisyGPEIPolicy",
+    "build_query_shortlist",
+    "build_witness_pool",
     "certify_root_action",
+    "compute_exact_standardized_margin",
+    "compute_mechanistic_snapshot",
     "correlated_kg_log_scores",
     "default_check_schedule",
     "exact_correlated_kg_single",
@@ -623,4 +706,5 @@ __all__ = [
     "noisy_gp_ei_log_scores",
     "select_bayesian_root_voi",
     "select_gp_arm_with_beta",
+    "select_margin_aware_query",
 ]

@@ -11,7 +11,7 @@ Installable Python library (`dagcert`), full experimental suite (`experiment/`),
 
 - **Manuscript:** [`manuscript/Joint_cert_manuscript.pdf`](https://github.com/AI-MathPhys/dag-cert/blob/main/manuscript/Joint_cert_manuscript.pdf) (LaTeX source: [`manuscript/joint_cert_manuscript.tex`](https://github.com/AI-MathPhys/dag-cert/blob/main/manuscript/joint_cert_manuscript.tex))
 - **Artifact-to-paper map:** [`REPRODUCIBILITY.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/REPRODUCIBILITY.md) maps every table and figure (including the expanded 1,000-campaign seven-method cross-domain benchmarks) to its archived logs and reproduction command — **100% coverage with zero missing experiments**.
-- **Formal mathematics:** [`lean/`](https://github.com/AI-MathPhys/dag-cert/tree/main/lean/) contains a Lean 4 formalization of the paper's 62 numbered results (62 proved as written, 0 false as written with a counterexample, 0 partial, 0 open); see [`lean/README.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/lean/README.md) for the status of each.
+- **Formal mathematics:** [`lean/`](https://github.com/AI-MathPhys/dag-cert/tree/main/lean/) contains a Lean 4 formalization of the paper's 62 core numbered results in Appendices A–L (62 proved as written, 0 false as written with a counterexample, 0 partial, 0 open; see [`lean/README.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/lean/README.md)). Supplementary extensions in Appendices M–N (`MA-CD-Joint` and Growing Implicit Search DAGs) are backed by paper proofs plus automated numerical-oracle/unit tests (`tests/test_v17_margin_aware_cd_joint.py`, `tests/test_v16_growing_dag.py`).
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/AI-MathPhys/dag-cert/main/figures/fig1_concept_overview.png" width="94%" alt="Shared outcomes change what can invalidate a root decision"/>
@@ -119,10 +119,12 @@ for policy in ("cd_joint", "gp_os", "kg"):
 | [`dagcert/certificates.py`](https://github.com/AI-MathPhys/dag-cert/blob/main/dagcert/certificates.py) | Exact rectangular regret, conic ellipsoidal dual, dual witness covers, bounded residuals | `exact_rectangular_regret`, `JointEllipsoidCertifier`, `check_ellipsoid_stopping`, `DualWitnessCovers`, `CanonicalIntervals`, `NestedIntervals`, `RobustAwareJointCertifier` |
 | [`dagcert/posteriors.py`](https://github.com/AI-MathPhys/dag-cert/blob/main/dagcert/posteriors.py) | Conjugate Gaussian posterior, contrast rank $r$, $\sqrt{\chi^2_{r,1-\delta}}$, valid anytime posterior-risk MC | `SharedGaussianPosterior`, `contrast_rank_of_kernel`, `chi2_credible_beta`, `contrast_ellipsoid_coverage`, `eval_direct_posterior_risk_valid` |
 | [`dagcert/acquisition.py`](https://github.com/AI-MathPhys/dag-cert/blob/main/dagcert/acquisition.py) | Decision-aware BED & BO baselines under matched posteriors | `certify_root_action`, `MatchedModelBEDSession`, `CDJointPolicy`, `CorrelatedKGPolicy`, `GPOSPolicy`, `BayesianVOIPolicy`, `GPUCBPolicy`, `GPTSPolicy`, `NoisyGPEIPolicy` |
+| [`dagcert/margin_aware.py`](https://github.com/AI-MathPhys/dag-cert/blob/main/dagcert/margin_aware.py) | Margin-Aware CD-Joint (`MA-CD-Joint` / `MA-CD-Joint-Safe`), Gauss–Hermite rank-1 lookahead & mechanistic diagnostics (App. M) | `select_margin_aware_query`, `compute_standardized_margin`, `compute_mechanistic_snapshot` |
+| [`dagcert/growing.py`](https://github.com/AI-MathPhys/dag-cert/blob/main/dagcert/growing.py) | Growing Implicit Search DAGs: canonical prefix-DAGs, sound box/group-sparse envelopes, split-envelope conic dual & *Growing CD-Joint* (App. N) | `ImplicitSearchDAG`, `BoxFeatureEnvelope`, `GroupSparseCappedSimplexEnvelope`, `GrowingEllipsoidCertifier`, `run_growing_campaign` |
 | [`dagcert/tracking.py`](https://github.com/AI-MathPhys/dag-cert/blob/main/dagcert/tracking.py) | Optimal information tracking ($T_*^\varepsilon$), unknown-variance sparse V34 tracker | `RegularizedInfoTrackerSession`, `run_v34_tracker`, `CppV34BnBRunner`, `compute_characteristic_rate`, `solve_action_design_certified` |
 | [`dagcert/search.py`](https://github.com/AI-MathPhys/dag-cert/blob/main/dagcert/search.py) | Passive trajectory-coupled UCT/PUCT certification monitors | `TrajectoryCoupledUCT`, `RootPUCT`, `RecursivePUCT`, `CertifiedSearchSession`, `CppKernelRunner` |
 | [`dagcert/benchmarks/`](https://github.com/AI-MathPhys/dag-cert/tree/main/dagcert/benchmarks/) | Bundled synthetic, GB1/TmTrpB protein, WorFBench workflow & SameGame DAG loaders | `OverlapCorrelationDAGProblem`, `OffWitnessProxyDAGProblem`, `GB1MutationCampaignProblem`, `TrpBMutationCampaignProblem`, `WorFBenchWorkflowProblem`, `load_standard_samegame_boards` |
-| [`dagcert/_native/`](https://github.com/AI-MathPhys/dag-cert/tree/main/dagcert/_native/) | Optional auto-compiled `-O3` C++17 accelerators | `_cpp_v12_kg.cpp`, `_cpp_v34_bnb.cpp`, `_cpp_kernels.cpp`, `_cpp_samegame.cpp` |
+| [`dagcert/_native/`](https://github.com/AI-MathPhys/dag-cert/tree/main/dagcert/_native/) | Optional auto-compiled `-O3` C++17 accelerators | `_cpp_v12_kg.cpp`, `_cpp_v17_ma.cpp`, `_cpp_v34_bnb.cpp`, `_cpp_kernels.cpp`, `_cpp_samegame.cpp` |
 
 Standalone runnable library examples live in [`examples/`](https://github.com/AI-MathPhys/dag-cert/tree/main/examples/):
 
@@ -151,17 +153,19 @@ Every main-paper and appendix result is backed by executable code in `experiment
 | §3.3, Table 5 (live), Table 37, Fig. 9 | 36 fresh uncached Qwen3-0.6B campaigns across 4 domains: formal DF stops **$0/36$** by 60 evals; model-based EB+LOO certifies **$36/36$** in median **$24$** evals (**$14{,}291$** tokens, held-out $F_1 = 0.4717$) | `agentic_workflows` (`v11_2`) |
 | App. J.3, Table 43, Fig. 13a | Unknown-variance sparse-refresh + action-local IUT tracker (V34): **$50.4\times$** speedup at $K=64$, rank 2 ($34.0\text{ s} \to 0.675\text{ s}$) | `simulated` (`v9_1`) |
 | App. L.5–L.6, Tables 68–69, Fig. 14 | Native C++17 outward-certified B&B achieves **$31$–$82\times$** end-to-end speedup; zero-shared-code independent numerical-oracle audit passes **$5/5$** checks | `simulated` (`v10_1`, `v11_3`) |
+| App. M, `supp_margin_aware_cd_joint.pdf` | Margin-Aware CD-Joint (`33,330` runs, `0` false certs): proves exact concave-$\min_z$ Jensen drag stalling unconstrained `MA-CD-Joint` and $\le 2\times$ finite-sample bound for `MA-CD-Joint-Safe`, which cuts WorFBench evals **$12.7\%$** ($0.873\times$), ties CD-Joint on $d=8$ AY ($98.1\%$), beats GP-OS/GP-Root-Info on TmTrpB ($0.942\times$/$0.971\times$), and exposes single-witness collapse on epistatic proteins ($3.42\times$ on TmTrpB) | `simulated` (`v17_phasea`, `v17_phaseb`) |
+| App. N, `supp_growing_dag_benchmarks.pdf` | Growing Implicit Search DAGs (`3,140` runs, `0` false certs): proves shared-subtree cancellation, conic split-envelope duality, and $O(D)$ vs. $\Omega(2^D)$ separation (**$72$ vs. $4{,}144$ nodes, $57.6\times$** at $D=12$); certifies **$100\%$** on $10$-site proteins up to **$|Z^*| = 2.41 \times 10^9$** in **$311.8$** assays ($0.00054\%$ of variants) vs. Growing Best-Leaf **$52\%$ / $1{,}498$** (**$4.80\times$**) | `simulated` (`v16_scale`, `v16_fs`), `protein_engineering` (`v16_prot`), `agentic_workflows` (`v16_mve`) |
 
 ---
 
 ## Reproducing the Paper (`experiment/`)
 
-All experiments rely directly on the installed `dagcert` package and are organized into three domain folders mirroring Section 3 of the paper, plus unified plotting (`experiment/plots/`) and CLI (`experiment/run_all.py`):
+All experiments rely directly on the installed `dagcert` package and are organized into three domain folders mirroring Section 3 of the paper, plus cross-domain `exp_v17_margin_aware.py`, unified plotting (`experiment/plots/`), and CLI (`experiment/run_all.py`):
 
-- [`experiment/simulated/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/simulated/) — Section 3.1 + Appendices G, J, L (27 suites + `passive_uct/` v1 archive)
-- [`experiment/protein_engineering/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/protein_engineering/) — Section 3.2 + Appendix H (10 GB1 & TmTrpB suites)
-- [`experiment/agentic_workflows/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/agentic_workflows/) — Section 3.3 + Appendix I (WorFBench offline & live Qwen3-0.6B suites)
-- [`experiment/plots/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/plots/) — All manuscript data figures (Figures 2–14: `figures/fig*.pdf`, `figures/supp_*.pdf`) in one shared style, plus detailed suite figures
+- [`experiment/simulated/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/simulated/) — Section 3.1 + Appendices G, J, L, M, N (32 suites + `passive_uct/` v1 archive)
+- [`experiment/protein_engineering/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/protein_engineering/) — Section 3.2 + Appendices H, N (12 GB1 & TmTrpB suites)
+- [`experiment/agentic_workflows/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/agentic_workflows/) — Section 3.3 + Appendices I, N (6 WorFBench, live Qwen3-0.6B & 8-stage growing suites)
+- [`experiment/plots/`](https://github.com/AI-MathPhys/dag-cert/tree/main/experiment/plots/) — All manuscript data figures (`figures/fig*.pdf`, `figures/supp_*.pdf`) in one shared style, plus detailed suite figures
 
 ### Fast Verification (~2 minutes, CPU only, offline)
 
@@ -169,20 +173,20 @@ All experiments rely directly on the installed `dagcert` package and are organiz
 # 1. Check bundled datasets, optional Hugging Face cache, and C++17 compiler
 python scripts/fetch_data.py --check
 
-# 2. Cryptographically verify SHA-256 manifests for ALL archived suites (v1--v15, zero gaps)
+# 2. Cryptographically verify SHA-256 manifests for ALL archived suites (v1--v17, zero gaps)
 python experiment/run_all.py verify
 
-# 3. Run all 93 unit, parity, library-API, and independent-oracle tests
+# 3. Run all 102 unit, parity, library-API, and independent-oracle tests
 python experiment/run_all.py test
 
-# 4. Regenerate all 15 manuscript data figures (`figures/fig*.pdf`, `figures/supp_*.pdf`)
+# 4. Regenerate all 17 manuscript data figures (`figures/fig*.pdf`, `figures/supp_*.pdf`)
 python experiment/run_all.py figures
 ```
 
 ### Running Individual Domains or Suites
 
 ```bash
-# List all 41 suites grouped by domain
+# List all 50 suites grouped by domain
 python experiment/run_all.py list
 
 # Fast non-destructive smoke tests (writes only to OS tempdir, never modifies results/)

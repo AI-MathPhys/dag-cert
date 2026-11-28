@@ -1,0 +1,21 @@
+{
+  "experiment": "v16_growing_feature_selection",
+  "git_commit": "0589c819d1fcc12e4795237a461888eec6040e24",
+  "smoke": false,
+  "datasets": [
+    "breast_cancer_p30",
+    "digits_p64",
+    "collinear_p40"
+  ],
+  "policies": [
+    "growing_best_leaf",
+    "growing_marginal",
+    "growing_gp_os",
+    "growing_cd_joint"
+  ],
+  "n_seeds": 40,
+  "k_size": 5,
+  "n_root_actions": 8,
+  "max_evals": 1500,
+  "max_expansions": 800
+}

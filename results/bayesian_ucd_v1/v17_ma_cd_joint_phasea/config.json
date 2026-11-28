@@ -1,0 +1,58 @@
+{
+  "experiment": "v17_ma_cd_joint_phasea",
+  "phase": "A",
+  "git_commit": "0589c819d1fcc12e4795237a461888eec6040e24",
+  "smoke": false,
+  "policies": [
+    "gp_os",
+    "gp_root_info",
+    "cd_joint",
+    "cd_joint_single_witness",
+    "ma_cd_joint",
+    "ma_cd_joint_safe"
+  ],
+  "benchmarks": [
+    "synthetic_main64",
+    "synthetic_confirm_freq_d8",
+    "worfbench_cached",
+    "trpb",
+    "gb1"
+  ],
+  "checkpoints": [
+    10,
+    25,
+    50,
+    100,
+    250,
+    500,
+    1000,
+    2000,
+    5000
+  ],
+  "algorithmic_settings": {
+    "witness_pool": "current conic mixture + top-4 posterior mean + top-4 UCB (deduplicated)",
+    "quadrature": "9-point standard-normal Gauss-Hermite (exact up to degree 17)",
+    "utility_psi": "Psi(h) = min(1, h / beta_t)",
+    "query_shortlist_small": "all M candidates when M <= 100 (Synthetic, WorFBench)",
+    "query_shortlist_large": "top-8 CD-Joint + top-8 inside-support KG + GP-OS + GP-Root-Info when M > 100 (GB1, TmTrpB)",
+    "safeguard": "original mean_contrast > eps/2 safeguard overrides lookahead",
+    "safe_schedule": "ma_cd_joint_safe takes mandatory original CD-Joint on even steps (t % 2 == 0)",
+    "zero_per_domain_tuning": true
+  },
+  "seed_cohorts": {
+    "phase_A_disjoint_dev": {
+      "synthetic_main64": "seeds 9000..9024 x 4 conds (100)",
+      "synthetic_confirm_freq_d8": "seeds 9500..9524 x 4 conds (100)",
+      "worfbench_cached": "seeds 790001..790005 x 20 strata (100)",
+      "trpb": "seeds 892001..892005 x 21 templates (105)",
+      "gb1": "seeds 891001..891010 x 10 orig templates (100)"
+    },
+    "phase_B_full_expanded": {
+      "synthetic_main64": "seeds 2000..2249 x 4 conds (1,000)",
+      "synthetic_confirm_freq_d8": "seeds 5000..5249 x 4 conds (1,000)",
+      "worfbench_cached": "seeds 780001..780050 x 20 strata (1,000)",
+      "trpb": "seeds 802001..802050 x 21 templates (1,050)",
+      "gb1": "seeds 801001..801020 x 50 predeclared templates (1,000)"
+    }
+  }
+}

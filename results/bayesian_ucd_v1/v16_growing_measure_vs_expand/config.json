@@ -1,0 +1,23 @@
+{
+  "experiment": "v16_growing_measure_vs_expand",
+  "git_commit": "0589c819d1fcc12e4795237a461888eec6040e24",
+  "smoke": false,
+  "eta_grid": [
+    "0.0",
+    "0.25",
+    "0.5",
+    "1.0",
+    "2.0",
+    "4.0",
+    "inf"
+  ],
+  "workflow_8stage_levels": [
+    3,
+    4
+  ],
+  "n_wf_seeds": 30,
+  "n_samegame_boards": 20,
+  "samegame_horizon": 3,
+  "max_evals": 1500,
+  "max_expansions": 800
+}

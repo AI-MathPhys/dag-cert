@@ -3,9 +3,9 @@
 This document maps **every table (Tables 1–69) and every figure (Figures 1–14)** of **Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs** ([`manuscript/Joint_cert_manuscript.pdf`](manuscript/Joint_cert_manuscript.pdf)) to its executable script under `experiment/`, its SHA-256-verified archive under `results/`, and its reproduction command via `experiment/run_all.py`.
 
 **Coverage status: 100% complete — zero missing experiments, logs, supplementary figures, or formalizations.**
-All 44 extension/Bayesian/protein/workflow suites (`exp1`–`exp15`, `e0`–`e6`, `v8_1`–`v8_6`, `v9_1`–`v9_4`, `v10_1`–`v10_3`, `v11_1`–`v11_3`, `v12`, `v13`, `v14`, `v15_synth`, `v15_prot`, `v15_worf`), the frozen passive-UCT v1 archive (`results/uct_v1_manifest.json`), all supplementary vector PDFs (`figures/supp_*.pdf`), and the Lean 4 formalizations (`lean/`) are included and verified in this repository. (Tables 2 and 6 are conceptual validity-regime summaries requiring no experimental archive.)
+All 50 extension/Bayesian/protein/workflow/growing/margin-aware suites (`exp1`–`exp15`, `e0`–`e6`, `v8_1`–`v8_6`, `v9_1`–`v9_4`, `v10_1`–`v10_3`, `v11_1`–`v11_3`, `v12`, `v13`, `v14`, `v15_synth`, `v15_prot`, `v15_worf`, `v16_scale`, `v16_fs`, `v16_prot`, `v16_mve`, `v17_phasea`, `v17_phaseb`), the frozen passive-UCT v1 archive (`results/uct_v1_manifest.json`), all supplementary vector PDFs (`figures/supp_*.pdf`), and the Lean 4 formalizations (`lean/` for the 62 core results of Appendices A–L) are included and verified in this repository. (Tables 2 and 6 are conceptual validity-regime summaries requiring no experimental archive.)
 
-Appendix letters follow the compiled PDF: A–F (theory & methods), **G** (simulated experiments), **H** (protein engineering), **I** (agentic workflows), **J** (extended validation & unknown variance), **K** (algorithms), **L** (computational performance & independent oracle audit).
+Appendix letters follow the compiled PDF: A–F (theory & methods), **G** (simulated experiments), **H** (protein engineering), **I** (agentic workflows), **J** (extended validation & unknown variance), **K** (algorithms), **L** (computational performance & independent oracle audit), **M** (Margin-Aware CD-Joint), and **N** (Growing Implicit Search DAGs).
 
 ---
 
@@ -26,9 +26,9 @@ python -m pip install -e ".[all]"
 
 ```bash
 python scripts/fetch_data.py --check     # Verify bundled datasets, HF cache, and C++17 compiler
-python experiment/run_all.py verify      # SHA-256 check across passive-UCT v1 (31 files) + all 41 suites
-python experiment/run_all.py test        # Run all 88 pytest unit, parity, API & oracle tests
-python experiment/run_all.py figures     # Regenerate all 14 manuscript data figures (Figures 2–14)
+python experiment/run_all.py verify      # SHA-256 check across passive-UCT v1 (31 files) + all 50 suites (v2--v17)
+python experiment/run_all.py test        # Run all 102 pytest unit, parity, API & oracle tests
+python experiment/run_all.py figures     # Regenerate all 17 manuscript data figures
 ```
 
 ---
@@ -49,6 +49,10 @@ Covers Section 2.3, Section 3.1, Appendix G, Appendix J, and Appendix L.
 
 | Key | Manuscript Evidence | Script (`experiment/simulated/`) | Verified Archive (`results/`) |
 |---|---|---|---|
+| `v17_phasea` | **App. M** (Phase A disjoint dev validation across 5 benchmarks, 3,030 paired runs, 0 false certs) | `../exp_v17_margin_aware.py --phase A` | `bayesian_ucd_v1/v17_ma_cd_joint_phasea/` |
+| `v17_phaseb` | **App. M** (Phase B full expanded 6-policy evaluation across 5 benchmarks + nested GB1 Orig. 10, mechanistic checkpoint trajectories, `supp_margin_aware_cd_joint.pdf`; 30,300 paired runs, 0 false certs) | `../exp_v17_margin_aware.py --phase B` | `bayesian_ucd_v1/v17_ma_cd_joint_phaseb/` |
+| `v16_scale` | **App. N** (Suite 1A commuting DAG scaling to $|Z^*|=52.2\mathrm{M}$ & Suite 1B formal $O(D)$ vs. $\Omega(2^D)$ separation on $G_D$, `supp_growing_dag_benchmarks.pdf`; 1,220 runs, 0 false certs) | `exp_v16_growing_scaling.py` | `bayesian_ucd_v1/v16_growing_scaling/` |
+| `v16_fs` | **App. N** (Suite 2 combinatorial feature selection vs. Best-Leaf up to $|Z^*|=3.80\mathrm{M}$; 480 runs, 0 false certs) | `exp_v16_growing_feature_selection.py` | `bayesian_ucd_v1/v16_growing_feature_selection/` |
 | `v15_synth` | **App. G.1** (expanded 7-method Table 7, safeguard/single-witness ablation, 7-method stopping factorial, cross-domain Fig. `supp_7method_cross_domain.pdf`) — 1,000 paired runs/method + Parquet/CSV records & frozen generator/policy `config.json` | `exp_v15_synthetic_7method_and_ablations.py` | `bayesian_ucd_v1/v15_synthetic_7method/` |
 | `v12` | **Table 3** (§3.1); **App. G.1, L.1; Fig. 3** — 15,280-run matched-model BED vs. Correlated KG, GP-OS, VOI, BO & $d=8$ anytime frequentist + latency crossover | `exp_bed_vs_bo.py` | `bayesian_ucd_v1/v12_bed_vs_bo/` |
 | `exp1` | **Fig. 2d, Table 10, Fig. 4** (§3.1, App. G.2) — exact outside-support vs. marginal stopping across overlap | `exp_overlap_exact_regret.py` | `uct_v2_extensions/exp1_exact_regret/` |
@@ -87,6 +91,7 @@ Covers Section 3.2, Appendix H, and Appendix J.2/J.4 on measured four-site GB1 (
 
 | Key | Manuscript Evidence | Script (`experiment/protein_engineering/`) | Verified Archive (`results/`) |
 |---|---|---|---|
+| `v16_prot` | **App. N** (Suite 3: 10-site deep protein mutagenesis calibrated to measured GB1/TmTrpB epistatic spectra, scaling to $|Z^*|=2.41\times 10^9$, `supp_growing_dag_benchmarks.pdf`; 700 runs, 0 false certs) | `exp_v16_growing_deep_proteins.py` | `bayesian_ucd_v1/v16_growing_deep_proteins/` |
 | `v15_prot` | **App. H.3** (complete 7-method Condition B table, 7×3 stopping factorial, `supp_7method_cross_domain.pdf`) — 2,050 paired campaigns/method (50 predeclared GB1 templates $\times 20$; all 21 TmTrpB templates $\times 50$) with paired & hierarchical bootstrap CIs, Parquet/CSV records | `exp_v15_protein_7method.py` | `bayesian_ucd_v1/v15_protein_7method/` |
 | `v14` | **Fig. 2f–h, Table 4** (§3.2); **App. H.3** — 410-campaign proper $\sqrt{\chi^2_{M-1,.95/.90}}$ joint credible ellipsoid, valid anytime direct posterior-risk MC & simultaneous contrast coverage audit | `exp_credible_ellipsoid_audit.py` | `bayesian_ucd_v1/v14_protein_credible_ellipsoid/` |
 | `v13` | **Table 4 (DF rows), Fig. 2h** (§3.2); **Tables 25, 26** (App. H.2, H.4) — 12,300-run matched GB1 & TmTrpB acquisition comparison (CD-Joint, Correlated KG, GP-OS, GP-Root-Info, GP-UCB) under nominal & DF stopping | `exp_matched_bed_vs_kg.py` | `bayesian_ucd_v1/v13_protein_bed_vs_kg/` |
@@ -109,6 +114,7 @@ Covers Section 3.3 and Appendix I on WorFBench ($3^4=81$ workflows) and fresh un
 
 | Key | Manuscript Evidence | Script (`experiment/agentic_workflows/`) | Verified Archive (`results/`) |
 |---|---|---|---|
+| `v16_mve` | **App. N** (Suite 4: Measure-vs-Expand $\eta$-Pareto sweep on 8-stage workflows $3^8$/$4^8$ + 20 real SameGame endgame boards, `supp_growing_dag_benchmarks.pdf`; 740 runs, 0 false certs) | `exp_v16_growing_measure_vs_expand.py` | `bayesian_ucd_v1/v16_growing_measure_vs_expand/` |
 | `v15_worf` | **App. I** (1,000-campaign 7-method matched Gaussian WorFBench table, 7×3 stopping factorial, verified uniform-with-replacement `SplitMix64` sampling audit, `supp_7method_cross_domain.pdf`) — predeclared leak-free Hamming kernel, Parquet/CSV records | `exp_v15_worfbench_7method.py` | `bayesian_ucd_v1/v15_worfbench_7method/` |
 | `v11_2` | **Table 5 (live rows)** (§3.3); **App. I** — 36-campaign, 4-domain fresh uncached live Qwen3-0.6B replication ($0/36$ DF vs. $36/36$ EB+LOO in 24 evals / 14,291 tokens) | `exp_live_qwen3_36campaigns.py` | `bayesian_ucd_v1/v11_exp2_live_worfbench_36campaigns/` |
 | `v10_3` | **Table 38, Fig. 14c** (App. I) — 8-campaign (24-run) fresh uncached live Qwen3-0.6B cohort | `exp_live_qwen3_8campaigns.py` | `bayesian_ucd_v1/v10_exp3_live_worfbench_expanded/` |
@@ -141,6 +147,8 @@ Figures 2–14 are vector PDFs generated at their printed size, in one shared st
 | **Fig. 13** (App. J.3) | `supp_sparse_variance_tracking.pdf` | `v9_1`, `v9_2` |
 | **Fig. 14** (App. L.5) | `supp_native_solver_and_workflows.pdf` | `v10_1`, `v10_2`, `v10_3` |
 | **Fig. 15** (App. H.3) | `supp_7method_cross_domain.pdf` | `v15_synth`, `v15_prot`, `v15_worf` |
+| **Fig. 16** (App. M) | `supp_margin_aware_cd_joint.pdf` | `v17_phaseb` |
+| **Fig. 17** (App. N) | `supp_growing_dag_benchmarks.pdf` | `v16_scale`, `v16_prot`, `v16_mve` |
 
 Pass `--all-suites` to `python experiment/run_all.py figures --all-suites` to also generate every detailed per-suite diagnostic figure into `figures/detailed/`.
 
@@ -148,7 +156,7 @@ Pass `--all-suites` to `python experiment/run_all.py figures --all-suites` to al
 
 ## 4. Verification Contracts
 
-1. **Cryptographic integrity (`python experiment/run_all.py verify`).** Verifies SHA-256 digests of all 31 files in the frozen passive-UCT v1 archive (`results/uct_v1_manifest.json`) and every `manifest.json` across all 41 suites (`exp1`–`exp15`, `e0`–`e6`, `v8`–`v14`), asserting that no archived manifest was produced in `--smoke` mode.
-2. **Automated unit, parity, API & oracle tests (`python experiment/run_all.py test`).** Executes all 88 tests across `tests/test_*.py`, covering the public `dagcert` API, bit-exact C++17 vs. Python parity (correlated KG, certified B&B, graph-maintenance kernels, SameGame DP), exact minimax duality against CVXPY/Clarabel, Behrens–Fisher bimodal soundness, and disjoint WorFBench task splits.
+1. **Cryptographic integrity (`python experiment/run_all.py verify`).** Verifies SHA-256 digests of all 31 files in the frozen passive-UCT v1 archive (`results/uct_v1_manifest.json`) and every `manifest.json` across all 50 suites (`exp1`–`exp15`, `e0`–`e6`, `v8`–`v17`), asserting that no archived manifest was produced in `--smoke` mode.
+2. **Automated unit, parity, API & oracle tests (`python experiment/run_all.py test`).** Executes all 102 tests across `tests/test_*.py`, covering the public `dagcert` API, bit-exact C++17 vs. Python parity (correlated KG, margin-aware Gauss–Hermite lookahead, certified B&B, graph-maintenance kernels, SameGame DP), exact minimax & growing split-envelope duality against CVXPY/Clarabel, Behrens–Fisher bimodal soundness, and disjoint WorFBench task splits.
 3. **Non-destructive execution.** `verify`, `test`, `list`, and `benchmark --smoke` never modify `results/`. Individual scripts under `experiment/` also accept `--out-dir <path>` (or `--out <path>`), `--smoke`, `--summarize-only`, and `--workers <N>`.
 4. **Deterministic trajectories vs. host-dependent timing.** All random seeds, paired noise tapes, query counts, certification decisions, and SHA-256 manifests are deterministic. Wall-clock latency and peak Python memory depend on host CPU and compiler flags.

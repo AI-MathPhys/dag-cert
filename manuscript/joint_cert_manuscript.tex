@@ -1355,13 +1355,23 @@ from controlled acquisition comparisons to protein fitness landscapes,
 agentic workflows, and extended validation studies.
 Part~III addresses computational implementation, numerical certification,
 representation costs, and performance benchmarks.
+Finally, Sections~\ref{app:margin-aware} and~\ref{app:growing-dags}
+present two supplementary methodological extensions: Margin-Aware
+Contrast-Directed Joint acquisition (\textsc{MA-CD-Joint} /
+\textsc{MA-CD-Joint-Safe}) and the extension of Joint Root Certification
+to growing implicit search DAGs.
 
-Every numbered result below is also proved in Lean~4 in the
+Every numbered result in Sections~\ref{app:group-cert}--\ref{app:group-benchmarks}
+(the $62$ core results) is also proved in Lean~4 in the
 \texttt{lean/} directory of the accompanying source repository;
-\texttt{lean/JointRootCert/Manuscript.lean} indexes the formal
+\texttt{lean/JointRootCert/Manuscript.lean} indexes those formal
 statements by the labels used here, and \texttt{lean/README.md}
 states, result by result, how each formal statement models the
-text.
+text. The supplementary extensions in Sections~\ref{app:margin-aware}
+and~\ref{app:growing-dags} are accompanied by complete proofs below
+together with automated numerical-oracle and unit-test verification
+(\texttt{tests/test\_v17\_margin\_aware\_cd\_joint.py} and
+\texttt{tests/test\_v16\_growing\_dag.py}).
 
 Throughout, we distinguish observation complexity from computational
 cost, and formal statistical guarantees from empirical assessments
@@ -7739,6 +7749,697 @@ D: Dual Covers (Thm.~\ref{thm:charged-dual-cover}) & Brute-force full-DAG DP & $
 To verify Proposition~\ref{prop:ta-coupled} empirically, an external replay audit ran an unmonitored reference TA-UCT allocator alongside all four monitored implementations across the longest observed rollout prefix of every configuration and seed ($911{,}532$ rollouts in the primary suite plus $436{,}096$ rollouts in the gap-intervention study). At every single rollout, the audit verified exact agreement on the selected root-to-leaf path, terminal reward draw, empirical root recommendation, root confidence intervals $[l_t(a), u_t(a)]$, optimistic leader $a_t^*$, and stopping decision. In addition, independent full-DAG reverse-topological dynamic programming checkpoints verified the exact root confidence intervals at initialization, during the first eight rollouts, at every power-of-two rollout, and at termination ($1{,}510$ checkpoints in the primary suite and $456$ in the gap study), with zero discrepancies.
 
 The paired-trajectory and independent-oracle tests support the implementation contracts under the tested conditions. They do not replace the statistical or deterministic proofs. The source archive and its experimental configurations, verification routines, and documented reproducibility limitations are described in the main text.
+
+\clearpage
+\section{Margin-Aware Contrast-Directed Joint Acquisition (\textsc{MA-CD-Joint})}
+\label{app:margin-aware}
+
+The matched-model WorFBench evaluation in Section~\ref{app:v15-worfbench} (Table~\ref{tab:app-v15-worfbench-primary}) exposes an instructive mechanism even under identical Gaussian beliefs and exact conic stopping: \textsc{CD-Joint} directs almost all of its queries to variance reduction along the active outside--inside contrast ($3.4\%$ inside-support queries on WorFBench), whereas \textsc{GP-OS} and \textsc{GP-Root-Info} invest roughly $19\%$ of queries inside $S(b_t)$, discovering a higher-value retained witness that enlarges the separation margin against many excluded challengers simultaneously. Under idealized inverse-square margin scaling, increasing a binding contrast margin from $0.40$ to $0.50$ reduces the observations required to reach a fixed confidence radius by roughly $1-(0.40/0.50)^2 = 36\%$ before accounting for discovery cost.
+
+This section derives a principled, zero-tuning acquisition extension directly from the geometry of ellipsoidal certification, establishes both an exact analytical pathology of unconstrained one-step margin lookahead and a finite-sample termination theorem for its safeguarded alternating counterpart (\textsc{MA-CD-Joint-Safe}), and evaluates both variants across $33{,}330$ paired campaigns ($3{,}030$ disjoint development + $30{,}300$ full expanded runs; $0$ false certificates).
+
+\subsection{Standardized Certification Margin and Exact Equivalence}
+\label{app:ma-equivalence}
+
+Fix a step $t$, posterior/ellipsoid center $m_t \in \mathbb{R}^d$, covariance factor $\Sigma_t = L_t L_t^\top \succeq 0$, confidence radius $\beta_t > 0$, and tolerance $\varepsilon \ge 0$. For any proper root support $S(a) \subsetneq Z$, excluded challenger $z \notin S(a)$, and inside mixture $p \in \Delta(S(a))$ with contrast $g_{z,p} = \phi_z - \sum_{y \in S(a)} p_y \phi_y$, define the \emph{standardized certification margin}
+\begin{equation}
+  H_t(z, p)
+  := \begin{cases}
+    \dfrac{\varepsilon - g_{z,p}^\top m_t}{\sqrt{g_{z,p}^\top \Sigma_t g_{z,p}}}, & \text{if } g_{z,p}^\top \Sigma_t g_{z,p} > 0,\\[8pt]
+    +\infty, & \text{if } g_{z,p}^\top \Sigma_t g_{z,p} = 0 \text{ and } g_{z,p}^\top m_t \le \varepsilon,\\
+    -\infty, & \text{if } g_{z,p}^\top \Sigma_t g_{z,p} = 0 \text{ and } g_{z,p}^\top m_t > \varepsilon,
+  \end{cases}
+  \label{eq:ma-std-margin}
+\end{equation}
+and the action-level standardized certification margin
+\begin{equation}
+  H_t(a) := \min_{z \notin S(a)} \max_{p \in \Delta(S(a))} H_t(z, p).
+  \label{eq:ma-action-margin}
+\end{equation}
+Increasing $H_t(z, p)$ captures both mechanisms that accelerate certification: shrinking the contrast standard deviation $\sqrt{g_{z,p}^\top \Sigma_t g_{z,p}}$ in the denominator and discovering a stronger retained witness $p \in \Delta(S(a))$ that enlarges the numerator $\varepsilon - g_{z,p}^\top m_t$.
+
+\begin{lemma}[Exact equivalence of ellipsoidal and standardized-margin certification]
+\label{lem:ma-equivalence}
+For every proper root support $S(a) \subsetneq Z$, covariance $\Sigma_t = L_t L_t^\top \succeq 0$, radius $\beta_t > 0$, and tolerance $\varepsilon \ge 0$, the exact ellipsoidal regret bound~\eqref{eq:bay-main-dual} satisfies
+\begin{equation}
+  R_t(a) \le \varepsilon \quad\Longleftrightarrow\quad H_t(a) \ge \beta_t.
+  \label{eq:ma-equiv}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Fix any $z \notin S(a)$ and $p \in \Delta(S(a))$, and set $s := \|L_t^\top g_{z,p}\|_2 = \sqrt{g_{z,p}^\top \Sigma_t g_{z,p}} \ge 0$. If $s > 0$, then because $\beta_t > 0$,
+\[
+  g_{z,p}^\top m_t + \beta_t s \le \varepsilon
+  \;\Longleftrightarrow\;
+  \frac{\varepsilon - g_{z,p}^\top m_t}{s} \ge \beta_t
+  \;\Longleftrightarrow\;
+  H_t(z, p) \ge \beta_t.
+\]
+If $s = 0$, then $g_{z,p}^\top m_t + \beta_t s = g_{z,p}^\top m_t$, so $g_{z,p}^\top m_t + \beta_t s \le \varepsilon$ holds if and only if $H_t(z, p) = +\infty \ge \beta_t$ (since $\beta_t < +\infty$). Because $p \mapsto g_{z,p}^\top m_t + \beta_t \|L_t^\top g_{z,p}\|_2$ is continuous on the compact simplex $\Delta(S(a))$, its minimum $D_t(z, S(a))$ is attained; therefore $D_t(z, S(a)) \le \varepsilon$ holds if and only if there exists $p \in \Delta(S(a))$ with $H_t(z, p) \ge \beta_t$, equivalently $\sup_{p \in \Delta(S(a))} H_t(z, p) \ge \beta_t$ (with the supremum attained whenever $D_t(z, S(a)) \le \varepsilon$). Taking the conjunction over the finite set $z \notin S(a)$ and invoking Theorem~\ref{thm:t1-dual} ($R_t(a) = [\max_{z \notin S(a)} D_t(z, S(a))]_+$) gives $R_t(a) \le \varepsilon \iff \forall z \notin S(a),\, D_t(z, S(a)) \le \varepsilon \iff H_t(a) \ge \beta_t$.
+\end{proof}
+
+\subsection{One-Step Gaussian Fantasy Acquisition, Safeguard, and \textsc{MA-CD-Joint-Safe}}
+\label{app:ma-algorithm}
+
+Under the Gaussian working model with query $x$ having feature vector $\phi_x$, observation noise variance $\sigma_x^2 > 0$, and cost $c_x > 0$, define the normalized covariance column
+\begin{equation}
+  v_x := \frac{\Sigma_t \phi_x}{\sqrt{\sigma_x^2 + \phi_x^\top \Sigma_t \phi_x}}.
+  \label{eq:ma-vx}
+\end{equation}
+For a hypothetical standardized observation innovation $\xi \sim \mathcal{N}(0, 1)$, the exact rank-$1$ posterior update is $m_{t+1}^{(x,\xi)} = m_t + \xi v_x$ and $\Sigma_{t+1}^{(x)} = \Sigma_t - v_x v_x^\top$. For any contrast $g = g_{z, w}$ with current numerator $d_g := \varepsilon - g^\top m_t$, variance $s_g^2 := g^\top \Sigma_t g$, and projection $q_{g,x} := g^\top v_x$, the post-observation standardized margin takes the closed form
+\begin{equation}
+  H_{t+1}^{(x,\xi)}(z, w)
+  = \frac{d_g - \xi q_{g,x}}{\sqrt{(s_g^2 - q_{g,x}^2)_+}},
+  \label{eq:ma-rank1}
+\end{equation}
+applying the deterministic $\pm\infty$ convention of~\eqref{eq:ma-std-margin} whenever $s_g^2 - q_{g,x}^2 = 0$.
+
+To reward progress toward certification without overvaluing excess margin beyond the stopping boundary $\beta_t$, we apply the bounded certification-progress utility $\Psi(h) := \min(1, h / \beta_t)$ and evaluate the inner witness maximization over a compact finite witness pool $\mathcal{W}_t \subset \Delta(S(b_t))$ consisting of the current conic dual mixture $p_t^*$ together with the deduplicated unit-mass vertices of the top-$4$ posterior-mean and top-$4$ UCB inside terminals ($|\mathcal{W}_t| \le 9$). The cost-normalized one-step margin-aware acquisition function is
+\begin{equation}
+  \alpha_t^{\mathrm{MA}}(x)
+  := \frac{1}{c_x}\Bigl(
+    \mathbb{E}_{\xi \sim \mathcal{N}(0, 1)}\Bigl[
+      \Psi\Bigl(\min_{z \notin S(b_t)} \max_{w \in \mathcal{W}_t} H_{t+1}^{(x,\xi)}(z, w)\Bigr)
+    \Bigr]
+    - \Psi\Bigl(\min_{z \notin S(b_t)} \max_{w \in \mathcal{W}_t} H_t(z, w)\Bigr)
+  \Bigr).
+  \label{eq:ma-acq}
+\end{equation}
+We evaluate~\eqref{eq:ma-acq} with $9$-point standard-normal Gauss--Hermite quadrature (exact for polynomials up to degree $17$), accelerated by a native \texttt{-O3} C++17 kernel (\texttt{dagcert/\_native/\_cpp\_v17\_ma.cpp}) verified to match pure NumPy to $10^{-15}$. To keep acquisition latency strictly bounded with zero per-domain tuning, all $M$ terminals are scored when $M \le 100$ (Synthetic and WorFBench), while for $M > 100$ (GB1 and TmTrpB) $\alpha_t^{\mathrm{MA}}$ is evaluated over a fixed structured shortlist $\mathcal{C}_t$ of at most $18$ candidates: the deduplicated union of the top-$8$ \textsc{CD-Joint} queries, top-$8$ inside-support one-step knowledge-gradient queries, the \textsc{GP-OS} query, and the \textsc{GP-Root-Info} query.
+
+Both \textsc{MA-CD-Joint} and \textsc{MA-CD-Joint-Safe} retain the exact conic stopping certificate~\eqref{eq:bay-main-dual} and the $\varepsilon/2$ safeguard of~\eqref{eq:safeguard}: whenever $g_{z_t, p_t^*}^\top m_t > \varepsilon/2$, the safeguarded contrast $g_t = \phi_{z_t} - \phi_{y_t^{\mathrm{opt}}}$ overrides the lookahead. In addition, \textsc{MA-CD-Joint-Safe} enforces a fixed periodic safeguarded \textsc{CD-Joint} step whenever $t \equiv 0 \pmod{q}$ (fixed $q = 2$ across all experiments; Algorithm~\ref{alg:ma-cd-joint}).
+
+\begin{algorithm}[!htbp]
+\caption{\textsc{MA-CD-Joint} and \textsc{MA-CD-Joint-Safe} ($q=2$)}
+\label{alg:ma-cd-joint}
+\begin{algorithmic}[1]
+\STATE Initialize posterior/ellipsoid $(m_0, \Sigma_0)$, radius $\beta_0$, supports $\{S(a)\}$, and mode $\in \{\textsc{MA}, \textsc{MA-Safe}\}$.
+\FOR{$t = 0, 1, 2, \dots$}
+  \STATE Compute exact conic root-regret upper bounds $R_t(a)$ via~\eqref{eq:bay-main-dual}.
+  \IF{$\min_a R_t(a) \le \varepsilon$}
+    \STATE \textbf{return} certified action $\argmin_a R_t(a)$ and its exact conic certificate.
+  \ENDIF
+  \STATE Select optimistic terminal $y_t^{\mathrm{opt}} \in \argmax_{y \in Z} \{\phi_y^\top m_t + \beta_t \|L_t^\top \phi_y\|_2\}$ and root $b_t$ with $y_t^{\mathrm{opt}} \in S(b_t)$.
+  \STATE Obtain worst challenger $z_t \in \argmax_{z \notin S(b_t)} D_t(z, S(b_t))$ and dual witness $p_t^* \in \Delta(S(b_t))$.
+  \IF{$g_{z_t, p_t^*}^\top m_t > \varepsilon/2$ \textbf{or} ($\text{mode} = \textsc{MA-Safe}$ \textbf{and} $t \equiv 0 \pmod{q}$)}
+    \STATE Form safeguarded contrast $g_t$ per~\eqref{eq:safeguard} and query $x_{t+1} \in \argmax_{x \in \mathcal{X}} \alpha_t^{\mathrm{CD}}(x; g_t)$.
+  \ELSE
+    \STATE Build witness pool $\mathcal{W}_t = \{p_t^*\} \cup \text{top-}4\text{ mean}(S(b_t)) \cup \text{top-}4\text{ UCB}(S(b_t))$ and candidate set $\mathcal{C}_t$.
+    \STATE Query $x_{t+1} \in \argmax_{x \in \mathcal{C}_t} \alpha_t^{\mathrm{MA}}(x)$ via $9$-point Gauss--Hermite quadrature on~\eqref{eq:ma-acq}.
+  \ENDIF
+  \STATE Observe $x_{t+1}$ and update $(m_{t+1}, \Sigma_{t+1}, \beta_{t+1})$.
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Theoretical Analysis: Concave-\texorpdfstring{$\min_z$}{min\_z} Jensen Drag and Finite-Sample Termination}
+\label{app:ma-theory}
+
+Before presenting the empirical benchmarks, we establish two exact theoretical results explaining (i) why unconstrained one-step lookahead on $\Psi(H_t)$ systematically stalls on multi-challenger search graphs, and (ii) why alternating with safeguarded \textsc{CD-Joint} completely restores the finite-sample guarantee of Theorem~\ref{thm:t4-finite-sample} within a factor of $2$.
+
+\begin{proposition}[Concave-$\min_z$ Jensen drag and witness-vs-challenger asymmetry]
+\label{prop:ma-jensen-drag}
+Consider the one-step Gaussian fantasy update~\eqref{eq:ma-rank1} with $\Psi(h) = \min(1, h / \beta_t)$ and $\beta_t > 0$.
+\begin{enumerate}[label=(\alph*),leftmargin=1.8em]
+  \item \textbf{Exact negative expected gain on tied challengers.} Suppose two excluded challengers $z_1, z_2 \notin S(b_t)$ share the active minimum margin $H_t(z_1, w) = H_t(z_2, w) = h \in (0, \beta_t)$ under a fixed witness $w$, and query $x$ has contrast correlation $r := |g_1^\top v_x| / s_1 \in (0, 1)$ with $z_1$ while leaving $z_2$ orthogonal ($g_2^\top v_x = 0$). Then for every $r \in (0, 1)$,
+  \begin{align}
+    &\mathbb{E}_{\xi \sim \mathcal{N}(0, 1)}\Bigl[
+      \Psi\bigl(\min\{H_{t+1}^{(x,\xi)}(z_1, w),\, H_{t+1}^{(x,\xi)}(z_2, w)\}\bigr)
+    \Bigr] - \Psi(h) \nonumber\\
+    &\qquad = -\frac{r}{\beta_t\sqrt{1 - r^2}}\bigl(\phi(u) - u\bar\Phi(u)\bigr) < 0,
+    \label{eq:ma-jensen-exact}
+  \end{align}
+  where $u := \frac{h r}{1 + \sqrt{1 - r^2}} > 0$ and $\phi, \bar\Phi$ denote the standard normal density and upper tail. As $r \downarrow 0$,~\eqref{eq:ma-jensen-exact} expands to $-\frac{r}{\beta_t\sqrt{2\pi}} + \frac{h r^2}{4\beta_t} + O(r^3)$, so first-order $-O(r)$ concave drag dominates second-order $+O(r^2)$ variance reduction. By continuity, the expected gain remains strictly negative for near-tied challengers with margin gap $\delta = H_t(z_2, w) - H_t(z_1, w) < \frac{r}{\sqrt{2\pi}}(1 + O(r))$.
+  \item \textbf{Negative-margin variance repulsion and convex inside-witness bias.} If $d_g = \varepsilon - g^\top m_t < 0$, any variance reduction $q_{g,x} \neq 0$ lowers the deterministic baseline $d_g / \sqrt{s_g^2 - q_{g,x}^2} < d_g / s_g$. Conversely, an inside query $x \in S(b_t)$ that perturbs a candidate witness $w' \in \mathcal{W}_t$ enjoys a \emph{convex} inner maximization $\max_{w \in \mathcal{W}_t} H_{t+1}^{(x,\xi)}(z, w)$ across all challengers simultaneously, producing strictly positive option value even when its single-challenger correlation matches $r$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+For (a), by symmetry of $\xi \sim \mathcal{N}(0,1)$ assume without loss of generality that $g_1^\top v_x = r s_1 > 0$. Because $g_2^\top v_x = 0$, $H_{t+1}^{(x,\xi)}(z_2, w) \equiv h < \beta_t$, while $H_{t+1}^{(x,\xi)}(z_1, w) = (h - r\xi)/\sqrt{1 - r^2}$. Since $\min\{H_{t+1}^{(x,\xi)}(z_1, w), h\} \le h < \beta_t$, the saturation cap in $\Psi$ is inactive and $\Psi(\min\{\cdot, h\}) - \Psi(h) = \beta_t^{-1}\min\{H_{t+1}^{(x,\xi)}(z_1, w) - h,\, 0\}$. Now
+\[
+  \frac{h - r\xi}{\sqrt{1 - r^2}} < h
+  \;\Longleftrightarrow\;
+  r\xi > h\bigl(1 - \sqrt{1 - r^2}\bigr)
+  \;\Longleftrightarrow\;
+  \xi > \frac{h\bigl(1 - (1 - r^2)\bigr)}{r\bigl(1 + \sqrt{1 - r^2}\bigr)} = \frac{h r}{1 + \sqrt{1 - r^2}} = u > 0.
+\]
+On $\{\xi \le u\}$ the integrand vanishes; on $\{\xi > u\}$, $(h - r\xi)/\sqrt{1 - r^2} - h = -\frac{r}{\sqrt{1 - r^2}}(\xi - u)$. Integrating against $\phi(\xi)$ and using $\xi\phi(\xi) = -\phi'(\xi)$ gives
+\[
+  \int_u^\infty (\xi - u)\phi(\xi)\,d\xi
+  = \bigl[-\phi(\xi)\bigr]_u^\infty - u\bar\Phi(u)
+  = \phi(u) - u\bar\Phi(u)
+  = \mathbb{E}\bigl[(\xi - u)_+\bigr] > 0,
+\]
+yielding~\eqref{eq:ma-jensen-exact}. Substituting $u = \frac{hr}{2} + O(r^3)$, $\phi(u) = \frac{1}{\sqrt{2\pi}} + O(r^2)$, and $u\bar\Phi(u) = \frac{hr}{4} + O(r^2)$ produces $-\frac{r}{\beta_t\sqrt{2\pi}} + \frac{hr^2}{4\beta_t} + O(r^3)$. For (b), $d_g < 0$ and $0 < s_g^2 - q_{g,x}^2 < s_g^2$ immediately imply $d_g / \sqrt{s_g^2 - q_{g,x}^2} < d_g / s_g$, while for any fixed $z$ the function $\xi \mapsto \max_{w \in \mathcal{W}_t} H_{t+1}^{(x,\xi)}(z, w)$ is the pointwise maximum of affine functions of $\xi$, hence convex with nonnegative Jensen gap by Jensen's inequality.
+\end{proof}
+
+Proposition~\ref{prop:ma-jensen-drag} predicts a crisp failure signature for unconstrained \textsc{MA-CD-Joint}: whenever multiple excluded challengers are near-tied, querying an individual challenger carries a first-order negative expected change in $\Psi(\min_z \cdot)$, whereas querying inside $S(b_t)$ enjoys positive option value via the convex $\max_{w \in \mathcal{W}_t}$. Consequently, unconstrained \textsc{MA-CD-Joint} should lock heavily onto inside queries and refuse to shrink challenger variances. The finite-sample remedy is immediate: periodic safeguarded \textsc{CD-Joint} steps guarantee steady information-determinant progress regardless of the lookahead rule on intermediate steps.
+
+\begin{theorem}[Finite-sample cost guarantee for \textsc{MA-CD-Joint-Safe}]
+\label{thm:ma-safe-termination}
+Under the assumptions of Theorem~\ref{thm:t4-finite-sample} (fixed-feature unit-noise model, positive nondecreasing anytime-valid radius $\beta_t$, query dictionary containing all terminal features, and costs $0 < c_{\min} \le c_x \le c_{\max}$), let \textsc{MA-CD-Joint-Safe} (Algorithm~\ref{alg:ma-cd-joint}) execute the safeguarded \textsc{CD-Joint} step~\eqref{eq:safeguard} on every step $t \equiv 0 \pmod{q}$ (for any integer $q \ge 2$) and any query in $\mathcal{X}$ on the remaining steps. On simultaneous confidence coverage, \textsc{MA-CD-Joint-Safe} returns an $\varepsilon$-optimal root action and its cumulative query cost satisfies
+\begin{equation}
+  \sum_{t=1}^{\tau} c_{x_t}
+  \le \Bigl(1 + (q - 1)\frac{c_{\max}}{c_{\min}}\Bigr)
+      \frac{16 c_{\max}(1 + L_\phi^2/\lambda)\beta_{\tau - 1}^2}{\varepsilon^2}
+      \log\frac{\det V_\tau}{\lambda^d}.
+  \label{eq:ma-safe-bound}
+\end{equation}
+In particular, under unit query costs ($c_x \equiv 1$) and $q = 2$, the worst-case bound is at most $2\times$ that of safeguarded \textsc{CD-Joint} in~\eqref{eq:t4-bound}.
+\end{theorem}
+
+\begin{proof}
+Correctness on simultaneous coverage follows immediately from the exact conic stopping condition $\min_a R_t(a) \le \varepsilon$ (Theorem~\ref{thm:t1-dual}). Let $\mathcal{T}_{\mathrm{CD}} := \{t \in \{0, \dots, \tau - 1\} : t \equiv 0 \pmod{q}\}$ be the set of mandatory safeguarded \textsc{CD-Joint} steps prior to termination. On every step $t \notin \mathcal{T}_{\mathrm{CD}}$, $V_{t+1} = V_t + \phi_{x_{t+1}}\phi_{x_{t+1}}^\top \succeq V_t$, so $\log(\det V_{t+1} / \det V_t) \ge 0$. On every mandatory step $t \in \mathcal{T}_{\mathrm{CD}}$, the proof of Theorem~\ref{thm:t4-finite-sample} (specifically~\eqref{eq:cd-width-lemma}) applies verbatim to $(V_t, \widehat\theta_t, \beta_t)$ and yields
+\[
+  \log\frac{\det V_{t+1}}{\det V_t}
+  \ge \frac{c_{x_{t+1}}\varepsilon^2}{16 c_{\max}(1 + L_\phi^2/\lambda)\beta_t^2}
+  \ge \frac{c_{x_{t+1}}\varepsilon^2}{16 c_{\max}(1 + L_\phi^2/\lambda)\beta_{\tau - 1}^2}.
+\]
+Telescoping $\sum_{t=0}^{\tau - 1} \log(\det V_{t+1} / \det V_t) = \log(\det V_\tau / \lambda^d)$ gives
+\[
+  \sum_{t \in \mathcal{T}_{\mathrm{CD}}} c_{x_{t+1}}
+  \le \frac{16 c_{\max}(1 + L_\phi^2/\lambda)\beta_{\tau - 1}^2}{\varepsilon^2}
+      \log\frac{\det V_\tau}{\lambda^d}.
+\]
+Because $0 \in \mathcal{T}_{\mathrm{CD}}$ initiates every block of at most $q$ consecutive steps, the non-mandatory step count satisfies $|\{0, \dots, \tau - 1\} \setminus \mathcal{T}_{\mathrm{CD}}| \le (q - 1)|\mathcal{T}_{\mathrm{CD}}|$. Therefore
+\[
+  \sum_{t \notin \mathcal{T}_{\mathrm{CD}}} c_{x_{t+1}}
+  \le (q - 1)c_{\max}|\mathcal{T}_{\mathrm{CD}}|
+  \le (q - 1)\frac{c_{\max}}{c_{\min}}\sum_{t \in \mathcal{T}_{\mathrm{CD}}} c_{x_{t+1}}.
+\]
+Adding $\sum_{t \in \mathcal{T}_{\mathrm{CD}}} c_{x_{t+1}}$ yields~\eqref{eq:ma-safe-bound}. Under $c_x \equiv 1$ and $q = 2$, $1 + (q - 1)c_{\max}/c_{\min} = 2$.
+\end{proof}
+
+\subsection{Two-Phase Experimental Protocol and Results}
+\label{app:ma-results}
+
+We evaluate six matched policies---\textsc{GP-OS}, \textsc{GP-Root-Info}, \textsc{CD-Joint}, \textsc{CD-Joint-Single-Witness} (replacing the conic dual mixture $p_t^*$ in acquisition by the single best inside vertex while keeping exact conic stopping), \textsc{MA-CD-Joint}, and \textsc{MA-CD-Joint-Safe} ($q=2$)---under identical posteriors, paired intrinsic observation tapes, exact conic stopping, and fixed zero-tuning settings across all five benchmarks (script \texttt{experiment/exp\_v17\_margin\_aware.py}, archives \texttt{v17\_ma\_cd\_joint\_phasea/} and \texttt{v17\_ma\_cd\_joint\_phaseb/}):
+\begin{itemize}[leftmargin=1.6em]
+  \item \textbf{Phase A (Disjoint development validation; $3{,}030$ runs, $0$ false certificates):} strictly disjoint seed cohorts ($100$ Synthetic $M=64$, $100$ Synthetic $d=8$ anytime-valid, $100$ cached WorFBench, $105$ TmTrpB, $100$ GB1 across the original $10$ templates). All algorithmic choices ($\Psi$, $9$-point Gauss--Hermite, $|\mathcal{W}_t| \le 9$, shortlist, $q=2$) were frozen after Phase A.
+  \item \textbf{Phase B (Full expanded evaluation; $30{,}300$ runs, $0$ false certificates):} $1{,}000$ Synthetic $M=64$ ($\sqrt{\chi^2_{r,.95}}$, cap $12\mathrm{k}$), $1{,}000$ Synthetic $d=8$ anytime-valid Abbasi--Yadkori (cap $12\mathrm{k}$), $1{,}000$ cached WorFBench ($\sqrt{\chi^2_{r,.95}}$, cap $35\mathrm{k}$), $1{,}050$ TmTrpB ($21 \times 50$, cap $25\mathrm{k}$), and $1{,}000$ expanded GB1 ($50 \times 20$, cap $25\mathrm{k}$, plus the nested $200$-campaign original $10$-template cohort). Every policy uses identical full conic checks (\texttt{cd\_stop\_if\_above\_eps=False}, which accounts for the $<1.5\%$ difference vs.\ \texttt{v15} \textsc{CD-Joint} on Synthetic and WorFBench) and identical \textsc{GP-OS} selection (\texttt{select\_gp\_arm\_with\_beta}). All cost ratios report $10{,}000$-resample stratified paired bootstrap $95\%$ CIs (plus hierarchical template-level CIs on proteins).
+\end{itemize}
+
+\begin{table}[!htbp]
+\caption{\textbf{Phase A disjoint development validation ($3{,}030$ runs across $5$ benchmarks, $0$ false certificates).} Restricted mean evaluations (RM), certification rate, inside-support query fraction (\texttt{In\%}), acquisition time per query (\texttt{Acq}), and $10{,}000$-resample paired bootstrap ratio vs.\ \textsc{CD-Joint}. All algorithmic settings were frozen after Phase A.}
+\label{tab:app-v17-phasea}
+\uniformaligntable{0.93}{%
+\begin{tabular}{@{}llrrrrrr@{}}
+\toprule
+\textbf{Benchmark ($n$, cap)} & \textbf{Policy} & \textbf{Cert (\%)} & \textbf{Restr.\ Mean [95\% CI]} & \textbf{Med.} & \textbf{In (\%)} & \textbf{Acq (ms)} & \textbf{vs.\ CD [95\% CI]} \\
+\midrule
+\multirow{6}{*}{Synth $M{=}64$ ($100$, $12\mathrm{k}$)}
+  & \textsc{GP-OS}                   & $83.0$ & $4{,}268.6$ [$3{,}583$, $4{,}995$]   & $2{,}490$  & $15.8$ & $0.09$ & $1.864$ [$1.561$, $2.197$] \\
+  & \textsc{GP-Root-Info}            & $100.0$ & $\mathbf{2{,}149.8}$ [$2{,}068$, $2{,}234$] & $2{,}080$  & $33.3$ & $0.05$ & $0.939$ [$0.890$, $0.990$] \\
+  & \textsc{CD-Joint}                & $100.0$ & $2{,}289.7$ [$2{,}138$, $2{,}454$]   & $1{,}915$  & $11.8$ & $1.84$ & $1.000$ (ref.) \\
+  & \textsc{CD-Single-Witness}       & $100.0$ & $2{,}243.1$ [$2{,}045$, $2{,}462$]   & $1{,}955$  & $14.4$ & $0.08$ & $0.980$ [$0.908$, $1.061$] \\
+  & \textsc{MA-CD-Joint} (unconstr.) & $0.0$   & $12{,}000.0$ [$12{,}000$, $12{,}000$] & $12{,}000^*$ & $86.2$ & $0.64$ & $5.241$ [$4.890$, $5.614$] \\
+  & \textsc{MA-CD-Joint-Safe}        & $99.0$  & $2{,}752.5$ [$2{,}528$, $3{,}019$]   & $2{,}470$  & $39.3$ & $0.88$ & $1.202$ [$1.103$, $1.335$] \\
+\midrule
+\multirow{6}{*}{Synth $d{=}8$ AY ($100$, $12\mathrm{k}$)}
+  & \textsc{GP-OS}                   & $94.0$ & $1{,}842.7$ [$1{,}338$, $2{,}404$]   & $650$      & $29.8$ & $0.09$ & $1.953$ [$1.429$, $2.842$] \\
+  & \textsc{GP-Root-Info}            & $98.0$ & $940.8$ [$640$, $1{,}309$]           & $425$      & $37.5$ & $0.04$ & $0.997$ [$0.804$, $1.199$] \\
+  & \textsc{CD-Joint}                & $97.0$ & $943.6$ [$592$, $1{,}377$]           & $375$      & $33.2$ & $1.11$ & $1.000$ (ref.) \\
+  & \textsc{CD-Single-Witness}       & $97.0$ & $936.1$ [$580$, $1{,}368$]           & $352.5$    & $36.6$ & $0.08$ & $0.992$ [$0.921$, $1.057$] \\
+  & \textsc{MA-CD-Joint} (unconstr.) & $75.0$ & $3{,}916.1$ [$3{,}068$, $4{,}763$]   & $885$      & $46.0$ & $0.60$ & $4.150$ [$2.847$, $6.536$] \\
+  & \textsc{MA-CD-Joint-Safe}        & $97.0$ & $\mathbf{910.8}$ [$563$, $1{,}343$]  & $365$      & $35.9$ & $0.90$ & $\mathbf{0.965}$ [$0.899$, $1.015$] \\
+\midrule
+\multirow{6}{*}{WorFBench ($100$, $35\mathrm{k}$)}
+  & \textsc{GP-OS}                   & $100.0$ & $\mathbf{994.8}$ [$977$, $1{,}012$]  & $980$      & $18.8$ & $0.14$ & $0.590$ [$0.557$, $0.624$] \\
+  & \textsc{GP-Root-Info}            & $100.0$ & $\mathbf{994.8}$ [$977$, $1{,}012$]  & $980$      & $19.4$ & $0.06$ & $0.590$ [$0.557$, $0.624$] \\
+  & \textsc{CD-Joint}                & $100.0$ & $1{,}686.5$ [$1{,}592$, $1{,}790$]   & $1{,}500$  & $3.4$  & $0.36$ & $1.000$ (ref.) \\
+  & \textsc{CD-Single-Witness}       & $100.0$ & $1{,}403.8$ [$1{,}268$, $1{,}551$]   & $1{,}225$  & $7.1$  & $0.09$ & $0.832$ [$0.742$, $0.935$] \\
+  & \textsc{MA-CD-Joint} (unconstr.) & $0.0$   & $35{,}000.0$ [$35{,}000$, $35{,}000$] & $35{,}000^*$ & $84.8$ & $0.45$ & $20.754$ [$19.557$, $21.985$] \\
+  & \textsc{MA-CD-Joint-Safe}        & $100.0$ & $1{,}480.0$ [$1{,}223$, $1{,}797$]   & $1{,}190$  & $37.8$ & $0.40$ & $0.878$ [$0.721$, $1.075$] \\
+\midrule
+\multirow{6}{*}{TmTrpB ($105$, $25\mathrm{k}$)}
+  & \textsc{GP-OS}                   & $100.0$ & $4{,}132.1$ [$4{,}096$, $4{,}170$]   & $2{,}940$  & $14.8$ & $0.36$ & $1.147$ [$1.126$, $1.165$] \\
+  & \textsc{GP-Root-Info}            & $100.0$ & $3{,}962.0$ [$3{,}922$, $4{,}001$]   & $2{,}600$  & $20.2$ & $0.08$ & $1.099$ [$1.079$, $1.117$] \\
+  & \textsc{CD-Joint}                & $100.0$ & $\mathbf{3{,}603.6}$ [$3{,}543$, $3{,}672$] & $2{,}720$  & $7.0$  & $1.67$ & $1.000$ (ref.) \\
+  & \textsc{CD-Single-Witness}       & $68.6$  & $10{,}103.4$ [$8{,}435$, $11{,}829$] & $3{,}280$  & $14.9$ & $0.81$ & $2.804$ [$2.335$, $3.292$] \\
+  & \textsc{MA-CD-Joint} (unconstr.) & $64.8$  & $17{,}436.0$ [$16{,}871$, $18{,}018$] & $18{,}280$ & $69.7$ & $1.87$ & $4.838$ [$4.658$, $5.024$] \\
+  & \textsc{MA-CD-Joint-Safe}        & $100.0$ & $3{,}872.2$ [$3{,}770$, $3{,}986$]   & $2{,}900$  & $24.2$ & $1.81$ & $1.075$ [$1.039$, $1.111$] \\
+\midrule
+\multirow{6}{*}{GB1 Orig.\ $10$ ($100$, $25\mathrm{k}$)}
+  & \textsc{GP-OS}                   & $63.0$  & $19{,}368.4$ [$19{,}302$, $19{,}437$] & $17{,}670$ & $11.7$ & $0.32$ & $1.089$ [$1.078$, $1.099$] \\
+  & \textsc{GP-Root-Info}            & $70.0$  & $19{,}193.4$ [$19{,}020$, $19{,}380$] & $18{,}200$ & $18.3$ & $0.08$ & $1.080$ [$1.065$, $1.093$] \\
+  & \textsc{CD-Joint}                & $70.0$  & $\mathbf{17{,}776.8}$ [$17{,}597$, $17{,}999$] & $15{,}340$ & $6.9$  & $1.36$ & $1.000$ (ref.) \\
+  & \textsc{CD-Single-Witness}       & $55.0$  & $19{,}477.4$ [$18{,}791$, $20{,}187$] & $20{,}470$ & $8.6$  & $0.59$ & $1.096$ [$1.054$, $1.138$] \\
+  & \textsc{MA-CD-Joint} (unconstr.) & $0.0$   & $25{,}000.0$ [$25{,}000$, $25{,}000$] & $25{,}000^*$ & $58.6$ & $1.90$ & $1.406$ [$1.389$, $1.421$] \\
+  & \textsc{MA-CD-Joint-Safe}        & $69.0$  & $19{,}471.0$ [$19{,}172$, $19{,}810$] & $19{,}220$ & $27.9$ & $1.40$ & $1.095$ [$1.073$, $1.118$] \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[!htbp]
+\caption{\textbf{Phase B full expanded evaluation ($30{,}300$ runs across $5$ benchmarks $+$ nested $10$-template GB1 cohort, $0$ false certificates).} Paired ratios use $10{,}000$-resample stratified bootstrap $95\%$ CIs; for proteins, hierarchical template-level $95\%$ CIs are reported in parentheses $(\cdot)$. On WorFBench, mean cached tokens / held-out $F_1$ are $571.7\mathrm{k}/0.5287$ (\textsc{GP-OS}), $572.8\mathrm{k}/0.5284$ (\textsc{GP-Root-Info}), $949.1\mathrm{k}/0.5287$ (\textsc{CD-Joint}), $796.0\mathrm{k}/0.5287$ (\textsc{CD-Single}), $18.22\mathrm{M}/0.4803$ (\textsc{MA-CD-Joint}), and $799.4\mathrm{k}/0.5274$ (\textsc{MA-CD-Safe}).}
+\label{tab:app-v17-phaseb}
+\uniformaligntable{0.93}{%
+\begin{tabular}{@{}llrrrrrrrr@{}}
+\toprule
+\textbf{Benchmark ($n$, cap)} & \textbf{Policy} & \textbf{Cert (\%)} & \textbf{Restr.\ Mean [95\% CI]} & \textbf{Med.} & \textbf{In (\%)} & \textbf{RT (s)} & \textbf{vs.\ CD [95\% CI]} & \textbf{vs.\ OS [95\% CI]} & \textbf{vs.\ GRI [95\% CI]} \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{Synth $M{=}64$\\($1{,}000$, $12\mathrm{k}$)}}
+  & \textsc{GP-OS}             & $75.3$  & $4{,}796.5$ [$4{,}561$, $5{,}027$]   & $2{,}650$  & $17.3$ & $1.42$ & $2.068$ [$1.962$, $2.173$] & $1.000$ (ref.)             & $2.197$ [$2.087$, $2.303$] \\
+  & \textsc{GP-Root-Info}      & $100.0$ & $\mathbf{2{,}183.5}$ [$2{,}153$, $2{,}216$] & $2{,}100$  & $34.1$ & $1.32$ & $0.941$ [$0.924$, $0.960$] & $0.455$ [$0.434$, $0.479$] & $1.000$ (ref.) \\
+  & \textsc{CD-Joint}          & $100.0$ & $2{,}319.5$ [$2{,}274$, $2{,}366$]   & $2{,}090$  & $12.3$ & $5.18$ & $1.000$ (ref.)             & $0.484$ [$0.460$, $0.510$] & $1.062$ [$1.042$, $1.082$] \\
+  & \textsc{CD-Single}         & $100.0$ & $2{,}189.6$ [$2{,}131$, $2{,}251$]   & $1{,}925$  & $14.6$ & $1.16$ & $0.944$ [$0.919$, $0.970$] & $0.457$ [$0.433$, $0.483$] & $1.003$ [$0.976$, $1.031$] \\
+  & \textsc{MA-CD} (unc.)      & $0.3$   & $11{,}984.2$ [$11{,}963$, $12{,}000$] & $12{,}000^*$ & $85.6$ & $9.90$ & $5.167$ [$5.064$, $5.271$] & $2.498$ [$2.384$, $2.628$] & $5.489$ [$5.407$, $5.568$] \\
+  & \textsc{MA-CD-Safe}        & $100.0$ & $2{,}605.6$ [$2{,}554$, $2{,}660$]   & $2{,}420$  & $38.3$ & $2.84$ & $1.123$ [$1.099$, $1.149$] & $0.543$ [$0.517$, $0.572$] & $1.193$ [$1.169$, $1.218$] \\
+\midrule
+\multirow{2}{*}{\shortstack[l]{Synth $M{=}64$\\Cond.\ D ($250$)}}
+  & \textsc{CD-Joint} / \textsc{GRI} & $100/100$ & $1{,}527.2$ / $1{,}808.4$ & $1{,}470/1{,}770$ & $14.2/38.4$ & $4.66/1.42$ & $1.000$ / $1.184$ & $0.627$ / $0.743$ & $0.845$ / $1.000$ \\
+  & \textsc{MA-CD-Safe}        & $100.0$ & $1{,}625.0$ [$1{,}574$, $1{,}678$]   & $1{,}530$  & $38.0$ & $2.18$ & $1.064$ [$1.034$, $1.093$] & $0.668$ [$0.579$, $0.778$] & $\mathbf{0.899}$ [$0.877$, $0.921$] \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{Synth $d{=}8$ AY\\($1{,}000$, $12\mathrm{k}$)}}
+  & \textsc{GP-OS}             & $93.9$  & $1{,}670.9$ [$1{,}500$, $1{,}851$]   & $570$      & $27.4$ & $0.52$ & $2.224$ [$1.984$, $2.507$] & $1.000$ (ref.)             & $1.906$ [$1.735$, $2.110$] \\
+  & \textsc{GP-Root-Info}      & $97.9$  & $876.5$ [$767$, $996$]               & $400$      & $36.2$ & $0.31$ & $1.167$ [$1.100$, $1.237$] & $0.524$ [$0.474$, $0.576$] & $1.000$ (ref.) \\
+  & \textsc{CD-Joint}          & $97.9$  & $\mathbf{751.3}$ [$648$, $868$]      & $350$      & $33.7$ & $0.95$ & $1.000$ (ref.)             & $0.450$ [$0.399$, $0.504$] & $0.857$ [$0.808$, $0.909$] \\
+  & \textsc{CD-Single}         & $97.9$  & $786.5$ [$680$, $904$]               & $340$      & $35.4$ & $0.35$ & $1.047$ [$0.999$, $1.103$] & $0.471$ [$0.418$, $0.527$] & $0.897$ [$0.842$, $0.959$] \\
+  & \textsc{MA-CD} (unc.)      & $71.8$  & $4{,}159.4$ [$3{,}889$, $4{,}444$]   & $840$      & $47.0$ & $2.60$ & $5.536$ [$4.817$, $6.405$] & $2.489$ [$2.234$, $2.796$] & $4.746$ [$4.180$, $5.423$] \\
+  & \textsc{MA-CD-Safe}        & $\mathbf{98.1}$ & $\mathbf{752.0}$ [$652$, $864$] & $355$      & $34.0$ & $0.84$ & $\mathbf{1.001}$ [$0.955$, $1.043$] & $\mathbf{0.450}$ [$0.401$, $0.501$] & $\mathbf{0.858}$ [$0.815$, $0.900$] \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{WorFBench\\($1{,}000$, $35\mathrm{k}$)}}
+  & \textsc{GP-OS}             & $100.0$ & $\mathbf{1{,}011.5}$ [$1{,}005$, $1{,}018$] & $960$      & $18.8$ & $1.31$ & $0.607$ [$0.598$, $0.616$] & $1.000$ (ref.)             & $0.997$ [$0.993$, $1.000$] \\
+  & \textsc{GP-Root-Info}      & $100.0$ & $1{,}014.1$ [$1{,}007$, $1{,}022$]   & $960$      & $19.3$ & $1.23$ & $0.608$ [$0.599$, $0.618$] & $1.003$ [$1.000$, $1.007$] & $1.000$ (ref.) \\
+  & \textsc{CD-Joint}          & $100.0$ & $1{,}667.8$ [$1{,}643$, $1{,}694$]   & $1{,}500$  & $3.4$  & $2.03$ & $1.000$ (ref.)             & $1.649$ [$1.624$, $1.674$] & $1.645$ [$1.619$, $1.671$] \\
+  & \textsc{CD-Single}         & $100.0$ & $1{,}405.5$ [$1{,}322$, $1{,}513$]   & $1{,}230$  & $6.3$  & $1.34$ & $0.843$ [$0.792$, $0.907$] & $1.389$ [$1.307$, $1.496$] & $1.386$ [$1.304$, $1.493$] \\
+  & \textsc{MA-CD} (unc.)      & $0.0$   & $35{,}000.0$ [$35{,}000$, $35{,}000$] & $35{,}000^*$ & $82.6$ & $21.22$ & $20.985$ [$20.667$, $21.299$] & $34.602$ [$34.393$, $34.817$] & $34.513$ [$34.262$, $34.754$] \\
+  & \textsc{MA-CD-Safe}        & $100.0$ & $1{,}456.1$ [$1{,}340$, $1{,}591$]   & $1{,}200$  & $37.8$ & $1.13$ & $\mathbf{0.873}$ [$0.802$, $0.955$] & $1.440$ [$1.324$, $1.573$] & $1.436$ [$1.321$, $1.570$] \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{TmTrpB\\($1{,}050$, $25\mathrm{k}$)\\21 templates}}
+  & \textsc{GP-OS}             & $100.0$ & $4{,}129.1$ [$4{,}117$, $4{,}142$]   & $2{,}900$  & $14.7$ & $5.43$ & $1.137$ [$1.130$, $1.144$] ($1.065$--$1.182$) & $1.000$ (ref.) & $1.031$ [$1.027$, $1.035$] \\
+  & \textsc{GP-Root-Info}      & $100.0$ & $4{,}004.2$ [$3{,}984$, $4{,}025$]   & $2{,}560$  & $20.1$ & $4.16$ & $1.103$ [$1.095$, $1.111$] ($0.997$--$1.171$) & $0.970$ [$0.966$, $0.974$] & $1.000$ (ref.) \\
+  & \textsc{CD-Joint}          & $100.0$ & $\mathbf{3{,}630.7}$ [$3{,}607$, $3{,}656$] & $2{,}690$  & $7.3$  & $9.79$ & $1.000$ (ref.) & $\mathbf{0.879}$ [$0.874$, $0.885$] ($0.846$--$0.939$) & $\mathbf{0.907}$ [$0.900$, $0.913$] \\
+  & \textsc{CD-Single}         & $58.5$  & $12{,}401.3$ [$11{,}773$, $13{,}032$] & $4{,}190$  & $18.2$ & $19.21$ & $3.416$ [$3.239$, $3.592$] ($2.655$--$4.686$) & $3.003$ [$2.851$, $3.157$] & $3.097$ [$2.939$, $3.255$] \\
+  & \textsc{MA-CD} (unc.)      & $66.5$  & $17{,}647.1$ [$17{,}394$, $17{,}901$] & $18{,}430$ & $70.2$ & $44.38$ & $4.861$ [$4.782$, $4.939$] ($3.804$--$6.573$) & $4.274$ [$4.211$, $4.337$] & $4.407$ [$4.339$, $4.475$] \\
+  & \textsc{MA-CD-Safe}        & $100.0$ & $3{,}888.1$ [$3{,}854$, $3{,}923$]   & $2{,}920$  & $24.3$ & $10.26$ & $1.071$ [$1.060$, $1.082$] ($1.043$--$1.091$) & $\mathbf{0.942}$ [$0.933$, $0.950$] ($0.914$--$0.987$) & $\mathbf{0.971}$ [$0.962$, $0.981$] \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{GB1 Exp.\ $50$\\($1{,}000$, $25\mathrm{k}$)\\50 templates}}
+  & \textsc{GP-OS}             & $16.9$  & $23{,}837.2$ [$23{,}822$, $23{,}852$] & $25{,}000^*$ & $13.3$ & $23.35$ & $1.022$ [$1.022$, $1.023$] ($1.009$--$1.038$) & $1.000$ (ref.) & $1.000$ [$0.999$, $1.002$] \\
+  & \textsc{GP-Root-Info}      & $16.9$  & $23{,}827.4$ [$23{,}793$, $23{,}867$] & $25{,}000^*$ & $20.1$ & $16.72$ & $1.022$ [$1.020$, $1.024$] ($1.008$--$1.039$) & $1.000$ [$0.998$, $1.001$] & $1.000$ (ref.) \\
+  & \textsc{CD-Joint}          & $\mathbf{19.4}$ & $\mathbf{23{,}314.0}$ [$23{,}294$, $23{,}333$] & $25{,}000^*$ & $11.0$ & $59.01$ & $1.000$ (ref.) & $\mathbf{0.978}$ [$0.977$, $0.979$] ($0.963$--$0.991$) & $\mathbf{0.979}$ [$0.977$, $0.980$] \\
+  & \textsc{CD-Single}         & $13.2$  & $23{,}841.7$ [$23{,}739$, $23{,}945$] & $25{,}000^*$ & $6.8$  & $30.67$ & $1.023$ [$1.018$, $1.027$] ($1.005$--$1.046$) & $1.000$ [$0.996$, $1.005$] & $1.001$ [$0.996$, $1.005$] \\
+  & \textsc{MA-CD} (unc.)      & $0.0$   & $25{,}000.0$ [$25{,}000$, $25{,}000$] & $25{,}000^*$ & $52.4$ & $72.40$ & $1.072$ [$1.071$, $1.073$] ($1.028$--$1.128$) & $1.049$ [$1.048$, $1.049$] & $1.049$ [$1.048$, $1.051$] \\
+  & \textsc{MA-CD-Safe}        & $16.1$  & $23{,}768.8$ [$23{,}713$, $23{,}829$] & $25{,}000^*$ & $29.1$ & $53.55$ & $1.020$ [$1.017$, $1.022$] ($1.007$--$1.035$) & $0.997$ [$0.995$, $1.000$] ($0.988$--$1.006$) & $0.998$ [$0.995$, $1.000$] \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{GB1 Orig.\ $10$\\($200$, $25\mathrm{k}$)\\(Tab.~\ref{tab:app-v14-protein-credible} cohort)}}
+  & \textsc{GP-OS}             & $63.0$  & $19{,}449.8$ [$19{,}389$, $19{,}510$] & $17{,}800$ & $11.6$ & $19.22$ & $1.100$ [$1.096$, $1.104$] ($1.046$--$1.169$) & $1.000$ (ref.) & $1.003$ [$0.993$, $1.012$] \\
+  & \textsc{GP-Root-Info}      & $69.5$  & $19{,}390.3$ [$19{,}219$, $19{,}587$] & $18{,}610$ & $18.8$ & $12.93$ & $1.097$ [$1.087$, $1.108$] ($1.038$--$1.181$) & $0.997$ [$0.989$, $1.007$] & $1.000$ (ref.) \\
+  & \textsc{CD-Joint}          & $\mathbf{70.0}$ & $\mathbf{17{,}677.8}$ [$17{,}602$, $17{,}756$] & $15{,}070$ & $7.0$  & $41.48$ & $1.000$ (ref.) & $\mathbf{0.909}$ [$0.906$, $0.912$] ($0.855$--$0.956$) & $\mathbf{0.912}$ [$0.903$, $0.920$] \\
+  & \textsc{CD-Single}         & $50.5$  & $19{,}791.1$ [$19{,}309$, $20{,}275$] & $23{,}450$ & $8.8$  & $24.71$ & $1.119$ [$1.091$, $1.147$] ($1.018$--$1.265$) & $1.018$ [$0.992$, $1.043$] & $1.021$ [$0.993$, $1.049$] \\
+  & \textsc{MA-CD} (unc.)      & $0.0$   & $25{,}000.0$ [$25{,}000$, $25{,}000$] & $25{,}000^*$ & $62.0$ & $66.70$ & $1.414$ [$1.408$, $1.420$] ($1.176$--$1.744$) & $1.285$ [$1.281$, $1.289$] & $1.289$ [$1.276$, $1.301$] \\
+  & \textsc{MA-CD-Safe}        & $68.0$  & $19{,}301.4$ [$19{,}048$, $19{,}583$] & $18{,}940$ & $27.5$ & $41.61$ & $1.092$ [$1.077$, $1.108$] ($1.031$--$1.180$) & $0.992$ [$0.979$, $1.007$] ($0.941$--$1.048$) & $0.995$ [$0.981$, $1.010$] \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[!htbp]
+\caption{\textbf{Phase B mechanistic checkpoint trajectories confirming stronger retained-witness discovery.} Active campaign count ($n_{\mathrm{act}}$), mean certification progress $\Psi(H_t) = \min(1, H_t / \beta_t)$, mean retained witness margin $m_t(\mathrm{in}) - m_t(\mathrm{out})$, and cumulative inside-support query fraction (\texttt{In\%}). At identical early/mid-stage budgets where all campaigns remain active, \textsc{MA-CD-Safe} raises witness separation margin and standardized certification progress sharply above \textsc{CD-Joint} across all three real-world benchmarks.}
+\label{tab:app-v17-trajectories}
+\uniformaligntable{0.93}{%
+\begin{tabular}{@{}llrrrrrr@{}}
+\toprule
+\textbf{Benchmark} & \textbf{Step $t$} & \textbf{Policy} & \textbf{$n_{\mathrm{act}}$} & \textbf{$\Psi(H_t)$} & \textbf{Witness Margin} & \textbf{Contrast Var.} & \textbf{In (\%)} \\
+\midrule
+\multirow{6}{*}{WorFBench ($n{=}1{,}000$)}
+  & $100$  & \textsc{CD-Joint} / \textsc{MA-CD-Safe} / \textsc{GP-OS} & $1{,}000 / 1{,}000 / 1{,}000$ & $0.195$ / $\mathbf{0.283}$ / $0.129$ & $0.2290$ / $\mathbf{0.2745}$ / $0.1332$ & --- & $6.9 / 43.9 / 25.8$ \\
+  & $250$  & \textsc{CD-Joint} / \textsc{MA-CD-Safe} / \textsc{GP-OS} & $999 / 993 / 999$             & $0.302$ / $\mathbf{0.438}$ / $0.159$ & $0.2827$ / $\mathbf{0.3291}$ / $0.1194$ & --- & $3.7 / 39.7 / 22.0$ \\
+  & $500$  & \textsc{CD-Joint} / \textsc{MA-CD-Safe} / \textsc{GP-OS} & $964 / 900 / 865$             & $0.451$ / $\mathbf{0.570}$ / $0.173$ & $0.3263$ / $\mathbf{0.3494}$ / $0.1099$ & --- & $2.8 / 38.7 / 21.2$ \\
+  & $1{,}000$ & \textsc{CD-Joint} / \textsc{MA-CD-Safe} / \textsc{GP-OS} & $759 / 583 / 467$          & $0.621$ / $\mathbf{0.663}$ / $0.210$ & $\mathbf{0.3604}$ / $0.3443$ / $0.1041$ & --- & $2.9 / 37.2 / 21.5$ \\
+  & $1{,}000$ & \textsc{MA-CD} (unconstrained)                     & $1{,}000$                     & $0.226$                              & $0.2361$                              & --- & $86.6$ \\
+  & $5{,}000$ & \textsc{MA-CD} (unconstrained)                     & $1{,}000$                     & $0.234$                              & $0.2422$                              & --- & $84.3$ \\
+\midrule
+\multirow{4}{*}{TmTrpB ($n{=}1{,}050$)}
+  & $250$  & \textsc{CD-Joint} / \textsc{MA-CD-Safe} / \textsc{GP-OS} & $1{,}050 / 1{,}050 / 1{,}050$ & $0.061$ / $\mathbf{0.115}$ / $0.065$ & $0.0734$ / $\mathbf{0.1103}$ / $0.0693$ & $.00564 / .00590 / .00441$ & $7.0 / 36.6 / 22.9$ \\
+  & $500$  & \textsc{CD-Joint} / \textsc{MA-CD-Safe} / \textsc{GP-OS} & $1{,}050 / 1{,}050 / 1{,}050$ & $0.090$ / $\mathbf{0.231}$ / $0.073$ & $0.0716$ / $\mathbf{0.1639}$ / $0.0564$ & $.00274 / .00290 / .00173$ & $5.6 / 28.1 / 18.6$ \\
+  & $1{,}000$ & \textsc{CD-Joint} / \textsc{MA-CD-Safe} / \textsc{GP-OS} & $1{,}050 / 1{,}050 / 1{,}050$ & $0.179$ / $\mathbf{0.397}$ / $0.110$ & $0.0777$ / $\mathbf{0.1559}$ / $0.0432$ & $.00124 / .00095 / .00037$ & $6.2 / 25.0 / 15.3$ \\
+  & $2{,}000$ & \textsc{CD-Joint} / \textsc{MA-CD-Safe} / \textsc{GP-OS} & $751 / 797 / 827$            & $0.452$ / $\mathbf{0.566}$ / $0.190$ & $0.1070$ / $\mathbf{0.1262}$ / $0.0444$ & $.00060 / .00040 / .00014$ & $9.2 / 23.6 / 12.3$ \\
+\midrule
+\multirow{3}{*}{GB1 Exp.\ $50$ ($n{=}1{,}000$)}
+  & $1{,}000$ & \textsc{CD-Joint} / \textsc{MA-CD-Safe} / \textsc{GP-OS} & $1{,}000 / 1{,}000 / 1{,}000$ & $0.043$ / $\mathbf{0.059}$ / $0.040$ & $\mathbf{0.0586}$ / $0.0500$ / $0.0487$ & $.00469 / .00565 / .00463$ & $6.9 / 37.4 / 16.0$ \\
+  & $2{,}000$ & \textsc{CD-Joint} / \textsc{MA-CD-Safe} / \textsc{GP-OS} & $1{,}000 / 1{,}000 / 1{,}000$ & $0.057$ / $\mathbf{0.106}$ / $0.054$ & $0.0521$ / $\mathbf{0.0753}$ / $0.0484$ & $.00299 / .00357 / .00224$ & $10.8 / 33.4 / 12.9$ \\
+  & $5{,}000$ & \textsc{CD-Joint} / \textsc{MA-CD-Safe} / \textsc{GP-OS} & $1{,}000 / 1{,}000 / 1{,}000$ & $0.109$ / $\mathbf{0.176}$ / $0.083$ & $0.0597$ / $\mathbf{0.0807}$ / $0.0463$ & $.00183 / .00190 / .00076$ & $13.8 / 30.0 / 10.7$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics{figures/supp_margin_aware_cd_joint.pdf}
+\vspace{-10pt}
+\caption{\textbf{Margin-Aware CD-Joint (\texttt{v17} Phase B, $30{,}300$ paired runs, $0$ false certificates).} (a) Paired restricted-mean evaluation ratio vs.\ \textsc{CD-Joint} ($<1$ better; $95\%$ bootstrap CIs); \textsc{MA-CD-Safe} cuts WorFBench cost by $12.7\%$, ties \textsc{CD-Joint} on $d{=}8$ anytime-valid ($1.001\times$), and beats \textsc{GP-OS} and \textsc{GP-Root-Info} on TmTrpB and GB1, while \textsc{CD-Single} spikes to $3.42\times$ on TmTrpB. (b) Certification rates showing unconstrained \textsc{MA-CD} stalling at $0\%$--$0.3\%$ on Synthetic $M{=}64$, WorFBench, and GB1 (Proposition~\ref{prop:ma-jensen-drag}) and \textsc{CD-Single} collapsing on epistatic proteins. (c--e) Mechanistic checkpoint trajectories confirming that \textsc{MA-CD-Safe} lifts certification progress $\Psi(H_t)$ and retained witness margin sharply above \textsc{CD-Joint} while holding inside-query allocation near $24\%$--$38\%$ rather than locking at $>80\%$. Sources: Tables~\ref{tab:app-v17-phaseb} and~\ref{tab:app-v17-trajectories}.}
+\label{fig:app-v17-ma}
+\end{figure}
+
+\paragraph{Key mechanistic findings.}
+Four clean conclusions emerge from Tables~\ref{tab:app-v17-phasea}--\ref{tab:app-v17-trajectories} and Figure~\ref{fig:app-v17-ma}:
+\begin{enumerate}[leftmargin=1.6em]
+  \item \textbf{Empirical confirmation of Proposition~\ref{prop:ma-jensen-drag}.} Unconstrained \textsc{MA-CD-Joint} locks onto inside-support queries ($85.6\%$ on Synthetic $M{=}64$, $82.6\%$ on WorFBench, $70.2\%$ on TmTrpB, $52.4\%$ on GB1) and stalls at $0.3\%$, $0.0\%$, $66.5\%$, and $0.0\%$ certification, respectively---exactly as predicted by the concave-$\min_z$ Jensen drag identity~\eqref{eq:ma-jensen-exact}.
+  \item \textbf{\textsc{MA-CD-Joint-Safe} validates the witness-discovery mechanism with a clean early-vs-late tradeoff.} Across WorFBench ($t=100,250$), TmTrpB ($t=500,1000$, all $1{,}050$ runs active), and GB1 ($t=2000,5000$, all $1{,}000$ runs active), \textsc{MA-CD-Safe} lifts retained witness margin and $\Psi(H_t)$ by $+45\%$ to $+129\%$ above \textsc{CD-Joint} (Table~\ref{tab:app-v17-trajectories}). On WorFBench, this cuts evaluations by $12.7\%$ ($1{,}456.1$ vs.\ $1{,}667.8$; ratio $0.873$, $95\%$ CI $[0.802, 0.955]$; $799.4\mathrm{k}$ vs.\ $949.1\mathrm{k}$ tokens; $1.13\mathrm{s}$ vs.\ $2.03\mathrm{s}$ runtime). On fixed-feature $d=8$ anytime-valid synthetic DAGs, \textsc{MA-CD-Safe} achieves the highest certification rate ($98.1\%$) and ties \textsc{CD-Joint} ($1.001\times$, CI $[0.955, 1.043]$) while beating \textsc{GP-OS} ($0.450\times$) and \textsc{GP-Root-Info} ($0.858\times$). On TmTrpB and GB1, \textsc{MA-CD-Safe} ranks second overall---beating both \textsc{GP-OS} ($0.942\times$ on TmTrpB, hierarchical CI $[0.914, 0.987]$) and \textsc{GP-Root-Info} ($0.971\times$)---while incurring a modest $7.1\%$--$9.2\%$ ($2.0\%$ on expanded $50$-template GB1) overhead relative to pure \textsc{CD-Joint} because fixed $50/50$ alternation keeps inside queries at $24\%$--$38\%$ during late-stage variance liquidation.
+  \item \textbf{Conic simplex mixtures are indispensable on real epistatic landscapes.} \textsc{CD-Single-Witness} matches or edges out \textsc{CD-Joint} on synthetic $M=64$ ($0.944\times$) and WorFBench ($0.843\times$), where a single dominant inside terminal suffices, yet \emph{collapses} on measured epistatic protein landscapes: on TmTrpB, certification drops from $100\%$ to $58.5\%$ and cost jumps $3.416\times$ (paired CI $[3.239, 3.592]$, hierarchical template CI $[2.655, 4.686]$); on GB1, certification falls from $19.4\%$ to $13.2\%$ ($70.0\% \to 50.5\%$ on the original $10$ templates); and on Synthetic $d=8$ AY Condition~D, cost worsens by $1.143\times$ (CI $[1.020, 1.310]$). Multi-vertex conic mixtures (mean support $3.8$--$5.0$ on proteins) are therefore not an implementation detail but a structural necessity under epistasis.
+  \item \textbf{Practical guidance.} Pure safeguarded \textsc{CD-Joint} remains the strongest general-purpose default when late-stage variance reduction dominates (real epistatic proteins and correlated fixed-feature graphs), whereas \textsc{MA-CD-Joint-Safe} offers a theoretically guaranteed, zero-tuning alternative whenever discovering stronger retained witnesses materially enlarges the separation margin (e.g.\ agentic workflows), without risking the protein-epistasis collapse of single-witness approximations.
+\end{enumerate}
+
+\clearpage
+\section{Extension to Growing Implicit Search DAGs}
+\label{app:growing-dags}
+
+The finite-DAG formulation in Sections~\ref{sec:method}--\ref{sec:results} assumes that the terminal set $Z$ is enumerated upfront. In deep combinatorial domains---such as $10$-site protein mutagenesis ($|Z| > 2 \times 10^9$), high-dimensional combinatorial feature selection ($|Z| > 3.8 \times 10^6$; \citealt{pelissier}), or deep multi-stage workflow synthesis---enumerating $Z$ is infeasible even though only a tiny fraction of continuations ever influences the root commitment. This section extends Joint Root Certification to \emph{growing implicit search DAGs} that materialize states on demand while preserving exact shared-subtree cancellation, dimension-only witness sparsity, and anytime soundness independent of $|Z^*|$.
+
+\subsection{Implicit Search DAGs, Prefix-DAGs, and Sound Subtree Feature Envelopes}
+\label{app:growing-model}
+
+Let $G^* = (V^*, E^*)$ be a finite rooted all-MAX implicit search DAG with root $r$, root actions $\mathcal{A}$ ($|\mathcal{A}| = K$), terminal set $Z^* \subseteq V^*$, and a canonical transposition map $\kappa : V^* \to \mathcal{K}$ identifying equivalent states. Every terminal $z \in Z^*$ carries a fixed-dimension feature vector $\phi(z) \in \mathbb{R}^d$ and true mean outcome
+\begin{equation}
+  \mu^*(z) = \phi(z)^\top \theta^* + \delta^*(z), \qquad |\delta^*(z)| \le \bar\xi(z),
+  \label{eq:growing-truth}
+\end{equation}
+where $\theta^* \in \mathbb{R}^d$ is an unknown shared parameter and $\bar\xi(z) \ge 0$ bounds non-linear / higher-order structural residuals (cf.\ Section~\ref{app:group-robust}). For any node $v \in V^*$, write $Z^*(v) \subseteq Z^*$ for the set of terminals reachable from $v$ in $G^*$, and $S^*(a) := Z^*(a)$ for the full implicit support of root action $a \in \mathcal{A}$.
+
+\begin{definition}[Canonical prefix-DAG and sound nested subtree envelopes]
+\label{def:growing-prefix}
+At step $t$, an explicit \emph{prefix-DAG} $G_t = (V_t, E_t)$ is a rooted subgraph of $G^*$ closed under canonical transposition merging whose sinks partition into materialized \emph{terminals} $T_t \subseteq V_t \cap Z^*$ and unexpanded \emph{frontier nodes} $F_t \subseteq V_t \setminus Z^*$. For each root action $a \in \mathcal{A}$, let $T_t(a) \subseteq T_t$ and $F_t(a) \subseteq F_t$ denote the terminals and frontier nodes reachable from $a$ in $G_t$. Every node $v \in V_t$ is equipped with a compact convex \emph{subtree feature envelope} $\widehat\Phi(v) \subseteq \mathbb{R}^d$ and residual ceiling $\bar\xi(v) \ge 0$ satisfying:
+\begin{enumerate}[label=(\roman*),leftmargin=1.8em]
+  \item \textbf{Soundness:} $\phi(z) \in \widehat\Phi(v)$ and $|\delta^*(z)| \le \bar\xi(v)$ for every $z \in Z^*(v)$, with $\widehat\Phi(z) = \{\phi(z)\}$ on terminals $z \in T_t$;
+  \item \textbf{Nesting under expansion:} when $v \in F_t$ is expanded into its canonical children $\mathrm{ch}(v)$ (merging any child whose key $\kappa(u)$ already exists in $V_t$), $\bigcup_{u \in \mathrm{ch}(v)} \widehat\Phi(u) \subseteq \widehat\Phi(v)$ and $\max_{u \in \mathrm{ch}(v)} \bar\xi(u) \le \bar\xi(v)$.
+\end{enumerate}
+\end{definition}
+
+In \texttt{dagcert/growing.py}, we implement two linear-time envelope families covering all four benchmarks below: (i) \emph{coordinate boxes} $\widehat\Phi(v) = [c_v - h_v, c_v + h_v]$ and (ii) \emph{group-sparse capped-simplex envelopes} for combinatorial mutation, feature-selection, and staged-workflow DAGs, where a partial state $v$ fixes already-committed coordinates in $c_v$ and allows activating at most $r_v$ (or exactly $r_v$) remaining open site groups, selecting at most one option per group.
+
+Given a parameter confidence set $\Theta_t \subseteq \mathbb{R}^d$, only \emph{materialized} inside terminals $T_t(a)$ provide certifiable lower bounds on $\max_{y \in S^*(a)} \mu^*(y)$, while all reachable frontier and terminal nodes provide sound upper bounds. The outside-restricted prefix-DAG worst-case regret of action $a$ is
+\begin{equation}
+  R_t^{\mathrm{grow}}(a)
+  := \Bigl[
+    \sup_{\theta \in \Theta_t}
+    \Bigl(
+      \max_{v \in (T_t \setminus T_t(a)) \cup (F_t \setminus F_t(a))}
+      \sup_{\phi \in \widehat\Phi(v)} \bigl(\phi^\top \theta + \bar\xi(v)\bigr)
+      - \max_{y \in T_t(a)} \bigl(\phi(y)^\top \theta - \bar\xi(y)\bigr)
+    \Bigr)
+  \Bigr]_+,
+  \label{eq:growing-regret}
+\end{equation}
+with $R_t^{\mathrm{grow}}(a) := +\infty$ if $T_t(a) = \emptyset$.
+
+\subsection{Shared-Subtree Cancellation, Conic Split-Envelope Duality, and Sparsity}
+\label{app:growing-duality}
+
+\begin{theorem}[Exact shared-subtree cancellation and monotone tightening]
+\label{thm:growing-cancellation}
+Let $G_t$ be a canonical prefix-DAG with sound nested envelopes (Definition~\ref{def:growing-prefix}), and suppose $\theta^* \in \Theta_t$.
+\begin{enumerate}[label=(\alph*),leftmargin=1.8em]
+  \item \textbf{Soundness with shared-subtree cancellation.} Every node $v \in T_t(a) \cup F_t(a)$ reachable from $a$ in $G_t$ satisfies $Z^*(v) \subseteq S^*(a)$, regardless of any undiscovered deeper transpositions below $v$. Consequently, no terminal in $Z^*(v)$ can contribute positive regret against $a$, and the outside-restricted prefix bound is globally sound on the full implicit DAG $G^*$:
+  \begin{equation}
+    r^*(a) := \max_{z \in Z^*} \mu^*(z) - \max_{y \in S^*(a)} \mu^*(y) \le R_t^{\mathrm{grow}}(a).
+    \label{eq:growing-sound}
+  \end{equation}
+  \item \textbf{Monotone tightening under canonical expansion.} If $G_{t^+}$ is obtained from $G_t$ by expanding any frontier node $v \in F_t$ into $\mathrm{ch}(v)$ with nested envelopes and canonical transposition merging (keeping $\Theta_t$ fixed), then $R_{t^+}^{\mathrm{grow}}(a) \le R_t^{\mathrm{grow}}(a)$ for every $a \in \mathcal{A}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) Since $G_t$ is a prefix-DAG of $G^*$, every terminal $z \in Z^*$ is reachable from at least one sink $v \in T_t \cup F_t$. If $z \in S^*(a)$, then $\mu^*(z) - \max_{y \in S^*(a)} \mu^*(y) \le 0$. If $z \notin S^*(a)$, then no sink $v \in T_t(a) \cup F_t(a)$ can reach $z$ (otherwise concatenating the $G_t$-path $a \rightsquigarrow v$ with the $G^*$-path $v \rightsquigarrow z$ would imply $z \in S^*(a)$). Hence $z \in Z^*(v)$ for some outside sink $v \in (T_t \setminus T_t(a)) \cup (F_t \setminus F_t(a))$. By envelope soundness and $\theta^* \in \Theta_t$, $\mu^*(z) \le \sup_{\phi \in \widehat\Phi(v)} (\phi^\top \theta^* + \bar\xi(v))$ while $\max_{y \in S^*(a)} \mu^*(y) \ge \max_{y \in T_t(a)} (\phi(y)^\top \theta^* - \bar\xi(y))$ because $T_t(a) \subseteq S^*(a)$. Taking $\max_{z \notin S^*(a)}$ and $[\cdot]_+$ yields~\eqref{eq:growing-sound}.
+
+(b) Expanding $v \in F_t$ can only enlarge the materialized inside witness set ($T_{t^+}(a) \supseteq T_t(a)$) and reachable frontier sets. On the outside challenger set, if $v \in F_t(a)$, every child $u \in \mathrm{ch}(v)$ also lies in $T_{t^+}(a) \cup F_{t^+}(a)$, so the outside set cannot grow. If $v \notin F_t(a)$, $v$ is replaced by those children $u \in \mathrm{ch}(v)$ not merged into $T_{t^+}(a) \cup F_{t^+}(a)$; by nesting, $\max_{u \in \mathrm{ch}(v)} \sup_{\phi \in \widehat\Phi(u)} (\phi^\top \theta + \bar\xi(u)) \le \sup_{\phi \in \widehat\Phi(v)} (\phi^\top \theta + \bar\xi(v))$ for every $\theta \in \Theta_t$. Hence the outer supremum in~\eqref{eq:growing-regret} is nonincreasing while the inner witness maximum is nondecreasing, giving $R_{t^+}^{\mathrm{grow}}(a) \le R_t^{\mathrm{grow}}(a)$.
+\end{proof}
+
+\begin{theorem}[Conic split-envelope duality and dimension-only witness sparsity]
+\label{thm:growing-conic-duality}
+Let $\Theta_t = \{m_t + L_t u : \|u\|_2 \le \beta_t\}$ with $\Sigma_t = L_t L_t^\top \succeq 0$, fix an action $a$ with $T_t(a) \neq \emptyset$, and let $v \in (T_t \setminus T_t(a)) \cup (F_t \setminus F_t(a))$ be any outside sink with compact convex envelope $\widehat\Phi(v)$.
+\begin{enumerate}[label=(\alph*),leftmargin=1.8em]
+  \item \textbf{Minimax dual upper bound (exact on terminals).} The exact worst-case advantage of $v$ over $T_t(a)$ satisfies
+  \begin{align}
+    D_t^{\mathrm{grow}}(v, T_t(a))
+    &:= \sup_{\theta \in \Theta_t} \sup_{\phi \in \widehat\Phi(v)} \min_{y \in T_t(a)}
+        \bigl[(\phi - \phi(y))^\top \theta + \bar\xi(v) + \bar\xi(y)\bigr] \nonumber\\
+    &\le \min_{p \in \Delta(T_t(a))} \sup_{\phi \in \widehat\Phi(v)}
+       \Bigl[(\phi - \phi_p)^\top m_t + \beta_t \|L_t^\top(\phi - \phi_p)\|_2 + \bar\xi(v) + \sum_{y \in T_t(a)} p_y \bar\xi(y)\Bigr],
+    \label{eq:growing-exact-dual}
+  \end{align}
+  where $\phi_p := \sum_{y \in T_t(a)} p_y \phi(y)$, with exact equality whenever $v \in T_t$ is a materialized terminal ($\widehat\Phi(v) = \{\phi(v)\}$).
+  \item \textbf{Self-collapsing split-envelope SOCP upper bound.} Let $\phi_v^{\mathrm{opt}} \in \argmax_{\phi \in \widehat\Phi(v)} \phi^\top m_t$ be a mean-optimal anchor in $\widehat\Phi(v)$, and let $s_{\mathrm{opt}}(v) \ge \sup_{\phi \in \widehat\Phi(v)} \bigl[(\phi - \phi_v^{\mathrm{opt}})^\top m_t + \beta_t \|L_t^\top(\phi - \phi_v^{\mathrm{opt}})\|_2\bigr]$ be any sound \emph{structural envelope slack} (for box envelopes $[c_v - h_v, c_v + h_v]$, $s_{\mathrm{opt}}(v) = \sum_{j=1}^d 2 h_{v,j} [\beta_t \|L_t^\top e_j\|_2 - |m_{t,j}|]_+$ is exact and self-collapses to $0$ as soon as all coordinate signs are statistically resolved; for group-sparse capped-simplex envelopes, within-group and top-$q$ cross-group swap slacks give an analogous closed-form self-collapsing bound). Then
+  \begin{align}
+    D_t^{\mathrm{grow}}(v, T_t(a))
+    &\le \widehat D_t^{\mathrm{grow}}(v, T_t(a)) \nonumber\\
+    &:= \min_{p \in \Delta(T_t(a))}
+       \Bigl[
+         (\phi_v^{\mathrm{opt}} - \phi_p)^\top m_t
+         + \beta_t \bigl\|L_t^\top(\phi_v^{\mathrm{opt}} - \phi_p)\bigr\|_2
+         + \bar\xi(v) + \sum_{y \in T_t(a)} p_y \bar\xi(y)
+       \Bigr]
+       + s_{\mathrm{opt}}(v).
+    \label{eq:growing-split-socp}
+  \end{align}
+  Whenever $v \in T_t$ is a materialized terminal ($\widehat\Phi(v) = \{\phi(v)\}$), $s_{\mathrm{opt}}(v) = 0$ identically and $\widehat D_t^{\mathrm{grow}}(v, T_t(a)) = D_t^{\mathrm{grow}}(v, T_t(a))$.
+  \item \textbf{Dimension-only Carath\'eodory sparsity.} The convex minimization~\eqref{eq:growing-split-socp} admits an optimal inside witness $p^* \in \Delta(T_t(a))$ with $|\supp(p^*)| \le \operatorname{rank}(L_t) + 1 \le d + 1$ (and at most $\operatorname{rank}(L_t) + 2 \le d + 2$ when residuals $\bar\xi(y)$ vary across $y \in T_t(a)$), independent of both $|Z^*|$ and $|T_t(a)|$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For (a), replacing $\min_{y \in T_t(a)}$ by $\min_{p \in \Delta(T_t(a))}$ and applying max--min weak duality yields
+\[
+  D_t^{\mathrm{grow}}(v, T_t(a))
+  \le \min_{p \in \Delta(T_t(a))} \sup_{\phi \in \widehat\Phi(v)} \sup_{\theta \in \Theta_t}
+      \Bigl[(\phi - \phi_p)^\top \theta + \bar\xi(v) + \sum_{y \in T_t(a)} p_y \bar\xi(y)\Bigr].
+\]
+Evaluating the inner ellipsoidal supremum $\sup_{\theta \in \Theta_t} (\phi - \phi_p)^\top \theta = (\phi - \phi_p)^\top m_t + \beta_t \|L_t^\top(\phi - \phi_p)\|_2$ gives~\eqref{eq:growing-exact-dual}. When $v \in T_t$ is a materialized terminal ($\widehat\Phi(v) = \{\phi(v)\}$), the remaining objective is bilinear in $(\theta, p)$ on compact convex sets, so Sion's minimax theorem yields exact equality (recovering Theorem~\ref{thm:t1-dual}). For (b), for any $\phi \in \widehat\Phi(v)$ and $p \in \Delta(T_t(a))$, writing $\phi - \phi_p = (\phi_v^{\mathrm{opt}} - \phi_p) + (\phi - \phi_v^{\mathrm{opt}})$ and applying the triangle inequality $\|L_t^\top(a + b)\|_2 \le \|L_t^\top a\|_2 + \|L_t^\top b\|_2$ yields
+\begin{align*}
+  (\phi - \phi_p)^\top m_t + \beta_t \|L_t^\top(\phi - \phi_p)\|_2
+  &\le \bigl[(\phi_v^{\mathrm{opt}} - \phi_p)^\top m_t + \beta_t \|L_t^\top(\phi_v^{\mathrm{opt}} - \phi_p)\|_2\bigr] \\
+  &\quad + \bigl[(\phi - \phi_v^{\mathrm{opt}})^\top m_t + \beta_t \|L_t^\top(\phi - \phi_v^{\mathrm{opt}})\|_2\bigr].
+\end{align*}
+Taking $\sup_{\phi \in \widehat\Phi(v)}$ and then $\min_{p \in \Delta(T_t(a))}$ yields~\eqref{eq:growing-split-socp}. For a coordinate box $[c_v - h_v, c_v + h_v]$, every $\phi \in \widehat\Phi(v)$ satisfies $\phi - \phi_v^{\mathrm{opt}} = -\sum_j \lambda_j \operatorname{sign}(m_{t,j}) (2 h_{v,j}) e_j$ with $\lambda_j \in [0, 1]$; by the triangle inequality on $\|L_t^\top (\phi - \phi_v^{\mathrm{opt}})\|_2$, the slack is bounded above by $\sum_j 2 h_{v,j} \lambda_j (\beta_t \|L_t^\top e_j\|_2 - |m_{t,j}|) \le \sum_j 2 h_{v,j} [\beta_t \|L_t^\top e_j\|_2 - |m_{t,j}|]_+$. For (c), the objective in~\eqref{eq:growing-split-socp} depends on $p$ only through the $\operatorname{rank}(L_t)$-dimensional vector $L_t^\top \phi_p$ and the scalar $\phi_p^\top m_t - \sum_y p_y \bar\xi(y)$ (or through $L_t^\top \phi_p$ alone when $\bar\xi$ is constant on $T_t(a)$); Carath\'eodory's theorem on the convex hull of the corresponding image points in $\mathbb{R}^{\operatorname{rank}(L_t) + 1}$ gives the stated support bound.
+\end{proof}
+
+\subsection{Algorithm \emph{Growing CD-Joint}, Anytime Soundness, and Exponential Separation}
+\label{app:growing-alg}
+
+Equation~\eqref{eq:growing-split-socp} cleanly separates the uncertainty of any active outside challenger $v_t$ into a \emph{statistical contrast width} $w_{\mathrm{stat}}(v_t) := \beta_t \|L_t^\top(\phi_{v_t}^{\mathrm{opt}} - \phi_{p_t^*})\|_2$ and a \emph{structural expansion slack} $s_{\mathrm{opt}}(v_t)$. This yields \emph{Growing CD-Joint} (Algorithm~\ref{alg:growing-cd-joint}), parameterized by a single Measure-vs-Expand tradeoff knob $\eta \in [0, \infty]$ (default $\eta = 1$).
+
+\begin{algorithm}[!htbp]
+\caption{\emph{Growing CD-Joint}: joint root certification on growing implicit search DAGs}
+\label{alg:growing-cd-joint}
+\begin{algorithmic}[1]
+\STATE Initialize prefix-DAG $G_0$ with root $r$, root actions $\mathcal{A}$, fixed-dimension estimator $(m_0, \Sigma_0, \beta_0)$, and balance $\eta > 0$.
+\LOOP
+  \STATE Compute outside-sink regret bounds $\widehat R_t^{\mathrm{grow}}(a) := \bigl[\max_{v \notin T_t(a) \cup F_t(a)} \widehat D_t^{\mathrm{grow}}(v, T_t(a))\bigr]_+$ via~\eqref{eq:growing-split-socp}.
+  \IF{$\min_a \widehat R_t^{\mathrm{grow}}(a) \le \varepsilon$}
+    \STATE \textbf{return} certified root action $\argmin_a \widehat R_t^{\mathrm{grow}}(a)$.
+  \ENDIF
+  \STATE Select optimistic root $b_t$ maximizing optimistic node value $\phi_v^{\mathrm{opt}\,\top} m_t + \beta_t \|L_t^\top \phi_v^{\mathrm{opt}}\|_2 + s_{\mathrm{opt}}(v) + \bar\xi(v)$.
+  \STATE \textbf{Rule 1 (Inside witness refresh / $\varepsilon/2$ safeguard):} If $T_t(b_t) = \emptyset$, or (cooldown satisfied and active dual mean $> \varepsilon/2$ while $\exists u \in F_t(b_t)$ whose optimistic value exceeds $\max_{y \in T_t(b_t)} \phi(y)^\top m_t$), expand the best inside frontier node along its optimistic child path until a new terminal enters $T_t(b_t)$; \textbf{continue}.
+  \STATE Obtain active outside challenger $v_t \in \argmax_{v \notin T_t(b_t) \cup F_t(b_t)} \widehat D_t^{\mathrm{grow}}(v, T_t(b_t))$, dual witness $p_t^*$, statistical width $w_{\mathrm{stat}}(v_t)$, and structural slack $s_{\mathrm{opt}}(v_t)$.
+  \STATE \textbf{Rule 2 (Measure-vs-Expand $\eta$-balance):} If $v_t \in F_t$ and $s_{\mathrm{opt}}(v_t) > \eta \cdot w_{\mathrm{stat}}(v_t)$ (and expansion budget remains), expand $v_t$ into canonical children $\mathrm{ch}(v_t)$ with transposition merging and nested envelopes; \textbf{continue}.
+  \STATE \textbf{Rule 3 (Contrast-directed measurement):} Form safeguarded contrast $g_t$ from $(\phi_{v_t}^{\mathrm{opt}}, p_t^*)$ and query $x_{t+1} \in \argmax_{x \in T_t} \alpha_t^{\mathrm{CD}}(x; g_t)$ (possibly an off-witness proxy terminal); update $(m_{t+1}, \Sigma_{t+1}, \beta_{t+1})$.
+\ENDLOOP
+\end{algorithmic}
+\end{algorithm}
+
+\begin{theorem}[Anytime soundness independent of $|Z^*|$, pruning, and formal $O(D)$ vs.\ $\Omega(2^D)$ separation]
+\label{thm:growing-separation}
+Assume the fixed-dimension ($d$) model~\eqref{eq:growing-truth} with $\sigma$-sub-Gaussian noise, $\|\theta^*\|_2 \le B_\theta$, bounded residual $|\delta^*(z)| \le \bar\xi(z) \le \bar\xi_{\max}$, and sound nested envelopes (Definition~\ref{def:growing-prefix}).
+\begin{enumerate}[label=(\alph*),leftmargin=1.8em]
+  \item \textbf{Anytime soundness independent of $|Z^*|$.} With the residual-inflated Abbasi--Yadkori radius \citep{abbasi2011}
+  \[
+    \beta_t^{\mathrm{rob}}
+    := \sqrt{\lambda}\, B_\theta
+       + \sigma\sqrt{2\log(1/\delta) + \log\frac{\det V_t}{\lambda^d}}
+       + \bar\xi_{\max}\sqrt{t},
+  \]
+  the ellipsoid $\Theta_t = \{\theta : \|\theta - \widehat\theta_t\|_{V_t} \le \beta_t^{\mathrm{rob}}\}$ satisfies $\mathbb{P}(\forall t \ge 1,\, \theta^* \in \Theta_t) \ge 1 - \delta$ with \emph{no dependence on $|Z^*|$}. Whenever Algorithm~\ref{alg:growing-cd-joint} terminates with $\widehat R_\tau^{\mathrm{grow}}(\hat a) \le \varepsilon$, $r^*(\hat a) \le \varepsilon$ on the full implicit DAG $G^*$ with probability at least $1 - \delta$.
+  \item \textbf{Pruning guarantee.} Any outside frontier node $v \notin F_t(a)$ with $\widehat D_t^{\mathrm{grow}}(v, T_t(a)) \le \varepsilon$ is never selected by Rule~2 as an active challenger and never requires expansion.
+  \item \textbf{Formal exponential separation on $G_D$.} For every depth $D \ge 4$, let $G_D$ be the depth-$D$ implicit DAG (\texttt{SharedPlateauSeparationDAG}, $|Z^*| = 3 \cdot 2^{D-1}$) with two root actions $a_1, a_2$ that share a canonical depth-$(D-1)$ full binary plateau subtree $P_{D-1}$ of $2^{D-1}$ near-tied terminals ($\mu^* \approx 0.80$), while $a_1$ additionally reaches a single unshared terminal $z_{\mathrm{in}}$ ($\mu^* = 0.85$) and $a_2$ reaches an unshared inferior subtree ($\mu^* \le 0.40$). Under Algorithm~\ref{alg:growing-cd-joint} (with $\varepsilon = 0.05$), the root of $P_{D-1}$ merges canonically into $F_t(a_1) \cap F_t(a_2)$ at depth $1$, cancels identically by Theorem~\ref{thm:growing-cancellation}(a), and is never expanded; \emph{Growing CD-Joint} certifies $a_1$ using only $O(D)$ node expansions ($3D - 1$ expansions, $6D$ nodes) and $O(1)$ observations. By contrast, any best-leaf / best-continuation-identification algorithm (including \citealt{pelissier}) and any marginal-bound growing algorithm must resolve the shared plateau $P_{D-1}$, requiring $\Omega(2^D)$ node expansions.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) For the ridge estimator $\widehat\theta_t = V_t^{-1}\sum_{s=1}^t \phi_{x_s} y_s$ with $y_s = \phi_{x_s}^\top \theta^* + \delta^*(x_s) + \eta_s$, decompose
+\[
+  \widehat\theta_t - \theta^*
+  = -\lambda V_t^{-1}\theta^*
+    + V_t^{-1}\sum_{s=1}^t \phi_{x_s}\eta_s
+    + V_t^{-1}\sum_{s=1}^t \phi_{x_s}\delta^*(x_s).
+\]
+Applying the triangle inequality in $\|\cdot\|_{V_t}$: the first term has norm $\le \sqrt{\lambda} B_\theta$; the martingale noise term has norm $\le \sigma\sqrt{2\log(1/\delta) + \log(\det V_t/\lambda^d)}$ simultaneously for all $t \ge 1$ with probability $\ge 1 - \delta$ \citep{abbasi2011}; and letting $\Phi_t \in \mathbb{R}^{t \times d}$ stack $\phi_{x_1}^\top, \dots, \phi_{x_t}^\top$, because $\Phi_t^\top \Phi_t = V_t - \lambda I \preceq V_t$, the operator norm satisfies $\|V_t^{-1/2}\Phi_t^\top\|_{\mathrm{op}} = \sqrt{\lambda_{\max}(V_t^{-1/2}(V_t - \lambda I)V_t^{-1/2})} \le 1$, giving
+\[
+  \Bigl\|\sum_{s=1}^t \phi_{x_s}\delta^*(x_s)\Bigr\|_{V_t^{-1}}
+  = \bigl\|V_t^{-1/2}\Phi_t^\top \delta_{1:t}\bigr\|_2
+  \le \|V_t^{-1/2}\Phi_t^\top\|_{\mathrm{op}}\, \|\delta_{1:t}\|_2
+  \le \bar\xi_{\max}\sqrt{t}.
+\]
+Combining with Theorem~\ref{thm:growing-cancellation}(a) and Theorem~\ref{thm:growing-conic-duality}(b) establishes anytime soundness. (b) follows immediately from Rule~2 selecting the active maximizer $v_t$ only while $\widehat R_t^{\mathrm{grow}}(b_t) > \varepsilon$. (c) On $G_D$, once $a_1$ and $a_2$ are expanded at depth $1$, the shared plateau root $v_P$ belongs to $F_t(a_1) \cap F_t(a_2)$ and is excluded from the outside challenger set of $a_1$. Only the depth-$D$ path to $z_{\mathrm{in}}$ under $a_1$ and the depth-$D$ inferior path under $a_2$ are traversed ($3D - 1$ expansions, $6D$ nodes), after which $O(1)$ observations certify $\mu^*(z_{\mathrm{in}}) - \max_{z \in Z^*_{\mathrm{bad}}(a_2)} \mu^*(z) > \varepsilon$. Conversely, any best-leaf or marginal-action-value algorithm must certify $\max_{z \in P_{D-1}} \mu^*(z)$ to within $\varepsilon$ (or rule out every branch of $P_{D-1}$), forcing expansion of $\Omega(2^D)$ plateau nodes.
+\end{proof}
+
+\subsection{Scope Boundaries: Horizon-Truncated Frontiers and Two-Player MIN--MAX Counterexample}
+\label{app:growing-scope}
+
+\begin{proposition}[Scope boundaries of growing-DAG root certification]
+\label{prop:growing-scope}
+\leavevmode
+\begin{enumerate}[label=(\alph*),leftmargin=1.8em]
+  \item \textbf{Horizon-truncated combinatorial frontiers (e.g.\ SameGame).} On single-agent all-MAX search DAGs lacking a low-dimensional feature model, any deterministic subtree upper bound $U_{\mathrm{det}}(v) \ge \max_{z \in Z^*(v)} \mu^*(z)$ defines a valid $d = 0$ scalar envelope ($\widehat\Phi(v) = \{0\}$, $\bar\xi(v) = U_{\mathrm{det}}(v)$). Theorem~\ref{thm:growing-cancellation}(a) remains strictly sound ($0$ false certificates), while pruning efficiency is governed by the tightness of $U_{\mathrm{det}}$.
+  \item \textbf{Failure of outside-support cancellation in two-player MIN--MAX games (e.g.\ Go).} Consider a $4$-node alternating root-MAX, depth-$1$-MIN DAG with root actions $a_1, a_2$ where $a_1$ transitions to a MIN node with children $\{z_{\mathrm{in}}, z_{\mathrm{trap}}\}$ and $a_2$ transitions to a MIN node with children $\{z_{\mathrm{in}}, z_{\mathrm{safe}}\}$, sharing $z_{\mathrm{in}}$. Under true values $\mu^*(z_{\mathrm{in}}) = 0.9$, $\mu^*(z_{\mathrm{safe}}) = 0.8$, and $\mu^*(z_{\mathrm{trap}}) = 0.1$, the only terminal excluded by $a_1$ is $z_{\mathrm{safe}}$, which satisfies $\mu^*(z_{\mathrm{safe}}) = 0.8 < 0.9 = \mu^*(z_{\mathrm{in}})$. Thus the all-MAX outside-support regret evaluates to $R^{\mathrm{MAX}}(a_1) = [0.8 - \max(0.9, 0.1)]_+ = 0$, falsely certifying $a_1$, whereas the true MIN--MAX values are $V(a_1) = \min(0.9, 0.1) = 0.1$ and $V(a_2) = \min(0.9, 0.8) = 0.8$, giving true minimax regret $0.7$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Part~(a) is a direct specialization of Definition~\ref{def:growing-prefix} and Theorem~\ref{thm:growing-cancellation}(a) with $d = 0$, $\theta^* = 0$, and $\bar\xi(v) = U_{\mathrm{det}}(v)$. Part~(b) follows directly from the displayed arithmetic: in a two-player MIN--MAX DAG, an \emph{inside} terminal $z_{\mathrm{trap}} \in S^*(a_1)$ can invalidate $a_1$ because the MIN opponent can force it, violating the all-MAX premise that only excluded terminals $z \notin S^*(a_1)$ can invalidate $a_1$. Extending joint certification to adversarial games requires propagating adversary strategy sets rather than all-MAX reachability supports.
+\end{proof}
+
+\subsection{Empirical Evaluation Across Four Growing-DAG Benchmarks}
+\label{app:growing-results}
+
+We evaluate \emph{Growing CD-Joint} against three matched growing-DAG baselines sharing identical canonical transposition tables, sound envelopes, and fixed-dimension anytime-valid posteriors across $3{,}140$ campaigns ($0$ false certificates everywhere; unit/CVXPY parity in \texttt{tests/test\_v16\_growing\_dag.py}): \emph{Growing Best-Leaf} (growing best-continuation identification following \citealt{pelissier}), \emph{Growing GP-OS} (outside-support stopping with optimistic inside/outside LUCB queries), and \emph{Growing Marginal} (marginal per-action UCB/LCB stopping).
+
+\begin{table}[!htbp]
+\caption{\textbf{Growing-DAG Suite 1: Commuting DAG scaling to $|Z| = 52.2\mathrm{M}$ (1A, $n=30$/depth, cap $1{,}500$ evals) and formal $O(D)$ vs.\ $\Omega(2^D)$ separation on $G_D$ (1B, $n=25$/depth, cap $500$ evals; $1{,}220$ total runs, $0$ false certificates).} Paired $10{,}000$-resample bootstrap $95\%$ CIs compare evaluations and materialized nodes vs.\ \emph{Growing CD-Joint}.}
+\label{tab:app-v16-scaling}
+\uniformaligntable{0.93}{%
+\begin{tabular}{@{}lrlrrrrrrr@{}}
+\toprule
+\textbf{Suite} & \textbf{$D$ ($|Z^*|$)} & \textbf{Policy} & \textbf{Cert (\%)} & \textbf{Evals [95\% CI]} & \textbf{Exp.} & \textbf{Nodes $|V_\tau|$} & \textbf{Exp.\ (\%)} & \textbf{Eval vs.\ CD} & \textbf{Node vs.\ CD} \\
+\midrule
+\multirow{10}{*}{\shortstack[l]{1A: Commuting\\Upgrade DAG\\($n=30$/depth)}}
+  & $3$ ($640$)              & \textsc{CD-Joint} / \textsc{Best-Leaf} & $100 / 100$ & $\mathbf{45.6}$ / $67.3$   & $13.8 / 13.8$   & $208.2 / 207.2$     & $32.5 / 32.4$     & $1.48\times$ [$1.29, 1.70$] & $1.00\times$ [$0.97, 1.03$] \\
+  & $4$ ($4{,}197$)          & \textsc{CD-Joint} / \textsc{Best-Leaf} & $100 / 100$ & $\mathbf{73.9}$ / $97.1$   & $22.0 / 22.2$   & $362.7 / 364.8$     & $8.64 / 8.69$     & $1.31\times$ [$1.12, 1.54$] & $1.01\times$ [$0.96, 1.05$] \\
+  & $5$ ($23{,}985$)         & \textsc{CD-Joint} / \textsc{Best-Leaf} & $100 / 100$ & $\mathbf{108.0}$ / $118.9$ & $32.6 / 34.0$   & $587.6 / 609.4$     & $2.45 / 2.54$     & $1.10\times$ [$0.90, 1.34$] & $1.04\times$ [$0.97, 1.11$] \\
+  & $6$ ($124{,}713$)        & \textsc{CD-Joint} / \textsc{Best-Leaf} & $100 / 100$ & $\mathbf{106.5}$ / $150.5$ & $44.5 / 46.1$   & $865.8 / 894.9$     & $0.69 / 0.72$     & $1.41\times$ [$1.02, 2.00$] & $1.03\times$ [$0.94, 1.14$] \\
+  & $8$ ($2.78\mathrm{M}$)   & \textsc{CD-Joint} / \textsc{Best-Leaf} & $100 / 100$ & $\mathbf{139.0}$ / $231.5$ & $68.3 / 124.8$  & $1{,}549 / 2{,}674$ & $0.056 / 0.096$   & $1.67\times$ [$1.24, 2.17$] & $1.73\times$ [$1.50, 2.00$] \\
+  & \multirow{4}{*}{$10$ ($52.2\mathrm{M}$)}
+    & \textsc{Growing CD-Joint}   & $\mathbf{100.0}$ & $\mathbf{181.2}$ [$157$, $208$]   & $178.4$ & $4{,}545.5$ & $\mathbf{0.0087}$ & $1.00\times$ (ref.) & $1.00\times$ (ref.) \\
+  & & \textsc{Growing Best-Leaf}  & $100.0$          & $292.4$ [$205$, $400$]            & $361.3$ & $8{,}483.1$ & $0.0162$          & $1.61\times$ [$1.17, 2.15$] & $1.87\times$ [$1.34, 2.64$] \\
+  & & \textsc{Growing GP-OS}      & $6.7$            & $1{,}419.2$ [$1{,}293$, $1{,}500$] & $76.7$  & $1{,}989.9$ & $0.0038$          & $7.83\times$ [$6.85, 8.99$] & $0.44\times$ [$0.33, 0.59$] \\
+  & & \textsc{Growing Marginal}   & $6.7$            & $1{,}457.5$ [$1{,}376$, $1{,}500$] & $103.3$ & $2{,}629.9$ & $0.0050$          & $8.04\times$ [$6.98, 9.33$] & $0.58\times$ [$0.38, 0.89$] \\
+\midrule
+\multirow{8}{*}{\shortstack[l]{1B: Formal\\Separation $G_D$\\(Thm.~\ref{thm:growing-separation}c,\\$n=25$/depth)}}
+  & $4$ ($24$)               & \textsc{CD-Joint} / \textsc{Best-Leaf} & $100 / 100$ & $18.4$ / $18.4$ & $\mathbf{11} / 15$ & $\mathbf{24} / 32$         & $100 / 133$  & $1.00\times$ & $1.33\times$ \\
+  & $6$ ($96$)               & \textsc{CD-Joint} / \textsc{Best-Leaf} & $100 / 100$ & $18.5$ / $18.5$ & $\mathbf{17} / 43$ & $\mathbf{36} / 88$         & $37.5 / 91.7$ & $1.00\times$ & $2.44\times$ \\
+  & $8$ ($384$)              & \textsc{CD-Joint} / \textsc{Best-Leaf} & $100 / 100$ & $18.6$ / $18.6$ & $\mathbf{23} / 143$ & $\mathbf{48} / 288$       & $12.5 / 75.0$ & $1.00\times$ & $6.00\times$ \\
+  & $10$ ($1{,}536$)         & \textsc{CD-Joint} / \textsc{Best-Leaf} & $100 / 100$ & $18.1$ / $18.1$ & $\mathbf{29} / 531$ & $\mathbf{60} / 1{,}064$   & $3.91 / 69.3$ & $1.00\times$ & $17.73\times$ \\
+  & \multirow{4}{*}{$12$ ($6{,}144$)}
+    & \textsc{Growing CD-Joint}   & $\mathbf{100.0}$ & $\mathbf{18.3}$ [$18.0$, $18.7$] & $\mathbf{35.0}$ & $\mathbf{72.0}$ & $\mathbf{1.17}$ & $1.00\times$ (ref.) & $1.00\times$ (ref.) \\
+  & & \textsc{Growing GP-OS}      & $100.0$          & $18.2$ [$18.0$, $18.6$]          & $35.0$          & $72.0$          & $1.17$          & $1.00\times$ [$0.99, 1.00$] & $1.00\times$ \\
+  & & \textsc{Growing Best-Leaf}  & $100.0$          & $18.3$ [$18.0$, $18.7$]          & $2{,}071.0$     & $4{,}144.0$     & $67.45$         & $1.00\times$ & $\mathbf{57.56\times}$ \\
+  & & \textsc{Growing Marginal}   & $0.0$            & $500.0$ [$500.0$, $500.0$]       & $2{,}070.0$     & $4{,}142.0$     & $67.42$         & $27.35\times$ [$26.77, 27.78$] & $57.53\times$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[!htbp]
+\caption{\textbf{Growing-DAG Suite 2: Combinatorial feature selection vs.\ Best-Leaf \citep{pelissier} ($480$ runs across $3$ datasets, $n=40$/dataset, cap $1{,}500$ evals, $0$ false certificates).} On \texttt{collinear\_p40} ($5$ redundant $8$-feature blocks, $\binom{8}{5}=56$ near-tied subsets), shared-support cancellation cuts both evaluations ($1.34\times$) and materialized nodes ($1.25\times$); on \texttt{digits\_p64} ($3.80\mathrm{M}$ subsets), \emph{Growing CD-Joint} cuts evaluations by $1.58\times$ while expanding only $0.52\%$ of the DAG.}
+\label{tab:app-v16-fs}
+\uniformaligntable{0.93}{%
+\begin{tabular}{@{}llrrrrrrr@{}}
+\toprule
+\textbf{Dataset ($|Z^*|$)} & \textbf{Policy} & \textbf{Cert (\%)} & \textbf{Evals [95\% CI]} & \textbf{Exp.} & \textbf{Nodes $|V_\tau|$} & \textbf{Exp.\ (\%)} & \textbf{Eval vs.\ CD [95\% CI]} & \textbf{Node vs.\ CD [95\% CI]} \\
+\midrule
+\multirow{4}{*}{\shortstack[l]{\texttt{breast\_cancer}\\($p{=}30$, $|Z^*|{=}116\mathrm{k}$)}}
+  & \textsc{Growing CD-Joint}  & $\mathbf{100.0}$ & $\mathbf{456.7}$ [$428$, $486$]  & $436.5$ & $8{,}269$ & $7.12$ & $1.00\times$ (ref.) & $1.00\times$ (ref.) \\
+  & \textsc{Growing Best-Leaf} & $100.0$          & $471.2$ [$441$, $504$]           & $425.4$ & $8{,}097$ & $6.97$ & $1.03\times$ [$0.94, 1.14$] & $0.98\times$ [$0.90, 1.07$] \\
+  & \textsc{Growing GP-OS}     & $0.0$            & $1{,}500.0$ [$1{,}500$, $1{,}500$] & $86.4$  & $1{,}916$ & $1.65$ & $3.28\times$ [$3.09, 3.50$] & $0.23\times$ [$0.19, 0.28$] \\
+  & \textsc{Growing Marginal}  & $0.0$            & $1{,}500.0$ [$1{,}500$, $1{,}500$] & $65.9$  & $1{,}592$ & $1.37$ & $3.28\times$ [$3.09, 3.50$] & $0.19\times$ [$0.18, 0.21$] \\
+\midrule
+\multirow{4}{*}{\shortstack[l]{\texttt{collinear\_p40}\\($p{=}40$, $|Z^*|{=}457\mathrm{k}$)}}
+  & \textsc{Growing CD-Joint}  & $\mathbf{100.0}$ & $\mathbf{61.3}$ [$54$, $69$]     & $\mathbf{114.9}$ & $\mathbf{3{,}867}$ & $0.85$ & $1.00\times$ (ref.) & $1.00\times$ (ref.) \\
+  & \textsc{Growing Best-Leaf} & $100.0$          & $82.1$ [$67$, $99$]              & $144.6$          & $4{,}825$          & $1.06$ & $\mathbf{1.34\times}$ [$1.09, 1.64$] & $\mathbf{1.25\times}$ [$1.20, 1.30$] \\
+  & \textsc{Growing GP-OS}     & $7.5$            & $1{,}410.5$ [$1{,}301$, $1{,}500$] & $65.1$          & $2{,}227$          & $0.49$ & $23.00\times$ [$20.15, 26.18$] & $0.58\times$ [$0.53, 0.62$] \\
+  & \textsc{Growing Marginal}  & $0.0$            & $1{,}500.0$ [$1{,}500$, $1{,}500$] & $33.2$          & $1{,}141$          & $0.25$ & $24.46\times$ [$21.65, 27.55$] & $0.30\times$ [$0.28, 0.31$] \\
+\midrule
+\multirow{4}{*}{\shortstack[l]{\texttt{digits\_p64}\\($p{=}64$, $|Z^*|{=}3.80\mathrm{M}$)}}
+  & \textsc{Growing CD-Joint}  & $\mathbf{100.0}$ & $\mathbf{179.3}$ [$171$, $188$]  & $388.3$ & $19{,}651$ & $0.52$ & $1.00\times$ (ref.) & $1.00\times$ (ref.) \\
+  & \textsc{Growing Best-Leaf} & $100.0$          & $283.5$ [$264$, $306$]           & $236.0$ & $12{,}698$ & $0.33$ & $\mathbf{1.58\times}$ [$1.45, 1.73$] & $0.65\times$ [$0.57, 0.74$] \\
+  & \textsc{Growing GP-OS}     & $20.0$           & $1{,}375.2$ [$1{,}286$, $1{,}453$] & $96.7$  & $5{,}345$  & $0.14$ & $7.67\times$ [$7.04, 8.28$] & $0.27\times$ [$0.22, 0.33$] \\
+  & \textsc{Growing Marginal}  & $0.0$            & $1{,}500.0$ [$1{,}500$, $1{,}500$] & $42.4$  & $2{,}482$  & $0.07$ & $8.36\times$ [$7.97, 8.79$] & $0.13\times$ [$0.11, 0.14$] \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[!htbp]
+\caption{\textbf{Growing-DAG Suite 3: Deep $10$-site combinatorial protein mutagenesis up to $|Z^*| = 2.41 \times 10^9$ variants ($700$ runs, $n=25$/horizon, cap $2{,}000$ assays, $0$ false certificates).} Epistatic variance decompositions are measured directly on the bundled GB1 ($149{,}361$ variants: $R^2_{\mathrm{add}}=0.2636$, $R^2_{\mathrm{add+pair}}=0.3045$, $R^2_{\mathrm{ho}}=0.6955$) and TmTrpB ($159{,}129$ variants: $R^2_{\mathrm{add}}=0.2597$, $R^2_{\mathrm{add+pair}}=0.3108$, $R^2_{\mathrm{ho}}=0.6892$) landscapes; bounded higher-order residuals ($\bar\xi = 0.004$ GB1, $0.003$/$0.002$ TrpB) are accounted for via Theorem~\ref{thm:growing-separation}(a).}
+\label{tab:app-v16-proteins}
+\uniformaligntable{0.93}{%
+\begin{tabular}{@{}lrlrrrrrrr@{}}
+\toprule
+\textbf{Landscape} & \textbf{$k$ ($|Z^*|$)} & \textbf{Policy} & \textbf{Cert (\%)} & \textbf{Assays [95\% CI]} & \textbf{Exp.} & \textbf{Nodes $|V_\tau|$} & \textbf{Exp.\ (\%)} & \textbf{Assay vs.\ CD} & \textbf{Node vs.\ CD} \\
+\midrule
+\multirow{6}{*}{\shortstack[l]{GB1-cal.\\($\sigma{=}0.10$)}}
+  & $4$ ($69.6\mathrm{k}$)   & \textsc{CD-Joint} / \textsc{Best-Leaf} & $\mathbf{100} / 96$ & $\mathbf{166.1}$ / $244.9$ & $29.6 / 30.4$ & $1{,}116 / 1{,}145$ & $1.60 / 1.65$ & $1.47\times$ [$0.87, 2.47$] & $1.03\times$ [$0.98, 1.07$] \\
+  & $6$ ($2.30\mathrm{M}$)   & \textsc{CD-Joint} / \textsc{Best-Leaf} & $\mathbf{100} / 96$ & $\mathbf{257.6}$ / $417.0$ & $57.2 / 68.1$ & $1{,}893 / 2{,}231$ & $0.082 / 0.097$ & $\mathbf{1.62\times}$ [$1.09, 2.32$] & $\mathbf{1.18\times}$ [$1.08, 1.29$] \\
+  & \multirow{4}{*}{$8$ ($14.68\mathrm{M}$)}
+    & \textsc{Growing CD-Joint}  & $\mathbf{100.0}$ & $\mathbf{343.0}$ [$295$, $395$]    & $130.9$ & $3{,}737$ & $\mathbf{0.025}$ & $1.00\times$ (ref.) & $1.00\times$ (ref.) \\
+  & & \textsc{Growing Best-Leaf} & $92.0$           & $779.1$ [$558$, $1{,}024$]         & $215.1$ & $5{,}696$ & $0.039$          & $\mathbf{2.27\times}$ [$1.63, 3.03$] & $\mathbf{1.52\times}$ [$1.20, 1.92$] \\
+  & & \textsc{Growing GP-OS}     & $0.0$            & $2{,}000.0$ [$2{,}000$, $2{,}000$] & $73.2$  & $2{,}085$ & $0.014$          & $5.83\times$ [$5.06, 6.77$] & $0.56\times$ [$0.48, 0.66$] \\
+  & & \textsc{Growing Marginal}  & $4.0$            & $1{,}973.6$ [$1{,}921$, $2{,}000$] & $122.1$ & $3{,}272$ & $0.022$          & $5.75\times$ [$5.01, 6.65$] & $0.88\times$ [$0.53, 1.42$] \\
+\midrule
+\multirow{7}{*}{\shortstack[l]{TrpB-cal.\\($\sigma{=}0.07$)}}
+  & $4$ ($69.6\mathrm{k}$)   & \textsc{CD-Joint} / \textsc{Best-Leaf} & $100 / 100$         & $96.9$ / $94.1$            & $29.5 / 30.2$   & $1{,}115 / 1{,}141$  & $1.60 / 1.64$   & $0.97\times$ [$0.82, 1.18$] & $1.02\times$ [$0.97, 1.07$] \\
+  & $6$ ($2.30\mathrm{M}$)   & \textsc{CD-Joint} / \textsc{Best-Leaf} & $100 / 100$         & $\mathbf{135.5}$ / $182.5$ & $57.9 / 66.2$   & $1{,}913 / 2{,}169$  & $0.083 / 0.094$ & $1.35\times$ [$0.97, 1.84$] & $1.13\times$ [$0.96, 1.33$] \\
+  & $8$ ($14.68\mathrm{M}$)  & \textsc{CD-Joint} / \textsc{Best-Leaf} & $\mathbf{100} / 92$ & $\mathbf{167.1}$ / $558.2$ & $111.8 / 212.6$ & $3{,}219 / 5{,}581$  & $0.022 / 0.038$ & $\mathbf{3.34\times}$ [$2.10, 4.74$] & $\mathbf{1.73\times}$ [$1.47, 2.01$] \\
+  & \multirow{4}{*}{$10$ ($2.41\mathrm{B}$)}
+    & \textsc{Growing CD-Joint}  & $\mathbf{100.0}$ & $\mathbf{311.8}$ [$244$, $393$]    & $\mathbf{276.3}$ & $\mathbf{13{,}004}$ & $\mathbf{0.00054}$ & $1.00\times$ (ref.) & $1.00\times$ (ref.) \\
+  & & \textsc{Growing Best-Leaf} & $52.0$           & $1{,}497.6$ [$1{,}251$, $1{,}729$] & $863.8$          & $35{,}981$          & $0.00149$          & $\mathbf{4.80\times}$ [$3.80, 6.11$] & $\mathbf{2.77\times}$ [$2.07, 3.84$] \\
+  & & \textsc{Growing GP-OS}     & $0.0$            & $2{,}000.0$ [$2{,}000$, $2{,}000$] & $99.6$           & $4{,}429$           & $0.00018$          & $6.41\times$ [$5.09, 8.20$] & $0.34\times$ [$0.26, 0.47$] \\
+  & & \textsc{Growing Marginal}  & $0.0$            & $2{,}000.0$ [$2{,}000$, $2{,}000$] & $134.7$          & $5{,}706$           & $0.00024$          & $6.41\times$ [$5.09, 8.20$] & $0.44\times$ [$0.26, 0.77$] \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[!htbp]
+\caption{\textbf{Growing-DAG Suite 4: Measure-vs-Expand $\eta$-Pareto sweep on $8$-stage workflows ($3^8{=}6{,}561$ and $4^8{=}65{,}536$; $n=30$/setting, cap $1{,}500$ evals) and $20$ real SameGame endgame boards (Proposition~\ref{prop:growing-scope}a; $740$ total runs, $0$ false certificates).} Pure expansion ($\eta{=}0$) exhausts the expansion budget, while $\eta{=}0.25$ achieves the evaluation-optimal Pareto knee ($100\%$ / $96.7\%$ certified in $290$--$300$ evals, expanding $<0.9\%$ of $4^8$); larger $\eta$ trades modest extra evaluations for fewer materialized nodes.}
+\label{tab:app-v16-mve}
+\uniformaligntable{0.93}{%
+\begin{tabular}{@{}llrrrrrr@{}}
+\toprule
+\textbf{Domain ($|Z^*|$)} & \textbf{Policy / $\eta$} & \textbf{Cert (\%)} & \textbf{Evals [95\% CI]} & \textbf{Exp.} & \textbf{Nodes $|V_\tau|$} & \textbf{Exp.\ (\%)} & \textbf{RT (s)} \\
+\midrule
+\multirow{8}{*}{\shortstack[l]{8-Stage Workflow\\($3^8 = 6{,}561$, $n{=}30$)}}
+  & \textsc{CD-Joint} ($\eta{=}0$)      & $23.3$           & $1{,}210.1$ [$1{,}009$, $1{,}382$] & $800.0$ & $2{,}303.2$ & $35.10$ & $45.46$ \\
+  & \textsc{CD-Joint} ($\eta{=}0.25$)   & $\mathbf{100.0}$ & $\mathbf{290.4}$ [$229$, $363$]    & $123.2$ & $359.2$     & $5.47$  & $0.28$  \\
+  & \textsc{CD-Joint} ($\eta{=}0.5$)    & $96.7$           & $523.7$ [$418$, $643$]             & $85.4$  & $252.3$     & $3.84$  & $0.34$  \\
+  & \textsc{CD-Joint} ($\eta{=}1.0$)    & $93.3$           & $747.1$ [$608$, $891$]             & $79.0$  & $234.6$     & $3.58$  & $0.59$  \\
+  & \textsc{CD-Joint} ($\eta \ge 2 / \infty$) & $86.7$     & $792.7$ [$637$, $952$]             & $78.5$  & $233.2$     & $3.55$  & $0.61$  \\
+  & \textsc{Growing Best-Leaf} ($\eta{=}1$) & $36.7$       & $1{,}227.9$ [$1{,}078$, $1{,}362$] & $60.9$  & $182.5$     & $2.78$  & $0.46$  \\
+  & \textsc{Growing GP-OS} ($\eta{=}1$)     & $0.0$        & $1{,}500.0$ [$1{,}500$, $1{,}500$] & $54.2$  & $163.1$     & $2.49$  & $0.53$  \\
+  & \textsc{Growing Marginal} ($\eta{=}1$)  & $0.0$        & $1{,}500.0$ [$1{,}500$, $1{,}500$] & $54.0$  & $160.8$     & $2.45$  & $0.43$  \\
+\midrule
+\multirow{8}{*}{\shortstack[l]{8-Stage Workflow\\($4^8 = 65{,}536$, $n{=}30$)}}
+  & \textsc{CD-Joint} ($\eta{=}0$)      & $0.0$            & $1{,}500.0$ [$1{,}500$, $1{,}500$] & $800.0$ & $3{,}105.5$ & $4.74$  & $14.80$ \\
+  & \textsc{CD-Joint} ($\eta{=}0.25$)   & $\mathbf{96.7}$  & $\mathbf{300.5}$ [$222$, $403$]    & $149.5$ & $585.1$     & $\mathbf{0.89}$ & $0.50$  \\
+  & \textsc{CD-Joint} ($\eta{=}0.5$)    & $90.0$           & $519.9$ [$391$, $670$]             & $85.5$  & $338.4$     & $0.52$  & $0.45$  \\
+  & \textsc{CD-Joint} ($\eta{=}1.0$)    & $86.7$           & $678.0$ [$544$, $827$]             & $79.4$  & $316.1$     & $0.48$  & $0.67$  \\
+  & \textsc{CD-Joint} ($\eta{=}4 / \infty$) & $86.7$       & $695.8$ [$562$, $845$]             & $77.8$  & $310.0$     & $0.47$  & $0.70$  \\
+  & \textsc{Growing Best-Leaf} ($\eta{=}1$) & $16.7$       & $1{,}407.5$ [$1{,}322$, $1{,}477$] & $58.7$  & $235.1$     & $0.36$  & $0.62$  \\
+  & \textsc{Growing GP-OS} ($\eta{=}1$)     & $0.0$        & $1{,}500.0$ [$1{,}500$, $1{,}500$] & $56.5$  & $225.9$     & $0.34$  & $0.63$  \\
+  & \textsc{Growing Marginal} ($\eta{=}1$)  & $0.0$        & $1{,}500.0$ [$1{,}500$, $1{,}500$] & $76.1$  & $303.0$     & $0.46$  & $0.60$  \\
+\midrule
+SameGame $h{=}3$ ($20$ boards) & \textsc{CD-Joint} (all $7$ $\eta$ values) & $30.0$ ($6/20$) & $211.8$ [$152$, $270$] & $23.5$ & $68.5$ & $99.7$ & $5.09$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics{figures/supp_growing_dag_benchmarks.pdf}
+\vspace{-10pt}
+\caption{\textbf{Growing Implicit Search DAG benchmarks (\texttt{v16} Suites 1--4, $3{,}140$ runs, $0$ false certificates).} (a) Formal exponential separation on $G_D$ (Theorem~\ref{thm:growing-separation}c): \emph{Growing CD-Joint} and \emph{Growing GP-OS} grow linearly as $6D$ ($72$ nodes at $D{=}12$), while \emph{Growing Best-Leaf} and \emph{Growing Marginal} explode as $\Omega(2^D)$ ($4{,}144$ nodes, $57.6\times$). (b) Commuting DAG scaling to $|Z^*| = 5.22 \times 10^7$: \emph{Growing CD-Joint} certifies $100\%$ in $181.2$ evals and $0.0087\%$ of leaves ($1.61\times$ fewer evals and $1.87\times$ fewer nodes than \emph{Best-Leaf}). (c) Deep $10$-site combinatorial protein mutagenesis up to $|Z^*| = 2.41 \times 10^9$: at $k{=}10$, \emph{Growing CD-Joint} certifies $100\%$ in $311.8$ assays ($0.00054\%$ of variants) vs.\ \emph{Best-Leaf} $52\%$ / $1{,}497.6$ assays ($4.80\times$). (d) Measure-vs-Expand $\eta$-Pareto frontier on $8$-stage workflows ($3^8$ and $4^8$), dominating \emph{Best-Leaf} across all $\eta > 0$. Sources: Tables~\ref{tab:app-v16-scaling}, \ref{tab:app-v16-proteins}, and~\ref{tab:app-v16-mve}.}
+\label{fig:app-v16-growing}
+\end{figure}
+
+\paragraph{Summary of growing-DAG evidence.}
+Across all $3{,}140$ campaigns in Tables~\ref{tab:app-v16-scaling}--\ref{tab:app-v16-mve} and Figure~\ref{fig:app-v16-growing} ($0$ false certificates), four results stand out:
+(i) On $G_D$, canonical transposition merging empirically realizes the exact $O(D)$ vs.\ $\Omega(2^D)$ separation of Theorem~\ref{thm:growing-separation}(c) ($72$ vs.\ $4{,}144$ nodes at $D=12$, $57.6\times$);
+(ii) On commuting DAGs up to $|Z^*| = 52.2\mathrm{M}$ and combinatorial feature selection up to $|Z^*| = 3.80\mathrm{M}$, \emph{Growing CD-Joint} maintains $100\%$ certification while expanding $<0.01\%$--$0.85\%$ of leaves and cutting evaluations by $1.34\times$--$1.67\times$ over \emph{Growing Best-Leaf}, whereas \emph{Growing GP-OS} and \emph{Growing Marginal} fail to certify on $>80\%$ of campaigns because uncoordinated exploration fails to tighten active outside-vs-inside contrasts;
+(iii) On $10$-site deep protein mutagenesis calibrated to measured GB1 and TmTrpB spectra up to $|Z^*| = 2.41 \times 10^9$ variants, \emph{Growing CD-Joint} certifies $100\%$ at every horizon ($311.8$ assays and $13{,}004$ nodes $= 0.00054\%$ of $2.41\mathrm{B}$ at $k=10$) while \emph{Growing Best-Leaf} drops to $52\%$ ($1{,}497.6$ assays, $4.80\times$, CI $[3.80, 6.11]$; $35{,}981$ nodes, $2.77\times$); and
+(iv) On $8$-stage workflows, sweeping $\eta$ traces a clean Measure-vs-Expand Pareto frontier whose knee at $\eta = 0.25$ certifies $100\%$ ($3^8$) and $96.7\%$ ($4^8$) in $\approx 290$--$300$ evaluations while real SameGame boards confirm the sound $d=0$ combinatorial-ceiling boundary of Proposition~\ref{prop:growing-scope}(a) ($0/140$ false certificates, $6/20$ certified within $h=3$).
 
 \end{document}
 

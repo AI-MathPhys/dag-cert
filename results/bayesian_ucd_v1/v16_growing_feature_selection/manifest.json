@@ -1,0 +1,25 @@
+{
+  "experiment": "v16_growing_feature_selection",
+  "smoke": false,
+  "elapsed_s": 1163.45,
+  "python": "3.12.14",
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "files": {
+    "config.json": {
+      "sha256": "a642a68ce015fd09081eecde3e959b82333a4f25e7d04ec7cb3d4840c8a32f90",
+      "bytes": 429
+    },
+    "v16_growing_feature_selection_records.csv": {
+      "sha256": "fc2414acafc92de3c36b904077c795c8d1b1e09d81956402ec850caf1e19af27",
+      "bytes": 65251
+    },
+    "v16_growing_feature_selection_records.parquet": {
+      "sha256": "d15717a3b8a1dd403e4a527a402c079d0321103728ed312157b39743a5d718fb",
+      "bytes": 36036
+    },
+    "v16_growing_feature_selection_summary.csv": {
+      "sha256": "710e6d2b074ed41f79e644203325f39aa8670cc2779cd77821828f54cbef222d",
+      "bytes": 2972
+    }
+  }
+}

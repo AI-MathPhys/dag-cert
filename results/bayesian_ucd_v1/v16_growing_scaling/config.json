@@ -1,0 +1,36 @@
+{
+  "experiment": "v16_growing_scaling",
+  "git_commit": "0589c819d1fcc12e4795237a461888eec6040e24",
+  "smoke": false,
+  "policies": [
+    "growing_best_leaf",
+    "growing_marginal",
+    "growing_gp_os",
+    "growing_cd_joint"
+  ],
+  "suite_1A_depths": [
+    3,
+    4,
+    5,
+    6,
+    8,
+    10
+  ],
+  "suite_1A_seeds": 30,
+  "suite_1A_caps": {
+    "max_evals": 1500,
+    "max_expansions": 800
+  },
+  "suite_1B_depths": [
+    4,
+    6,
+    8,
+    10,
+    12
+  ],
+  "suite_1B_seeds": 25,
+  "suite_1B_caps": {
+    "max_evals": 500,
+    "max_expansions": 2500
+  }
+}

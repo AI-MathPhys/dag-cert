@@ -1053,6 +1053,285 @@ def fig16_seven_method_cross_domain(out: Path) -> None:
     ps.save(fig, out / "supp_7method_cross_domain.pdf")
 
 
+def fig17_margin_aware_cd_joint(out: Path) -> None:
+    """Margin-Aware CD-Joint (v17 Phase B): cross-domain ratios, cert rates & mechanistic trajectories."""
+    pb = BAY / "v17_ma_cd_joint_phaseb"
+    all_rows = _csv(pb / "v17_phaseb_all_benchmarks_summary.csv")
+    gb1_orig = _csv(pb / "v17_gb1_orig10_summary.csv")
+    lookup = {(r["dataset"], r["acquisition_method"]): r for r in all_rows if r["scope"] == "ALL"}
+    for r in gb1_orig:
+        lookup[("gb1_orig10", r["acquisition_method"])] = r
+
+    wf_tr = _csv(pb / "v17_worfbench_cached_trajectory_summary.csv")
+    trpb_tr = _csv(pb / "v17_trpb_trajectory_summary.csv")
+
+    fig = plt.figure(figsize=(ps.TEXT_WIDTH, 4.75))
+    top, bot = fig.subfigures(2, 1, height_ratios=[1.12, 1.05], hspace=0.06)
+    ax, bx = top.subplots(1, 2, gridspec_kw={"width_ratios": [1.22, 1.0]})
+    cx, dx, ex = bot.subplots(1, 3)
+
+    benches = (
+        ("synthetic_main64", "Synth\n$M{=}64$"),
+        ("synthetic_confirm_freq_d8", "Synth\n$d{=}8$ AY"),
+        ("worfbench_cached", "WorF\nBench"),
+        ("trpb", "TmTrpB\n(21 tmpl)"),
+        ("gb1_orig10", "GB1\n(10 tmpl)"),
+    )
+    comp_pols = (
+        ("gp_os", "GP-OS", ORANGE),
+        ("gp_root_info", "GP-Root-Info", BLUE),
+        ("cd_joint_single_witness", "CD-Single", REF),
+        ("ma_cd_joint_safe", "MA-CD-Safe", OURS),
+    )
+
+    # (a) Paired restricted-mean ratio vs CD-Joint (1.00x dashed ref)
+    ps.panel(ax, "a", "Cost ratio vs. CD-Joint (Phase B, $<1$ better)")
+    ps.ygrid(ax)
+    gx, w = _grouped(ax, len(benches), len(comp_pols), width=0.78)
+    y_cap = 2.55
+    for (m, name, col), xs in zip(comp_pols, gx):
+        vals, lo, hi, lbls = [], [], [], []
+        for ds, _ in benches:
+            r = lookup[(ds, m)]
+            v = float(r["ratio_vs_cd"])
+            v_lo = float(r["ratio_vs_cd_ci95_lo"])
+            v_hi = float(r["ratio_vs_cd_ci95_hi"])
+            vals.append(min(v, y_cap))
+            lo.append(min(v_lo, y_cap))
+            hi.append(min(v_hi, y_cap))
+            if v > y_cap:
+                lbls.append(f"{v:.2f}x")
+            elif m == "ma_cd_joint_safe":
+                lbls.append(f"{v:.2f}")
+            else:
+                lbls.append("")
+        ps.bars(ax, xs, vals, col, width=w * 0.9, lo=lo, hi=hi, labels=lbls, label_size=5.4, legend=name)
+    ax.axhline(1.0, color="#555555", linestyle="--", linewidth=0.9, zorder=1)
+    ax.annotate("CD-Joint = 1.00", xy=(2.0, 1.02), xytext=(2.0, 1.48),
+                ha="center", va="bottom", fontsize=ps.fs(5.3), color="#444444",
+                arrowprops=dict(arrowstyle="-", color="#777777", lw=0.65),
+                bbox=dict(facecolor="white", edgecolor="none", pad=0.6, alpha=0.9), zorder=6)
+    ax.set_xticks(range(len(benches)))
+    ax.set_xticklabels([lbl for _, lbl in benches])
+    ax.tick_params(axis="x", labelsize=ps.fs(6.2))
+    ax.set_ylim(0, 2.95)
+    ax.set_yticks([0.0, 0.5, 1.0, 1.5, 2.0, 2.5])
+    ax.set_ylabel("Eval. ratio vs. CD-Joint")
+
+    # (b) Certification rate (%) highlighting unconstrained MA-CD stall & single-witness protein collapse
+    ps.panel(bx, "b", "Certification rate (%)")
+    ps.ygrid(bx)
+    cert_pols = (
+        ("cd_joint", "CD-Joint", PINK),
+        ("ma_cd_joint_safe", "MA-CD-Safe", OURS),
+        ("cd_joint_single_witness", "CD-Single", REF),
+        ("ma_cd_joint", "MA-CD (unconstr.)", BAD),
+    )
+    gx_b, w_b = _grouped(bx, len(benches), len(cert_pols), width=0.78)
+    for (m, name, col), xs in zip(cert_pols, gx_b):
+        vals = [100.0 * float(lookup[(ds, m)]["cert_rate"]) for ds, _ in benches]
+        lo = [100.0 * float(lookup[(ds, m)]["cert_ci95_lo"]) for ds, _ in benches]
+        hi = [100.0 * float(lookup[(ds, m)]["cert_ci95_hi"]) for ds, _ in benches]
+        ps.bars(bx, xs, vals, col, width=w_b * 0.9, lo=lo, hi=hi, legend=name)
+    bx.set_xticks(range(len(benches)))
+    bx.set_xticklabels([lbl for _, lbl in benches])
+    bx.tick_params(axis="x", labelsize=ps.fs(6.2))
+    bx.set_ylim(0, 114)
+    bx.set_yticks([0, 25, 50, 75, 100])
+    bx.set_ylabel("Certified (%)")
+
+    # Shared legend for top row
+    h_a, l_a = ax.get_legend_handles_labels()
+    h_b, l_b = bx.get_legend_handles_labels()
+    seen_leg = {}
+    for h, l in list(zip(h_a, l_a)) + list(zip(h_b, l_b)):
+        if l not in seen_leg:
+            seen_leg[l] = h
+    top.legend(list(seen_leg.values()), list(seen_leg.keys()), loc="outside lower center",
+               ncol=6, handlelength=0.9, columnspacing=0.9, fontsize=ps.fs(6.2))
+
+    # Bottom row: mechanistic trajectories
+    traj_series = (
+        ("ma_cd_joint_safe", "MA-CD-Safe", OURS, "-", "D", 3.6),
+        ("cd_joint", "CD-Joint", PINK, "-", "o", 3.4),
+        ("gp_os", "GP-OS", ORANGE, "--", "s", 3.0),
+        ("cd_joint_single_witness", "CD-Single", BLUE, "-.", "^", 3.0),
+        ("ma_cd_joint", "MA-CD (unconstr.)", BAD, ":", "v", 3.0),
+    )
+
+    def _plot_traj(axis, rows, col_key, min_active=50, scale=1.0):
+        for pol, name, col, ls, mk, ms in traj_series:
+            sub = [r for r in rows if r["acquisition_method"] == pol and int(r["n_active"]) >= min_active]
+            if not sub:
+                continue
+            xs = [int(r["checkpoint"]) for r in sub]
+            ys = [scale * float(r[col_key]) for r in sub]
+            axis.plot(xs, ys, color=col, linestyle=ls, marker=mk, markersize=ms,
+                      linewidth=1.5 if pol == "ma_cd_joint_safe" else 1.25, label=name, zorder=4 if pol == "ma_cd_joint_safe" else 3)
+        axis.set_xscale("log")
+        ps.ygrid(axis)
+        axis.set_xlabel("Evaluation step $t$")
+
+    ps.panel(cx, "c", "WorFBench: progress $\\Psi(H_t)$")
+    _plot_traj(cx, wf_tr, "mean_std_cert_progress", min_active=100, scale=1.0)
+    cx.set_ylabel("Mean $\\min(1, H_t/\\beta_t)$")
+    cx.set_ylim(0, 0.90)
+
+    ps.panel(dx, "d", "TmTrpB: witness margin")
+    _plot_traj(dx, trpb_tr, "mean_retained_witness_margin", min_active=100, scale=1.0)
+    dx.set_ylabel("Mean $m_t(\\mathrm{in})-m_t(\\mathrm{out})$")
+    dx.set_ylim(-0.03, 0.19)
+
+    ps.panel(ex, "e", "WorFBench: in-set %")
+    _plot_traj(ex, wf_tr, "mean_inside_query_frac", min_active=100, scale=100.0)
+    ex.set_ylabel("Inside-support queries (%)")
+    ex.set_ylim(0, 105)
+
+    h_c, l_c = cx.get_legend_handles_labels()
+    bot.legend(h_c, l_c, loc="outside lower center", ncol=5, handlelength=1.2, columnspacing=1.0, fontsize=ps.fs(6.2))
+    ps.save(fig, out / "supp_margin_aware_cd_joint.pdf")
+
+
+def fig18_growing_dag_benchmarks(out: Path) -> None:
+    """Growing Implicit Search DAGs (v16 Suites 1-4): formal separation, scaling, 10-site proteins & eta Pareto."""
+    s1 = _csv(BAY / "v16_growing_scaling/v16_growing_scaling_summary.csv")
+    s3 = _csv(BAY / "v16_growing_deep_proteins/v16_growing_deep_proteins_summary.csv")
+    s4 = _csv(BAY / "v16_growing_measure_vs_expand/v16_growing_measure_vs_expand_summary.csv")
+
+    fig, axes = plt.subplots(2, 2, figsize=(ps.TEXT_WIDTH, 4.65))
+    ax, bx = axes[0]
+    cx, dx = axes[1]
+
+    pol_styles = (
+        ("growing_cd_joint", "Growing CD-Joint", OURS, "-", "D", 4.0),
+        ("growing_best_leaf", "Growing Best-Leaf", BLUE, "--", "s", 3.6),
+        ("growing_gp_os", "Growing GP-OS", ORANGE, "-.", "o", 3.4),
+        ("growing_marginal", "Growing Marginal", REF, ":", "^", 3.4),
+    )
+
+    # (a) Suite 1B: Formal exponential separation O(D) vs Omega(2^D)
+    ps.panel(ax, "a", "Formal separation $G_D$: $|V_\\tau|$ vs. depth")
+    ps.ygrid(ax)
+    for pol, name, col, ls, mk, ms in pol_styles:
+        sub = sorted([r for r in s1 if r["suite"] == "1B_formal_separation" and r["policy"] == pol],
+                     key=lambda r: int(r["depth"]))
+        xs = [int(r["depth"]) for r in sub]
+        ys = [float(r["mean_nodes"]) for r in sub]
+        ax.plot(xs, ys, color=col, linestyle=ls, marker=mk, markersize=ms,
+                linewidth=1.6 if pol == "growing_cd_joint" else 1.3, label=name, zorder=4 if pol == "growing_cd_joint" else 3)
+    ax.set_yscale("log")
+    ax.set_xticks([4, 6, 8, 10, 12])
+    ax.set_xlabel("DAG depth $D$ ($|Z| = 3\\cdot 2^{D-1}$)")
+    ax.set_ylabel("Materialized nodes $|V_\\tau|$ (log)")
+    ax.set_ylim(15, 8000)
+    ps.label(ax, 12, 4144, "4,144\n(57.6x)", dy=-16, dx=-22, size=5.9, color=BLUE, weight="bold")
+    ps.label(ax, 12, 72, "72\n($O(D)$)", dy=4, dx=-12, size=5.9, color=OURS, weight="bold")
+
+    # (b) Suite 1A: Commuting DAG depth scaling up to |Z| = 5.22e7
+    ps.panel(bx, "b", "Commuting DAG scaling")
+    ps.ygrid(bx)
+    for pol, name, col, ls, mk, ms in pol_styles:
+        sub = sorted([r for r in s1 if r["suite"] == "1A_commuting_scaling" and r["policy"] == pol],
+                     key=lambda r: int(r["total_leaf_count"]))
+        xs = [float(r["total_leaf_count"]) for r in sub]
+        ys = [float(r["restricted_mean_evals"]) for r in sub]
+        lo = [float(r["evals_ci95_lo"]) for r in sub]
+        hi = [float(r["evals_ci95_hi"]) for r in sub]
+        bx.plot(xs, ys, color=col, linestyle=ls, marker=mk, markersize=ms,
+                linewidth=1.6 if pol == "growing_cd_joint" else 1.3, label=name, zorder=4 if pol == "growing_cd_joint" else 3)
+        bx.fill_between(xs, lo, hi, color=col, alpha=0.12, zorder=2)
+    bx.set_xscale("log")
+    bx.set_xlabel("Total implicit leaves $|Z|$ (log)")
+    bx.set_ylabel("Mean evaluations")
+    bx.set_ylim(0, 1650)
+    bx.set_yticks([0, 400, 800, 1200, 1600])
+    ps.label(bx, 5.22e7, 181.2, "181\n(0.009%)", dy=6, dx=-18, size=5.8, color=OURS, weight="bold")
+    ps.label(bx, 5.22e7, 292.4, "292", dy=7, dx=-6, size=5.8, color=BLUE)
+
+    # (c) Suite 3: Deep 10-site combinatorial protein mutagenesis up to |Z| = 2.41e9
+    ps.panel(cx, "c", "10-site proteins ($|Z|$ up to $2.41\\times 10^9$)")
+    ps.ygrid(cx)
+    s3_map = {(r["landscape"], int(r["k_mut"]), r["policy"]): r for r in s3}
+    horizons = (
+        ("gb1_calibrated", 4, "GB1\n$k{=}4$"),
+        ("gb1_calibrated", 6, "GB1\n$k{=}6$"),
+        ("gb1_calibrated", 8, "GB1\n$k{=}8$"),
+        ("trpb_calibrated", 4, "TrpB\n$k{=}4$"),
+        ("trpb_calibrated", 6, "TrpB\n$k{=}6$"),
+        ("trpb_calibrated", 8, "TrpB\n$k{=}8$"),
+        ("trpb_calibrated", 10, "TrpB\n$k{=}10$\n(2.4B)"),
+    )
+    bar_pols = (
+        ("growing_cd_joint", "Growing CD-Joint", OURS),
+        ("growing_best_leaf", "Growing Best-Leaf", BLUE),
+        ("growing_gp_os", "Growing GP-OS", ORANGE),
+    )
+    gx_c, w_c = _grouped(cx, len(horizons), len(bar_pols), width=0.80)
+    for (pol, name, col), xs in zip(bar_pols, gx_c):
+        vals = [float(s3_map[(l, k, pol)]["restricted_mean_evals"]) for l, k, _ in horizons]
+        lo = [float(s3_map[(l, k, pol)]["evals_ci95_lo"]) for l, k, _ in horizons]
+        hi = [float(s3_map[(l, k, pol)]["evals_ci95_hi"]) for l, k, _ in horizons]
+        lbls = []
+        for (l, k, _), v in zip(horizons, vals):
+            if pol == "growing_cd_joint" and k in (8, 10):
+                lbls.append(f"{v:.0f}")
+            else:
+                lbls.append("")
+        ps.bars(cx, xs, vals, col, width=w_c * 0.9, lo=lo, hi=hi, labels=lbls, label_size=5.3)
+    # Clean non-overlapping callout for Best-Leaf k=10 (1,498 assays, 52% cert)
+    cx.annotate("1,498 (52%)", xy=(6.0, 1730), xytext=(5.55, 2170),
+                ha="center", va="bottom", fontsize=ps.fs(5.3), color=BLUE, fontweight="bold",
+                arrowprops=dict(arrowstyle="-", color=BLUE, lw=0.7),
+                bbox=dict(facecolor="white", edgecolor="none", pad=0.6, alpha=0.9), zorder=6)
+    cx.set_xticks(range(len(horizons)))
+    cx.set_xticklabels([lbl for _, _, lbl in horizons])
+    cx.tick_params(axis="x", labelsize=ps.fs(5.8))
+    cx.set_ylim(0, 2480)
+    cx.set_yticks([0, 500, 1000, 1500, 2000])
+    cx.set_ylabel("Mean assays (cap 2,000)")
+
+    # (d) Suite 4: Measure-vs-Expand eta Pareto frontier on 8-stage workflows
+    ps.panel(dx, "d", "Measure-vs-Expand Pareto ($\\eta$)")
+    ps.ygrid(dx)
+    ps.xgrid(dx)
+    eta_order = [0.0, 0.25, 0.5, 1.0, 2.0, float("inf")]
+    for dom, d_lbl, col, mk in (
+        ("workflow_8stage_b3", "$3^8{=}6.6\\mathrm{k}$", PINK, "o"),
+        ("workflow_8stage_b4", "$4^8{=}65.5\\mathrm{k}$", OURS, "D"),
+    ):
+        sub = [r for r in s4 if r["domain"] == dom and r["policy"] == "growing_cd_joint"]
+        by_e = {float(r["eta"]): r for r in sub}
+        xs = [float(by_e[e]["mean_nodes"]) for e in eta_order]
+        ys = [float(by_e[e]["restricted_mean_evals"]) for e in eta_order]
+        dx.plot(xs, ys, color=col, marker=mk, markersize=4.0, linewidth=1.6, label=f"CD-Joint ({d_lbl})", zorder=4)
+        # Annotate key eta points on b4 curve
+        if dom == "workflow_8stage_b4":
+            for e, txt, dxx, dyy in (
+                (0.0, "$\\eta{=}0$", -18, 2),
+                (0.25, "$\\eta{=}0.25$", 20, -4),
+                (0.5, "$\\eta{=}0.5$", 18, -2),
+                (float("inf"), "$\\eta{\\geq}2$", 15, 5),
+            ):
+                ps.label(dx, float(by_e[e]["mean_nodes"]), float(by_e[e]["restricted_mean_evals"]),
+                         txt, dx=dxx, dy=dyy, size=5.6, color=OURS, weight="bold" if e == 0.25 else "normal")
+        # Plot Best-Leaf comparator point
+        bl = next(r for r in s4 if r["domain"] == dom and r["policy"] == "growing_best_leaf")
+        dx.scatter([float(bl["mean_nodes"])], [float(bl["restricted_mean_evals"])],
+                   color=BLUE, marker="s", s=26, edgecolor=ps.EDGE, linewidth=0.6, zorder=5,
+                   label="Best-Leaf ($\\eta{=}1$)" if dom == "workflow_8stage_b4" else None)
+    dx.set_xscale("log")
+    dx.set_xlabel("Materialized nodes $|V_\\tau|$ (log)")
+    dx.set_ylabel("Mean evaluations")
+    dx.set_ylim(0, 1650)
+    dx.set_yticks([0, 400, 800, 1200, 1600])
+    dx.legend(loc="upper center", bbox_to_anchor=(0.48, 0.99), fontsize=ps.fs(5.6),
+              handlelength=1.0, frameon=True, facecolor="white", framealpha=0.92, edgecolor="none")
+
+    h, l = ax.get_legend_handles_labels()
+    ps.legend_below(fig, h, l, ncol=4)
+    ps.save(fig, out / "supp_growing_dag_benchmarks.pdf")
+
+
 FIGURES = (
     fig1_concept_overview,
     fig2_main_results,
@@ -1069,6 +1348,8 @@ FIGURES = (
     fig14_sparse_variance_tracking,
     fig15_native_solver_and_workflows,
     fig16_seven_method_cross_domain,
+    fig17_margin_aware_cd_joint,
+    fig18_growing_dag_benchmarks,
 )
 
 
@@ -1077,7 +1358,7 @@ def generate_all(out_dir: Path) -> None:
     ps.setup()
     for fn in FIGURES:
         fn(out_dir)
-    print(f"Generated {len(FIGURES)} manuscript figure PDFs (Figures 1-15) in {out_dir}")
+    print(f"Generated {len(FIGURES)} manuscript figure PDFs in {out_dir}")
 
 
 def main() -> None:
