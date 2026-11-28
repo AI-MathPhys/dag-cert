@@ -61,6 +61,7 @@ from dagcert.benchmarks.workflows import (
     WORFBENCH_TEST_NPZ_PATH,
     WorFBenchWorkflowProblem,
     build_worfbench_feature_matrix,
+    hamming_workflow_kernel,
 )
 
 __all__ = [
@@ -99,6 +100,7 @@ __all__ = [
     "build_worfbench_feature_matrix",
     "contiguous_window_dag",
     "gb1_mean_to_raw_fitness",
+    "hamming_workflow_kernel",
     "load_standard_samegame_boards",
     "make_behrens_fisher_null_dag",
     "make_general_d_dag",

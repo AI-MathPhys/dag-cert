@@ -10,7 +10,7 @@
 Installable Python library (`dagcert`), full experimental suite (`experiment/`), bundled benchmark datasets, SHA-256-verified run archives (`results/`), Lean 4 formalizations (`lean/`), and complete reproduction scripts for **Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs**.
 
 - **Manuscript:** [`manuscript/Joint_cert_manuscript.pdf`](https://github.com/AI-MathPhys/dag-cert/blob/main/manuscript/Joint_cert_manuscript.pdf) (LaTeX source: [`manuscript/joint_cert_manuscript.tex`](https://github.com/AI-MathPhys/dag-cert/blob/main/manuscript/joint_cert_manuscript.tex))
-- **Artifact-to-paper map:** [`REPRODUCIBILITY.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/REPRODUCIBILITY.md) maps every table (Tables 1–69) and figure (Figures 1–14) to its archived logs and reproduction command — **100% coverage with zero missing experiments**.
+- **Artifact-to-paper map:** [`REPRODUCIBILITY.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/REPRODUCIBILITY.md) maps every table and figure (including the expanded 1,000-campaign seven-method cross-domain benchmarks) to its archived logs and reproduction command — **100% coverage with zero missing experiments**.
 - **Formal mathematics:** [`lean/`](https://github.com/AI-MathPhys/dag-cert/tree/main/lean/) contains a Lean 4 formalization of the paper's 62 numbered results (62 proved as written, 0 false as written with a counterexample, 0 partial, 0 open); see [`lean/README.md`](https://github.com/AI-MathPhys/dag-cert/blob/main/lean/README.md) for the status of each.
 
 <p align="center">
@@ -142,12 +142,12 @@ Every main-paper and appendix result is backed by executable code in `experiment
 | Paper Location | Finding | Domain & Suite |
 |---|---|---|
 | §2.3, Table 1 | Lazy conic certificate updates scale from $0.70\text{ ms}$ ($M=64$) to $25.7\text{ ms}$ ($M=4{,}096$) | `simulated` (`e6`) |
-| §3.1, Table 3; App. G.1 (Tables 7–9, Fig. 3) | Matched-model $M=64, K=8$ factorial: CD-Joint needs **$2{,}358$** vs. Correlated KG **$5{,}056$** capped evals (**$2.14\times$** reduction; $2.53\times$ with overlap + correlation); **$1.65\times$** under anytime-valid $d=8$ frequentist stopping | `simulated` (`v12`) |
+| §3.1, Table 3; App. G.1 | Matched-model $M=64, K=8$ factorial: CD-Joint needs **$2{,}358$** vs. Correlated KG **$5{,}056$** ($2.14\times$; expanded 1,000-run 7-method cohort: **$2{,}336$** vs. **$4{,}953$**, $2.12\times$, and **$1.18\times$** vs. GP-Root-Info in Cond. D; omitting the $\varepsilon/2$ safeguard drops cert. **$100\%\to 45.7\%$**); **$1.85\times$** vs. KG & **$1.16\times$** vs. GP-Root-Info under $d=8$ anytime-valid frequentist stopping | `simulated` (`v12`, `v15_synth`) |
 | §3.1, Fig. 2d, Table 10 | Exact outside-support stopping needs **$0.054\times$** the queries of marginal stopping at $M=256$, overlap $.88$ (**$18.4\times$**) | `simulated` (`exp1`) |
 | §3.1, Fig. 2e, Tables 11 & 13 | CD-Joint routes **$76.8\%$** of queries to a low-valued proxy vs. **$0.6\%$** for direct-witness sampling; up to **$48.5\times$** lower median cost | `simulated` (`e0`, `v8_3`) |
-| §3.2, Fig. 2f–h, Table 4; App. H (Tables 24–26, Fig. 8) | 410 paired GB1 ($n=200$) & TmTrpB ($n=210$) campaigns: under rank-corrected $\sqrt{\chi^2_{r,.95}}$ ellipsoid, CD-Joint needs **$17{,}678$** [70%] / **$3{,}629$** [100%] assays vs. KG **$25{,}000^*$** [0%] / **$9{,}337$** [85.7%] (**$2.57\times$** on TmTrpB); ranking reverses under direct posterior risk (KG **$130$/$63$** vs. CD-Joint **$240$/$92$**) and independent-arm DF ($0\%$ for GP-only CD-Joint) | `protein_engineering` (`v14`, `v13`) |
+| §3.2, Fig. 2f–h, Table 4; App. H | Paired GB1 & TmTrpB campaigns under rank-corrected $\sqrt{\chi^2_{r,.95}}$ ellipsoid: original 410-campaign cohort CD-Joint **$17{,}678$** [70%] / **$3{,}629$** [100%] vs. KG **$25{,}000^*$** [0%] / **$9{,}337$** [85.7%]; expanded 2,050-campaign 7-method cohort (50 GB1 templates $\times 20$; 21 TmTrpB $\times 50$) confirms GP-UCB/TS/EI at **0%** and CD-Joint beating KG (**$2.58\times$** on TmTrpB), GP-OS, and GP-Root-Info under both paired and hierarchical CIs | `protein_engineering` (`v14`, `v13`, `v15_prot`) |
 | §3.2, Table 27 | Empirical-Bayes protein audit: simultaneous terminal coverage $91.5\%$ / $82.9\%$, yet **$100\%$** root-regret-bound coverage across 410 campaigns | `protein_engineering` (`v11_1`) |
-| §3.3, Table 5 (offline), Table 35 | WorFBench offline ($3^4=81$ workflows): OS certifies **$100\%$** in **$1{,}937$** median evals ($0.95\text{ M}$ tokens) vs. Flat-LUCB **$8{,}486$** ($4.78\text{ M}$ tokens) at identical held-out $F_1 = 0.529$ | `agentic_workflows` (`exp12`) |
+| §3.3, Table 5 (offline); App. I | WorFBench offline ($3^4=81$ workflows): DF-OS certifies **$100\%$** in **$1{,}937$** median evals ($0.95\text{ M}$ tokens) vs. Flat-LUCB **$8{,}486$** ($4.78\text{ M}$ tokens) at $F_1=0.529$; 1,000-campaign 7-method matched Gaussian benchmark cuts evals vs. KG (**$3{,}564$**, $1.86\text{ M}$ tok) to **$1{,}754$** (CD-Joint, **$2.03\times$**) and **$1{,}012$/$1{,}014$** (GP-OS/GP-Root-Info, **$3.52\times$**, $0.57\text{ M}$ tok) at $F_1=0.5287$ | `agentic_workflows` (`exp12`, `v15_worf`) |
 | §3.3, Table 5 (live), Table 37, Fig. 9 | 36 fresh uncached Qwen3-0.6B campaigns across 4 domains: formal DF stops **$0/36$** by 60 evals; model-based EB+LOO certifies **$36/36$** in median **$24$** evals (**$14{,}291$** tokens, held-out $F_1 = 0.4717$) | `agentic_workflows` (`v11_2`) |
 | App. J.3, Table 43, Fig. 13a | Unknown-variance sparse-refresh + action-local IUT tracker (V34): **$50.4\times$** speedup at $K=64$, rank 2 ($34.0\text{ s} \to 0.675\text{ s}$) | `simulated` (`v9_1`) |
 | App. L.5–L.6, Tables 68–69, Fig. 14 | Native C++17 outward-certified B&B achieves **$31$–$82\times$** end-to-end speedup; zero-shared-code independent numerical-oracle audit passes **$5/5$** checks | `simulated` (`v10_1`, `v11_3`) |
@@ -169,13 +169,13 @@ All experiments rely directly on the installed `dagcert` package and are organiz
 # 1. Check bundled datasets, optional Hugging Face cache, and C++17 compiler
 python scripts/fetch_data.py --check
 
-# 2. Cryptographically verify SHA-256 manifests for ALL archived suites (v1--v14, zero gaps)
+# 2. Cryptographically verify SHA-256 manifests for ALL archived suites (v1--v15, zero gaps)
 python experiment/run_all.py verify
 
-# 3. Run all 88 unit, parity, library-API, and independent-oracle tests
+# 3. Run all 93 unit, parity, library-API, and independent-oracle tests
 python experiment/run_all.py test
 
-# 4. Regenerate all 14 manuscript data figures (Figures 2–14: `figures/fig*.pdf`, `figures/supp_*.pdf`)
+# 4. Regenerate all 15 manuscript data figures (`figures/fig*.pdf`, `figures/supp_*.pdf`)
 python experiment/run_all.py figures
 ```
 

@@ -1,0 +1,90 @@
+{
+  "experiment": "v15_synthetic_7method",
+  "git_commit": "1f490cea4111dd40552264a2a124e731e8afd51d",
+  "smoke": false,
+  "epsilon": 0.025,
+  "delta": 0.05,
+  "budget_cap": 12000,
+  "n_seeds_per_condition": 250,
+  "total_instances_per_method": 1000,
+  "main64_seed_range": [
+    2000,
+    2249
+  ],
+  "orig400_main64_seed_range": [
+    2000,
+    2099
+  ],
+  "confirm_freq_seed_range": [
+    5000,
+    5249
+  ],
+  "orig400_confirm_freq_seed_range": [
+    5000,
+    5099
+  ],
+  "conditions": [
+    {
+      "id": "A_indep",
+      "omega": 0.0,
+      "rho": 0.0
+    },
+    {
+      "id": "B_struct",
+      "omega": 0.75,
+      "rho": 0.0
+    },
+    {
+      "id": "C_stat",
+      "omega": 0.0,
+      "rho": 0.9
+    },
+    {
+      "id": "D_both",
+      "omega": 0.75,
+      "rho": 0.9
+    }
+  ],
+  "generator_parameters": {
+    "class": "GaussianPairedDeconfoundedProblem (M=64, K=8, 8 motifs/action, zero containments)",
+    "shared_motifs_by_omega": {
+      "0.0": 0,
+      "0.75": 16
+    },
+    "private_motifs": "b in {6, 7} strictly private; motif peak placed at b=7 (+0.025)",
+    "prior_mean": 0.48,
+    "tau0": 0.14,
+    "hw": 0.14,
+    "obs_std": 0.08082904,
+    "target_margin": 0.055,
+    "kernel_formula": "K(rho) = tau0^2 * ((1 - rho) * I_64 + rho * kron(0.25*I_8 + 0.75*1_8*1_8^T, AR1(8, rho)))",
+    "action_gaps_vec": [
+      0.1,
+      0.045,
+      0.02575,
+      -0.01,
+      -0.025,
+      -0.04,
+      -0.055,
+      -0.07
+    ],
+    "fixed_feature_d": 8,
+    "fixed_feature_rkhs_bound_margin": "+0.05 above exact ||theta*||_2"
+  },
+  "policy_definitions": {
+    "gp_ucb": "argmax_x m_{t,x} + kappa_t * s_{t,x}, kappa_t = sqrt(2 log(M pi^2 t^2 / (6 delta))) (Srinivas et al. 2012), smallest index on ties",
+    "gp_ts": "argmax_x mu_tilde_x, single joint draw mu_tilde ~ N(m_t, Sigma_t) via independent seeded RNG, smallest index on ties",
+    "gp_ei": "argmax_x log(s_{t,x} * h((m_{t,x} - max_z m_{t,z}) / s_{t,x}) / c_x), exact underflow-free Mills-ratio log_h, smallest index on ties",
+    "kg": "argmax_x log(KG_t(x) / c_x), exact Frazier-Powell-Dayanik (2009) O(M log M) convex upper envelope in log-space",
+    "gp_os": "Optimistic Separation on shared posterior intervals with stopping beta: b_t = argmax_a (U_a - L^-_a), sample wider of {p_t, q_t}",
+    "gp_root_info": "Global optimistic terminal w* = argmax_z u_z; b_t = argmax_{a ni w*} (u_{w*} - max_{z notin S(a)} u_z); z_box = argmax_{z notin S(b_t)} u_z; sample wider of {w*, z_box}",
+    "cd_joint": "Algorithm 1 safeguarded contrast-directed acquisition with conic dual mixture p* in Delta(S(b_t)) and eps/2 safeguard",
+    "cd_joint_no_safeguard": "CD-Joint ablation removing the mean_contrast <= eps/2 safeguard",
+    "cd_joint_single_witness": "CD-Joint ablation restricting p in Delta(S(b_t)) to a single vertex e_y (retaining the eps/2 safeguard)"
+  },
+  "stopping_rules": {
+    "credible_ellipsoid_chi95": "Exact conic regret <= eps under beta = sqrt(chi2_{r, 0.95}), r = 63, check schedule: every step t<=50, every 5 (t<=500), every 10 (t<=2000), every 20 (t>2000)",
+    "direct_posterior_risk": "Valid anytime union-bound MC: N_MC=4096 fresh draws/check, eta=0.01/(K*j*(j+1)), delta_post=0.04",
+    "anytime_frequentist_ay": "Abbasi-Yadkori self-normalized ellipsoid B + sqrt(2(gamma_t + log(1/delta))) on exact d=8 linear feature model"
+  }
+}

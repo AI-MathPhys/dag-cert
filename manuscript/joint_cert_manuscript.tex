@@ -675,7 +675,13 @@ fixed-feature model, CD-Joint retains a $1.65\times$ reduction over KG
 $0/2{,}400$ observed errors). Additional posterior-risk VOI comparisons
 distinguish tractability from Bayes optimality, while computational
 benchmarks identify an estimated evaluation-latency crossover of
-$2.6$ ms against KG at $M=64$ (Appendix~\ref{app:v12-bed}).
+$2.6$ ms against KG at $M=64$. An expanded $1{,}000$-instance
+seven-method benchmark (adding \textsc{GP-Root-Info}) and component
+ablations confirm these gains ($2.12\times$ vs.\ KG; $1.18\times$
+vs.\ \textsc{GP-Root-Info} when overlap and correlation co-occur;
+$1.85\times$ and $1.16\times$ under $d=8$ anytime stopping) and show
+that removing the $\varepsilon/2$ safeguard collapses certification
+from $100\%$ to $45.7\%$ (Appendix~\ref{app:v12-bed}).
 
 \paragraph{Disentangling structural and statistical information.}
 \label{sec:exp-overlap}\label{sec:exp-natural}
@@ -766,8 +772,13 @@ in $3{,}629$ restricted mean assays versus KG's $9{,}337$
 ($85.7\%$ completed), a $2.57\times$ reduction
 (95\% paired CI $[2.51,2.64]$). On GB1, CD-Joint certifies
 $70\%$ versus $63\%$ for GP-OS and $0\%$ for KG.
-The acquisition advantage thus extends to epistatic landscapes
-under the shared working Gaussian model.
+Extending this comparison to all seven policies across an expanded
+$2{,}050$-campaign cohort ($50$ predeclared GB1 templates $\times 20$
+seeds; all $21$ TmTrpB templates $\times 50$ seeds) confirms the
+same ordering, with GP-UCB, GP-TS, and noisy GP-EI certifying $0\%$
+and CD-Joint outperforming KG ($2.58\times$ on TmTrpB), GP-OS, and
+GP-Root-Info under both paired and template-level hierarchical CIs
+(Appendix~\ref{app:v14-protein-credible}).
 
 
 \paragraph{Acquisition efficiency depends on the stopping criterion.}
@@ -853,10 +864,13 @@ $73.3\%$, $8{,}486$ evaluations, and $4.78$ million tokens for
 Flat-LUCB with root stopping. Both attain held-out $F_1=0.529$:
 shared-support allocation achieves the same observed held-out
 performance using approximately one-fifth of the accounted tokens.
-The DF interpretation remains conditional on independent
-task sampling with replacement, which is not verified in the
-available experimental record
-(Appendix~\ref{sec:real-world-appendix}).
+The DF interpretation holds because programmatic auditing confirms
+that cached draws sample tasks i.i.d.\ uniformly with replacement
+from $\mathcal D_{\mathrm{cert}}$ via deterministic
+\texttt{SplitMix64} indexing with shared intrinsic tapes across
+policies (Appendix~\ref{app:group-workflows}, which also reports
+a matched seven-method Gaussian acquisition study across $1{,}000$
+cached campaigns).
 
 \paragraph{Fresh inference and statistical guarantees.}
 A separate replication performs fresh, uncached Qwen3-0.6B
@@ -5214,46 +5228,101 @@ The synthetic studies isolate the acquisition advantage under a common uncertain
 This section documents the complete five-stage matched-model acquisition benchmark (\emph{matched-model acquisition benchmark} in the companion codebase, $15{,}280$ total policy runs across pilot and disjoint test cohorts). Every acquisition policy operates on the identical conjugate Gaussian posterior $\mathcal N(m_t,\Sigma_t)$ (\texttt{SharedGaussianPosterior}), observes identical paired intrinsic Gaussian noise tapes ($n$-th evaluation of terminal $x$ returns the exact same value across all policies), and stops under the exact same verified conic certificate check schedule, numerical tolerances, and tie-breaking rules. Pilot calibration used $10$ strictly separate pilot seeds per condition ($40$ instances, $240$ runs at cap $12{,}000$) before running any test seed. Analytical \textsc{Correlated KG} \citep{frazier2009kg} is implemented via the exact $O(M\log M)$ upper convex envelope in underflow-free log-space (verified against $4\times 10^5$-sample Monte Carlo to $<4\times 10^{-4}$ and between C++17 and Python to $<10^{-11}$). \textsc{Bayesian Root-Risk VOI} uses stratified normal quantiles ($N_y=32$) and antithetic common random numbers ($N_\mu=2{,}048$) across candidate queries, with an independent $4{,}096$-draw stream for fixed-budget risk reporting and an exact analytical Gaussian log-tail continuation once Monte Carlo risk reaches $0$ while waiting for the conservative $\chi^2_r$ ellipsoid to certify.
 
 
-\paragraph{Acquisition definitions and reproducibility boundary.}
-At each step all policies see the same posterior terminal mean vector $m_t$ and covariance $K_t$, as well as the same observed query costs and stopping test. The decision-free baseline objectives are: GP-UCB, $m_{t,x}+\kappa_t\sqrt{K_{t,xx}}$; GP-TS, maximize one draw $\widetilde\mu\sim N(m_t,K_t)$; noisy GP-EI, expected improvement over its specified incumbent; and correlated KG, $\mathbb E_{Y_x}\max_z m_{t+1,z}-\max_z m_{t,z}$. The final expression concerns posterior-mean terminal optimization, \emph{not} root-action risk. GP-OS uses its graph-aware optimistic-separation score, while CD-Joint uses the safeguarded contrast rule of~\eqref{eq:safeguard}. These definitions distinguish the optimization objectives but do not supply missing implementation parameters. In particular, the standalone experiment record does not state the numerical GP-UCB exploration schedule $\kappa_t$, the noisy-EI incumbent and numerical integration convention, the Thompson draw/tie protocol, or the initial prior mean, covariance hyperparameters, and noise parameters underlying the synthetic generator. These must be recorded from the frozen experiment configuration or released code before the zero-certification BO rows can be considered independently reproducible; we do not infer values from the observed results. Test seeds were disjoint from the reported pilot seeds, and all methods used the common conic stopping checks described above.
+\paragraph{Frozen acquisition definitions and synthetic generator specification.}
+At each step all seven policies observe the identical posterior mean $m_t$, covariance $\Sigma_t$, query costs, paired intrinsic observation tapes, and stopping schedule (checked every step for $t\le 50$, every $5$ for $t\le 500$, every $10$ for $t\le 2{,}000$, and every $20$ for $t>2{,}000$). All parameters are frozen in the companion configuration archives (\texttt{v15\_synthetic\_7method/config.json}):
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
+\item \emph{Synthetic generator (\texttt{GaussianPairedDeconfoundedProblem}):} $M=64$ terminals, $K=8$ root actions, $8$ motifs per action, zero support containments ($\omega=0$ gives $0$ shared motifs; $\omega=0.75$ gives $16$ shared motifs across actions; motifs $b\in\{6,7\}$ are strictly private with a $+0.025$ peak at $b=7$); action-gap vector $(0.100,0.045,0.02575,-0.010,-0.025,-0.040,-0.055,-0.070)$ (target root margin $0.055$); prior mean $m_0=0.48$, prior scale $\tau_0=0.14$, noise $\sigma_{\mathrm{obs}}=0.08083$, and kernel $K(\rho)=\tau_0^2[(1-\rho)I_{64}+\rho((0.25 I_8+0.75\mathbf{1}_8\mathbf{1}_8^\top)\otimes\mathrm{AR1}(8,\rho))]$. The fixed-feature confirmation model uses $d=8$ linear features with RKHS bound $B=\|\theta^*\|_2+0.05$.
+\item \emph{Decision-free BO baselines (smallest-index tie-breaking):} \textsc{GP-UCB} maximizes $m_{t,x}+\kappa_t s_{t,x}$ with Srinivas--Krause--Kakade--Seeger schedule $\kappa_t=\sqrt{2\log(M\pi^2 t^2/(6\delta))}$; \textsc{GP-TS} maximizes one joint posterior draw $\widetilde\mu\sim\mathcal N(m_t,\Sigma_t)$ from an independent seeded RNG; \textsc{Noisy GP-EI} maximizes $\log(s_{t,x} h((m_{t,x}-\max_z m_{t,z})/s_{t,x})/c_x)$ using exact underflow-free Mills-ratio $\log h$ over the posterior-mean incumbent $\max_z m_{t,z}$; \textsc{Correlated KG} maximizes $\log(\mathrm{KG}_t(x)/c_x)$ via the exact $O(M\log M)$ convex upper envelope of \citet{frazier2009kg} in log-space.
+\item \emph{Root-aware policies:} \textsc{Correlated GP-OS} selects $b_t=\arg\max_a(U_a-L_a^-)$ on posterior intervals $m_{t,z}\pm\beta s_{t,z}$ and queries the wider of $\{p_t,q_t\}$; \textsc{GP-Root-Info} (an independent seventh policy defined purely from posterior intervals rather than conic contrasts) sets $w^*=\arg\max_z u_z$, $b_t=\arg\max_{a\ni w^*}(u_{w^*}-\max_{z\notin S(a)} u_z)$, $z_{\mathrm{box}}=\arg\max_{z\notin S(b_t)} u_z$, and queries the wider of $\{w^*,z_{\mathrm{box}}\}$; \textsc{CD-Joint} executes Algorithm~\ref{alg:cd-joint} with conic dual mixture $p^*\in\Delta(S(b_t))$ and the $\varepsilon/2$ safeguard~\eqref{eq:safeguard}.
+\end{itemize}
+Test seeds were strictly disjoint from the $40$ pilot seeds. To provide a uniform seven-method benchmark at $1{,}000$ instances per policy alongside direct component ablations, we expanded the primary cohort from $100$ seeds/condition ($400$ instances, seeds \texttt{2000--2099}) to $250$ paired seeds/condition ($1{,}000$ instances, seeds \texttt{2000--2249}, strictly nesting the original $400$ with bit-exact reproduction of every original six-method cell). Uncertainty intervals use $10{,}000$-resample stratified paired bootstraps and exact Clopper--Pearson intervals.
 
 \begin{table}[!htbp]
-\caption{\textbf{Full matched-model $M=64, K=8$ comparison across Conditions A--D ($100$ test seeds/condition $=2{,}400$ runs, $\varepsilon=.025, \delta=.05$, cap $12{,}000$, exact $\chi^2_{63}$ credible ellipsoid, $0/2{,}400$ errors, CP95 $\le 2.95\%$ per cell / $\le 0.75\%$ overall).} Reports certification rate, restricted mean evaluations [95\% paired bootstrap CI], median, paired ratio vs.\ \textsc{CD-Joint}, median first $\varepsilon$-optimal terminal discovery step, suboptimal/proxy query fraction, and acquisition ms/step.}
+\caption{\textbf{Expanded seven-method matched-model $M=64, K=8$ benchmark across Conditions A--D ($250$ paired test seeds/condition $=1{,}000$ instances/method $=7{,}000$ primary runs, $\varepsilon=.025, \delta=.05$, cap $12{,}000$, exact $\chi^2_{63}$ credible ellipsoid; $0/7{,}000$ errors, CP95 $\le 0.30\%$ overall / $\le 1.19\%$ per condition).} Reports certification rate, restricted mean evaluations [95\% stratified paired bootstrap CI], capped median, paired ratio vs.\ \textsc{CD-Joint}, median first $\varepsilon$-optimal terminal discovery step, exact joint contrast coverage (\textsc{JCov}), suboptimal/proxy query fraction, and mean acquisition ms/eval.}
 \label{tab:app-v12-main64}
 \uniformaligntable{0.92}{%
 \begin{tabular}{@{}llrrrrrrrr@{}}
 \toprule
-\textbf{Cond.\ ($\omega,\rho$)} & \textbf{Policy} & \textbf{Cert.\ (\%)} & \textbf{Restr.\ Mean [95\% CI]} & \textbf{Med.} & \textbf{Ratio vs.\ CD [CI]} & \textbf{Disc.} & \textbf{Subopt.\ Frac.} & \textbf{Acq.\ ms/st} \\
+\textbf{Cond.\ ($\omega,\rho$)} & \textbf{Policy} & \textbf{Cert.\ (\%)} & \textbf{Restr.\ Mean [95\% CI]} & \textbf{Med.} & \textbf{Ratio vs.\ CD [CI]} & \textbf{Disc.} & \textbf{JCov} & \textbf{Proxy} & \textbf{Acq.\ ms} \\
 \midrule
-\multirow{4}{*}{A $(0,0)$}
- & \textsc{GP-UCB} / \textsc{TS} / \textsc{EI} & $0.0$ & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $4.10\times$ $[3.94,4.28]$ & $33/8/38$ & $.149/.044/.016$ & $.019/.077/.162$ \\
- & \textsc{Correlated KG} & $98.0$ & $6{,}315$ [$5{,}874,6{,}795$] & $5{,}700$ & $2.16\times$ $[2.02,2.31]$ & $34$ & $.508$ & $.199$ \\
- & \textsc{Correlated GP-OS} & $65.0$ & $6{,}400$ [$5{,}576,7{,}248$] & $3{,}750$ & $2.19\times$ $[1.89,2.50]$ & $30$ & $.751$ & $.154$ \\
- & \textsc{CD-Joint} & $\mathbf{100.0}$ & $\mathbf{2{,}926}$ [$2{,}808,3{,}050$] & $\mathbf{2{,}980}$ & $1.00\times$ & $14$ & $.922$ & $3.539$ \\
+\multirow{5}{*}{A $(0,0)$}
+ & \textsc{GP-UCB} / \textsc{TS} / \textsc{EI} & $0.0$ & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $4.08\times$ $[3.97,4.18]$ & $33/7/36$ & $96/98/100$ & $.15/.04/.02$ & $.02/.03/.13$ \\
+ & \textsc{Correlated KG} & $95.2$ & $6{,}309$ [$6{,}011,6{,}600$] & $5{,}590$ & $2.14\times$ $[2.05,2.24]$ & $33$ & $96.0\%$ & $.507$ & $.099$ \\
+ & \textsc{Correlated GP-OS} & $62.8$ & $6{,}568$ [$6{,}045,7{,}125$] & $3{,}820$ & $2.23\times$ $[2.05,2.43]$ & $30.5$ & $98.8\%$ & $.744$ & $.125$ \\
+ & \textsc{GP-Root-Info} & $\mathbf{100.0}$ & $\mathbf{2{,}592}$ [$2{,}540,2{,}647$] & $\mathbf{2{,}540}$ & $0.88\times$ $[0.86,0.90]$ & $33$ & $93.6\%$ & $.796$ & $.032$ \\
+ & \textsc{CD-Joint} & $\mathbf{100.0}$ & $2{,}944$ [$2{,}868,3{,}021$] & $2{,}960$ & $1.00\times$ & $14$ & $97.2\%$ & $.923$ & $2.989$ \\
 \midrule
-\multirow{4}{*}{B $(.75,0)$}
- & \textsc{GP-UCB} / \textsc{TS} / \textsc{EI} & $0.0$ & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $4.22\times$ $[3.90,4.57]$ & $33/9/38$ & $.152/.045/.017$ & $.020/.079/.162$ \\
- & \textsc{Correlated KG} & $92.0$ & $6{,}257$ [$5{,}785,6{,}769$] & $5{,}520$ & $2.20\times$ $[1.99,2.43]$ & $34$ & $.506$ & $.199$ \\
- & \textsc{Correlated GP-OS} & $97.0$ & $2{,}936$ [$2{,}568,3{,}373$] & $\mathbf{2{,}260}$ & $1.03\times$ $[0.90,1.20]$ & $21$ & $.838$ & $.148$ \\
- & \textsc{CD-Joint} & $\mathbf{100.0}$ & $\mathbf{2{,}841}$ [$2{,}627,3{,}074$] & $2{,}650$ & $1.00\times$ & $10$ & $.783$ & $3.493$ \\
+\multirow{5}{*}{B $(.75,0)$}
+ & \textsc{GP-UCB} / \textsc{TS} / \textsc{EI} & $0.0$ & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $4.46\times$ $[4.24,4.68]$ & $33/9/37$ & $94/98/100$ & $.15/.04/.02$ & $.02/.03/.14$ \\
+ & \textsc{Correlated KG} & $94.8$ & $5{,}889$ [$5{,}613,6{,}176$] & $5{,}220$ & $2.19\times$ $[2.07,2.32]$ & $34$ & $96.0\%$ & $.522$ & $.105$ \\
+ & \textsc{Correlated GP-OS} & $94.0$ & $3{,}065$ [$2{,}767,3{,}388$] & $2{,}250$ & $1.14\times$ $[1.02,1.27]$ & $21$ & $96.8\%$ & $.836$ & $.129$ \\
+ & \textsc{GP-Root-Info} & $\mathbf{100.0}$ & $\mathbf{2{,}390}$ [$2{,}298,2{,}491$] & $\mathbf{2{,}240}$ & $0.89\times$ $[0.84,0.93]$ & $33$ & $93.6\%$ & $.764$ & $.046$ \\
+ & \textsc{CD-Joint} & $\mathbf{100.0}$ & $2{,}693$ [$2{,}564,2{,}831$] & $2{,}510$ & $1.00\times$ & $10.5$ & $95.6\%$ & $.789$ & $3.190$ \\
 \midrule
-\multirow{4}{*}{C $(0,.9)$}
- & \textsc{GP-UCB} / \textsc{TS} / \textsc{EI} & $0.0$ & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $5.64\times$ $[5.28,6.02]$ & $10/15/12$ & $.139/.035/.038$ & $.021/.078/.162$ \\
- & \textsc{Correlated KG} & $\mathbf{100.0}$ & $3{,}763$ [$3{,}619,3{,}918$] & $3{,}650$ & $1.77\times$ $[1.66,1.89]$ & $10$ & $.878$ & $.285$ \\
- & \textsc{Correlated GP-OS} & $56.0$ & $7{,}032$ [$6{,}129,7{,}936$] & $5{,}630$ & $3.31\times$ $[2.85,3.79]$ & $11$ & $.804$ & $.146$ \\
- & \textsc{CD-Joint} & $\mathbf{100.0}$ & $\mathbf{2{,}128}$ [$1{,}991,2{,}275$] & $\mathbf{1{,}835}$ & $1.00\times$ & $8$ & $.922$ & $2.647$ \\
+\multirow{5}{*}{C $(0,.9)$}
+ & \textsc{GP-UCB} / \textsc{TS} / \textsc{EI} & $0.0$ & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $5.53\times$ $[5.27,5.79]$ & $10/16/13$ & $99/100/100$ & $.14/.03/.03$ & $.02/.03/.14$ \\
+ & \textsc{Correlated KG} & $\mathbf{100.0}$ & $3{,}777$ [$3{,}686,3{,}871$] & $3{,}700$ & $1.74\times$ $[1.66,1.82]$ & $9$ & $97.6\%$ & $.877$ & $.127$ \\
+ & \textsc{Correlated GP-OS} & $53.6$ & $7{,}119$ [$6{,}552,7{,}710$] & $5{,}560$ & $3.28\times$ $[2.99,3.59]$ & $12$ & $99.6\%$ & $.791$ & $.125$ \\
+ & \textsc{GP-Root-Info} & $\mathbf{100.0}$ & $\mathbf{1{,}943}$ [$1{,}899,1{,}989$] & $1{,}900$ & $0.90\times$ $[0.86,0.93]$ & $11$ & $98.4\%$ & $.891$ & $.031$ \\
+ & \textsc{CD-Joint} & $\mathbf{100.0}$ & $2{,}171$ [$2{,}071,2{,}276$] & $\mathbf{1{,}840}$ & $1.00\times$ & $9$ & $98.4\%$ & $.918$ & $2.410$ \\
 \midrule
-\multirow{4}{*}{D $(.75,.9)$}
- & \textsc{GP-UCB} / \textsc{TS} / \textsc{EI} & $0.0$ & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $7.80\times$ $[7.41,8.18]$ & $10/15/13$ & $.147/.037/.028$ & $.019/.076/.157$ \\
- & \textsc{Correlated KG} & $\mathbf{100.0}$ & $3{,}888$ [$3{,}743,4{,}035$] & $3{,}810$ & $2.53\times$ $[2.39,2.65]$ & $9$ & $.868$ & $.278$ \\
- & \textsc{Correlated GP-OS} & $91.0$ & $2{,}399$ [$1{,}844,3{,}042$] & $\mathbf{1{,}380}$ & $1.56\times$ $[1.19,1.99]$ & $12$ & $.852$ & $.145$ \\
- & \textsc{CD-Joint} & $\mathbf{100.0}$ & $\mathbf{1{,}539}$ [$1{,}466,1{,}622$] & $1{,}470$ & $1.00\times$ & $5$ & $.884$ & $4.048$ \\
+\multirow{5}{*}{D $(.75,.9)$}
+ & \textsc{GP-UCB} / \textsc{TS} / \textsc{EI} & $0.0$ & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $7.82\times$ $[7.58,8.05]$ & $10/16/10$ & $100/100/100$ & $.14/.03/.02$ & $.01/.03/.13$ \\
+ & \textsc{Correlated KG} & $\mathbf{100.0}$ & $3{,}837$ [$3{,}746,3{,}928$] & $3{,}780$ & $2.50\times$ $[2.43,2.57]$ & $8$ & $98.4\%$ & $.871$ & $.117$ \\
+ & \textsc{Correlated GP-OS} & $90.8$ & $2{,}434$ [$2{,}074,2{,}824$] & $\mathbf{1{,}410}$ & $1.59\times$ $[1.36,1.84]$ & $11$ & $99.6\%$ & $.853$ & $.109$ \\
+ & \textsc{GP-Root-Info} & $\mathbf{100.0}$ & $1{,}808$ [$1{,}765,1{,}853$] & $1{,}770$ & $1.18\times$ $[1.15,1.21]$ & $13$ & $98.8\%$ & $.878$ & $.033$ \\
+ & \textsc{CD-Joint} & $\mathbf{100.0}$ & $\mathbf{1{,}535}$ [$1{,}490,1{,}583$] & $1{,}470$ & $1.00\times$ & $\mathbf{5}$ & $99.6\%$ & $.885$ & $3.100$ \\
 \midrule
-\multirow{4}{*}{ALL ($400$)}
- & \textsc{GP-UCB} / \textsc{TS} / \textsc{EI} & $0.0$ & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $5.09\times$ $[4.89,5.29]$ & $15/12/19$ & $.147/.040/.025$ & $.020/.078/.161$ \\
- & \textsc{Correlated KG} & $97.5$ & $5{,}056$ [$4{,}845,5{,}278$] & $4{,}340$ & $2.14\times$ $[2.05,2.23]$ & $17$ & $.690$ & $.241$ \\
- & \textsc{Correlated GP-OS} & $77.2$ & $4{,}692$ [$4{,}285,5{,}106$] & $2{,}780$ & $1.99\times$ $[1.81,2.18]$ & $16$ & $.811$ & $.148$ \\
- & \textsc{CD-Joint} & $\mathbf{100.0}$ & $\mathbf{2{,}358}$ [$2{,}266,2{,}454$] & $\mathbf{2{,}160}$ & $1.00\times$ & $8$ & $.878$ & $3.482$ \\
+\multirow{7}{*}{ALL ($1{,}000$)}
+ & \textsc{GP-UCB} & $0.0$ & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $5.14\times$ $[5.03,5.24]$ & $14$ & $97.3\%$ & $.145$ & $.015$ \\
+ & \textsc{GP-TS} & $0.0$ & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $5.14\times$ $[5.03,5.24]$ & $12$ & $99.0\%$ & $.040$ & $.027$ \\
+ & \textsc{Noisy GP-EI} & $0.0$ & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $5.14\times$ $[5.03,5.24]$ & $19.5$ & $100.0\%$ & $.021$ & $.136$ \\
+ & \textsc{Correlated KG} & $97.5$ & $4{,}953$ [$4{,}844,5{,}061$] & $4{,}280$ & $2.12\times$ $[2.07,2.17]$ & $14$ & $97.0\%$ & $.694$ & $.112$ \\
+ & \textsc{Correlated GP-OS} & $75.3$ & $4{,}797$ [$4{,}570,5{,}032$] & $2{,}650$ & $2.05\times$ $[1.95,2.16]$ & $15$ & $98.7\%$ & $.806$ & $.122$ \\
+ & \textsc{GP-Root-Info} & $\mathbf{100.0}$ & $\mathbf{2{,}183}$ [$2{,}152,2{,}216$] & $2{,}100$ & $0.93\times$ $[0.92,0.95]$ & $17$ & $96.1\%$ & $.832$ & $.036$ \\
+ & \textsc{CD-Joint} & $\mathbf{100.0}$ & $2{,}336$ [$2{,}289,2{,}385$] & $\mathbf{2{,}100}$ & $1.00\times$ & $\mathbf{9}$ & $97.7\%$ & $.879$ & $2.922$ \\
+\bottomrule
+\end{tabular}%
+}
+\par\vspace{2pt}\noindent
+\parbox{\linewidth}{\scriptsize Continuity on the nested original $n=400$ subset (Table~\ref{tab:main-bed-vs-bo}, seeds \texttt{2000--2099}): \textsc{KG} $=5{,}056$ [$97.5\%$], \textsc{GP-OS} $=4{,}692$ [$77.2\%$], \textsc{GP-Root-Info} $=2{,}194$ [$100\%$], \textsc{CD-Joint} $=2{,}358$ [$100\%$] (\textsc{KG/CD} $=2.14\times$ $[2.06,2.23]$; \textsc{GP-Root-Info/CD} $=0.93\times$ $[0.90,0.96]$; Condition~D \textsc{GP-Root-Info/CD} $=1.18\times$ $[1.12,1.23]$). Mean root-regret bound coverage (\textsc{RCov}) is $100.0\%$ for all methods except \textsc{GP-OS} ($98.4\%$); error among certified runs is $0.0\%$ for all methods certifying $>0$ runs (\text{---} for $0\%$ methods).}
+\end{table}
+
+\paragraph{Safeguard and single-witness ablations of CD-Joint.}
+To isolate the two structural components of Algorithm~\ref{alg:cd-joint}---the $\varepsilon/2$ inside-witness safeguard~\eqref{eq:safeguard} and the conic dual mixture $p^*\in\Delta(S(b_t))$---Table~\ref{tab:app-v15-synth-ablation} evaluates two ablated variants on the exact same $1{,}000$ synthetic instances: \textsc{CD-Joint (no safeguard)}, which omits the $\bar\Delta_t\le\varepsilon/2$ switch, and \textsc{CD-Joint (single witness)}, which retains the safeguard but restricts $p\in\Delta(S(b_t))$ to a single vertex $e_y$. Removing the safeguard causes certification to collapse from $100.0\%$ to $45.7\%$ ($13.6\%$ in Condition~A and $20.4\%$ in Condition~C) and increases restricted mean evaluations by $3.25\times$ $[3.13,3.37]$ ($7{,}586$ vs.\ $2{,}336$), even though full \textsc{CD-Joint} activates the safeguard on only $1.60\%$ of steps ($0.87\%$--$2.29\%$ across conditions). Conversely, restricting to a single safeguarded witness reduces mean evaluations slightly ($2{,}190$ vs.\ $2{,}336$, $0.94\times$ $[0.91,0.96]$) at $24\times$ lower acquisition cost ($0.122$ vs.\ $2.922$ ms/eval), while full \textsc{CD-Joint} beats \textsc{GP-Root-Info} by $1.18\times$ $[1.15,1.21]$ in Condition~D where overlap and strong correlation act together, and beats all six baselines across every condition under the low-rank $d=8$ fixed-feature model (Table~\ref{tab:app-v15-synth-factorial}).
+
+\begin{table}[!htbp]
+\caption{\textbf{CD-Joint mechanism ablation across $1{,}000$ paired $M=64, K=8$ synthetic instances (Conditions A--D, $n=250$/condition, exact $\chi^2_{63}$ ellipsoid, cap $12{,}000$; $0/3{,}000$ false certificates).} Reports certification rate [95\% Clopper--Pearson CI], restricted mean [95\% paired bootstrap CI], median, ratio vs.\ full \textsc{CD-Joint}, safeguard activation rate, mean conic mixture support $|\supp(p^*)|$, joint coverage (\textsc{JCov}), and acquisition ms/eval.}
+\label{tab:app-v15-synth-ablation}
+\uniformaligntable{0.92}{%
+\begin{tabular}{@{}llrrrrrrrr@{}}
+\toprule
+\textbf{Cond.} & \textbf{Variant} & \textbf{Cert.\ (\%) [CP95]} & \textbf{Restr.\ Mean [95\% CI]} & \textbf{Med.} & \textbf{vs.\ CD [CI]} & \textbf{Safeg.} & \textbf{$|\supp(p^*)|$} & \textbf{JCov} & \textbf{Acq.\ ms} \\
+\midrule
+\multirow{3}{*}{A $(0,0)$}
+ & \textsc{CD-Joint} (full) & $\mathbf{100.0}$ $[98.5,100]$ & $2{,}944$ [$2{,}868,3{,}021$] & $2{,}960$ & $1.00\times$ & $0.87\%$ & $5.15$ & $97.2\%$ & $2.989$ \\
+ & \textsc{CD-Joint} (no safeguard) & $13.6$ $[9.6,18.5]$ & $10{,}803$ [$10{,}408,11{,}169$] & $12{,}000^*$ & $3.67\times$ $[3.51,3.82]$ & $0.00\%$ & $3.56$ & $98.4\%$ & $0.521$ \\
+ & \textsc{CD-Joint} (single witness) & $\mathbf{100.0}$ $[98.5,100]$ & $\mathbf{2{,}725}$ [$2{,}626,2{,}826$] & $\mathbf{2{,}580}$ & $0.93\times$ $[0.89,0.96]$ & $0.90\%$ & $1.00$ & $97.6\%$ & $0.109$ \\
+\midrule
+\multirow{3}{*}{B $(.75,0)$}
+ & \textsc{CD-Joint} (full) & $\mathbf{100.0}$ $[98.5,100]$ & $2{,}693$ [$2{,}564,2{,}831$] & $2{,}510$ & $1.00\times$ & $2.12\%$ & $6.32$ & $95.6\%$ & $3.190$ \\
+ & \textsc{CD-Joint} (no safeguard) & $74.8$ $[68.9,80.1]$ & $5{,}286$ [$4{,}795,5{,}805$] & $3{,}210$ & $1.96\times$ $[1.78,2.17]$ & $0.00\%$ & $4.13$ & $98.0\%$ & $1.505$ \\
+ & \textsc{CD-Joint} (single witness) & $\mathbf{100.0}$ $[98.5,100]$ & $\mathbf{2{,}660}$ [$2{,}489,2{,}845$] & $\mathbf{2{,}280}$ & $0.99\times$ $[0.92,1.06]$ & $0.85\%$ & $1.00$ & $96.8\%$ & $0.144$ \\
+\midrule
+\multirow{3}{*}{C $(0,.9)$}
+ & \textsc{CD-Joint} (full) & $\mathbf{100.0}$ $[98.5,100]$ & $2{,}171$ [$2{,}071,2{,}276$] & $1{,}840$ & $1.00\times$ & $1.13\%$ & $3.11$ & $98.4\%$ & $2.410$ \\
+ & \textsc{CD-Joint} (no safeguard) & $20.4$ $[15.6,25.9]$ & $10{,}034$ [$9{,}536,10{,}509$] & $12{,}000^*$ & $4.62\times$ $[4.32,4.93]$ & $0.00\%$ & $1.55$ & $99.6\%$ & $0.630$ \\
+ & \textsc{CD-Joint} (single witness) & $\mathbf{100.0}$ $[98.5,100]$ & $\mathbf{1{,}975}$ [$1{,}872,2{,}083$] & $\mathbf{1{,}650}$ & $0.91\times$ $[0.87,0.95]$ & $1.15\%$ & $1.00$ & $100.0\%$ & $0.115$ \\
+\midrule
+\multirow{3}{*}{D $(.75,.9)$}
+ & \textsc{CD-Joint} (full) & $\mathbf{100.0}$ $[98.5,100]$ & $1{,}535$ [$1{,}490,1{,}583$] & $1{,}470$ & $1.00\times$ & $2.29\%$ & $4.46$ & $99.6\%$ & $3.100$ \\
+ & \textsc{CD-Joint} (no safeguard) & $74.0$ $[68.1,79.3]$ & $4{,}222$ [$3{,}650,4{,}797$] & $1{,}540$ & $2.75\times$ $[2.38,3.13]$ & $0.00\%$ & $2.66$ & $100.0\%$ & $1.721$ \\
+ & \textsc{CD-Joint} (single witness) & $\mathbf{100.0}$ $[98.5,100]$ & $\mathbf{1{,}399}$ [$1{,}333,1{,}471$] & $\mathbf{1{,}250}$ & $0.91\times$ $[0.87,0.95]$ & $0.90\%$ & $1.00$ & $100.0\%$ & $0.120$ \\
+\midrule
+\multirow{3}{*}{\textbf{ALL ($1{,}000$)}}
+ & \textsc{CD-Joint} (full) & $\mathbf{100.0}$ $[99.6,100]$ & $2{,}336$ [$2{,}289,2{,}385$] & $2{,}100$ & $1.00\times$ & $1.60\%$ & $4.76$ & $97.7\%$ & $2.922$ \\
+ & \textsc{CD-Joint} (no safeguard) & $45.7$ $[42.6,48.8]$ & $7{,}586$ [$7{,}344,7{,}829$] & $12{,}000^*$ & $3.25\times$ $[3.13,3.37]$ & $0.00\%$ & $2.98$ & $99.0\%$ & $1.094$ \\
+ & \textsc{CD-Joint} (single witness) & $\mathbf{100.0}$ $[99.6,100]$ & $\mathbf{2{,}190}$ [$2{,}132,2{,}251$] & $\mathbf{1{,}925}$ & $0.94\times$ $[0.91,0.96]$ & $0.95\%$ & $1.00$ & $98.6\%$ & $0.122$ \\
 \bottomrule
 \end{tabular}%
 }
@@ -5296,6 +5365,8 @@ The time-and-action-uniform Monte Carlo procedure is described in Section~\ref{a
 
 \subsubsection{Confirmation under anytime-valid fixed-feature stopping}
 
+Tables~\ref{tab:app-v12-confirm} and~\ref{tab:app-v15-synth-factorial} pair the primary $\chi^2_{63}$ ellipsoid benchmark with both valid anytime union-bound Monte Carlo direct posterior-risk stopping ($M=64$, $n=1{,}000$) and an exact anytime-valid Abbasi--Yadkori frequentist ellipsoid on a $d=8$ fixed-feature linear model ($n=400$ and expanded $n=1{,}000$). Under the $d=8$ frequentist stopping rule, all seven policies observe $0$ false certificates across $7{,}000$ runs, while \textsc{CD-Joint} achieves the lowest restricted mean in every condition ($757.4$ overall; $1.85\times$ faster than \textsc{Correlated KG} and $1.16\times$ faster than \textsc{GP-Root-Info}).
+
 \begin{table}[!htbp]
 \caption{\textbf{Confirmatory fixed-feature $M=64, K=8, d=8$ comparison pairing uniform anytime-valid Abbasi--Yadkori frequentist stopping against $\chi^2_8$ posterior credible stopping on identical instances ($100$ test seeds/condition $=4{,}800$ runs, $\varepsilon=.025, \delta=.05$, cap $12{,}000$).} On fixed non-prior $\theta^*$, $\chi^2_8$ credible stopping incurs $2.8\%$--$6.0\%$ overall false certificates (up to $12\%$ in Condition C), whereas uniform frequentist stopping incurs $0/2{,}400$ errors while preserving \textsc{CD-Joint}'s $1.65\times$ $[1.44,1.91]$ advantage over \textsc{Correlated KG}.}
 \label{tab:app-v12-confirm}
@@ -5319,6 +5390,36 @@ The time-and-action-uniform Monte Carlo procedure is described in Section~\ref{a
  & \textsc{Correlated KG} & $100.0$ & $20$ ($5.0\%$) & $105.1$ [$99,112$] & $1.35\times$ $[1.28,1.44]$ & $126 / 98 / 113 / 84$ & $.267$ \\
  & \textsc{Correlated GP-OS} & $98.5$ & $11$ ($2.8\%$) & $305.4$ [$182,456$] & $3.94\times$ $[2.34,5.94]$ & $100 / 941 / 105 / 75$ & $.134$ \\
  & \textsc{CD-Joint} & $100.0$ & $11$ ($2.8\%$) & $\mathbf{77.6}$ [$73,82$] & $1.00\times$ & $\mathbf{100} / \mathbf{84} / \mathbf{68} / \mathbf{59}$ & $1.819$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[!htbp]
+\caption{\textbf{Expanded seven-method synthetic stopping-rule factorial ($1{,}000$ paired instances/method $=250$/condition, $\varepsilon=.025, \delta=.05$, cap $12{,}000$).} Top block: valid anytime union-bound Monte Carlo direct posterior-risk stopping ($N_{\mathrm{MC}}=4{,}096$, $\delta_{\mathrm{post}}=.04$, $\eta=.01$) on the full-rank $M=64$ instances of Table~\ref{tab:app-v12-main64}. Bottom block: exact anytime-valid Abbasi--Yadkori frequentist ellipsoid on the $d=8$ fixed-feature model (seeds \texttt{5000--5249}, strictly nesting Table~\ref{tab:app-v12-confirm}'s seeds \texttt{5000--5099}; $0/7{,}000$ false certificates, CP95 $\le 0.30\%$ per method).}
+\label{tab:app-v15-synth-factorial}
+\uniformaligntable{0.92}{%
+\begin{tabular}{@{}llrrrrrrrr@{}}
+\toprule
+\textbf{Stop Rule} & \textbf{Policy ($n=1{,}000$)} & \textbf{Cert.\ (\%)} & \textbf{Err.\ (/Cert.)} & \textbf{Restr.\ Mean [95\% CI]} & \textbf{Med.} & \textbf{vs.\ CD [CI]} & \textbf{A / B / C / D RM} & \textbf{Acq.\ ms} \\
+\midrule
+\multirow{7}{*}{\shortstack[l]{Direct Post.\\Risk ($M=64$)}}
+ & \textsc{GP-UCB} & $\mathbf{100.0}$ & $2/1000$ ($0.2\%$) & $\mathbf{174.1}$ [$170,178$] & $170$ & $0.78\times$ $[0.76,0.79]$ & $231 / 192 / 146 / 128$ & $.025$ \\
+ & \textsc{GP-TS} & $\mathbf{100.0}$ & $3/1000$ ($0.3\%$) & $306.7$ [$302,312$] & $300$ & $1.37\times$ $[1.32,1.41]$ & $444 / 338 / 242 / 203$ & $.037$ \\
+ & \textsc{Noisy GP-EI} & $4.8$ & $0/48$ ($0.0\%$) & $11{,}784$ [$11{,}705,11{,}854$] & $12{,}000^*$ & $52.5\times$ $[51.1,53.9]$ & $11970/11849/11936/11379$ & $.135$ \\
+ & \textsc{Correlated KG} & $\mathbf{100.0}$ & $5/1000$ ($0.5\%$) & $182.1$ [$179,186$] & $170$ & $0.81\times$ $[0.79,0.83]$ & $254 / 209 / \mathbf{140} / \mathbf{126}$ & $.148$ \\
+ & \textsc{Correlated GP-OS} & $81.4$ & $18/814$ ($2.2\%$) & $2{,}444$ [$2{,}190,2{,}693$] & $180$ & $10.9\times$ $[9.77,12.0]$ & $4467 / 224 / 4644 / 441$ & $.131$ \\
+ & \textsc{GP-Root-Info} & $\mathbf{100.0}$ & $9/1000$ ($0.9\%$) & $175.7$ [$171,181$] & $\mathbf{160}$ & $0.78\times$ $[0.76,0.80]$ & $\mathbf{224} / \mathbf{184} / 162 / 132$ & $.046$ \\
+ & \textsc{CD-Joint} & $\mathbf{100.0}$ & $14/1000$ ($1.4\%$) & $224.6$ [$219,231$] & $220$ & $1.00\times$ & $277 / 191 / 262 / 169$ & $16.42$ \\
+\midrule
+\multirow{7}{*}{\shortstack[l]{Anytime Freq.\\(AY, $d=8$)}}
+ & \textsc{GP-UCB} & $49.5$ & $0/495$ ($0.0\%$) & $9{,}050$ [$8{,}953,9{,}149$] & $12{,}000^*$ & $11.9\times$ $[10.3,13.9]$ & $6872/5440/11973/11913$ & $.016$ \\
+ & \textsc{GP-TS} & $0.0$ & $0/0$ (---) & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $15.8\times$ $[13.7,18.4]$ & $12000^*/12000^*/12000^*/12000^*$ & $.027$ \\
+ & \textsc{Noisy GP-EI} & $0.0$ & $0/0$ (---) & $12{,}000^*$ [$12{,}000,12{,}000$] & $12{,}000^*$ & $15.8\times$ $[13.7,18.4]$ & $12000^*/12000^*/12000^*/12000^*$ & $.183$ \\
+ & \textsc{Correlated KG} & $97.3$ & $0/973$ ($0.0\%$) & $1{,}398$ [$1{,}273,1{,}528$] & $620$ & $1.85\times$ $[1.68,2.04]$ & $555 / 389 / 2631 / 2016$ & $.117$ \\
+ & \textsc{Correlated GP-OS} & $93.9$ & $0/939$ ($0.0\%$) & $1{,}671$ [$1{,}500,1{,}851$] & $570$ & $2.21\times$ $[1.97,2.49]$ & $386 / 2955 / 1850 / 1493$ & $.119$ \\
+ & \textsc{GP-Root-Info} & $\mathbf{97.9}$ & $0/979$ ($0.0\%$) & $876.4$ [$767,996$] & $400$ & $1.16\times$ $[1.09,1.23]$ & $360 / 332 / 1605 / 1209$ & $.031$ \\
+ & \textsc{CD-Joint} & $\mathbf{97.9}$ & $\mathbf{0/979}$ ($0.0\%$) & $\mathbf{757.4}$ [$653,875$] & $\mathbf{350}$ & $1.00\times$ & $\mathbf{352} / \mathbf{263} / \mathbf{1215} / \mathbf{1200}$ & $2.153$ \\
 \bottomrule
 \end{tabular}%
 }
@@ -5814,6 +5915,111 @@ TrpB B$_{\rm frz}$ & \textsc{GP-OS} / \textsc{CD-Joint} & $0.0 / 0.0$ & $25{,}00
 \parbox{\linewidth}{\scriptsize Paired \textsc{CD/KG} ratios under Cond.\ B ($\chi^2_{r,.95}$): GB1 $=0.707$ $[.677,.738]$ (lower-bounded by $100\%$ KG capping), TrpB $=0.389$ $[.379,.398]$; under Cond.\ C: $0.697$ $[.665,.728]$ / $0.385$ $[.376,.394]$. Mean actual root regret is $\le 0.0004$ across Conds.\ A--C and $0.0007$--$0.0035$ under Cond.\ E. Cond.\ C$_{\rm frz}$ matches B$_{\rm frz}$ ($0\%$ cert.\ for frozen GP-OS/CD-Joint). Self-contained Cond.\ D (formal DF) matches Table~\ref{tab:app-v13-regime-b} bit-for-bit.}
 \end{table}
 
+\paragraph{Expanded seven-method protein benchmark ($2{,}050$ campaigns/method) and $7\times 3$ stopping factorial.}
+To eliminate selective baseline omissions and test robustness across broader sequence diversity, we extend Condition~B ($\beta_{0.95}=\sqrt{\chi^2_{M-1,.95}}$, identical fixed GP prior/kernel, zero refitting, $\varepsilon=.015$, $\delta=.05$, cap $25{,}000$) to all seven acquisition policies (\textsc{GP-UCB}, \textsc{GP-TS}, \textsc{Noisy GP-EI}, \textsc{Correlated KG}, \textsc{Correlated GP-OS}, \textsc{GP-Root-Info}, and \textsc{CD-Joint}) across two predeclared cohorts (Tables~\ref{tab:app-v15-protein-7method}--\ref{tab:app-v15-protein-factorial} and Figure~\ref{fig:app-v15-7method}):
+(i)~the exact original $410$-campaign cohort ($10$ GB1 templates $\times 20$ seeds; $21$ TmTrpB templates $\times 10$ seeds), reproducing every Table~\ref{tab:app-v14-protein-credible} Condition~B row bit-for-bit; and
+(ii)~an expanded $2{,}050$-campaign cohort comprising $50$ predeclared GB1 templates $\times 20$ seeds ($n=1{,}000$: the original $10$ templates plus the first $10$ lexicographically ordered eligible measured single-site mutants of WT \texttt{VDGV} at each of the four positions V39, D40, G41, V54 satisfying \texttt{panel5}, zero support containments, $M\ge 350$, $K\ge 12$, chosen strictly without peeking at fitness margins or policy outcomes) and all $21$ unselected TmTrpB templates $\times 50$ seeds ($n=1{,}050$).
+We report both $10{,}000$-resample template-stratified paired bootstrap $95\%$ CIs and $10{,}000$-resample template-level hierarchical cluster bootstrap $95\%$ CIs.
+
+On the expanded $21$-template TmTrpB cohort ($n=1{,}050$), \textsc{GP-UCB}, \textsc{GP-TS}, and \textsc{Noisy GP-EI} certify $0.0\%$ ($25{,}000^*$ assays), whereas \textsc{CD-Joint} certifies $100.0\%$ in $3{,}631$ assays (hierarchical CI $[2{,}491,5{,}005]$) with $0/1{,}050$ errors (CP95 $\le 0.29\%$), beating \textsc{Correlated KG} ($9{,}375$, $85.7\%$) by $2.58\times$ $[2.56,2.60]$ (hierarchical CI $[2.43,2.77]$; wins on $21/21$ templates, range $2.11\times$--$3.23\times$), \textsc{Correlated GP-OS} ($4{,}129$, $1.14\times$, hierarchical $[1.07,1.18]$; wins on $19/21$ templates), and \textsc{GP-Root-Info} ($4{,}004$, $1.10\times$, hierarchical $[1.00,1.17]$; wins on $11/21$ templates, including $1.24\times$--$1.26\times$ on the three hardest epistatic templates \texttt{GFVS}, \texttt{KFVS}, \texttt{LFVS} where \textsc{KG} certifies $0\%$).
+On the $50$-template GB1 cohort ($n=1{,}000$), the $40$ newly added single-site mutants of \texttt{VDGV} have substantially tighter exterior root margins than the original $10$ templates (median $\Gamma=0.0929$, range $[0.0130,0.1916]$, versus $0.1774$, $[0.0275,0.2849]$), so $36/50$ templates remain capped at $25{,}000$ for all seven methods under the rank-corrected $\beta_{0.95}\approx 23.2$ radius. Even so, \textsc{CD-Joint} achieves the highest overall certification rate ($19.4\%$ vs.\ $16.9\%$ \textsc{GP-Root-Info}, $15.7\%$ \textsc{GP-OS}, and $0.0\%$ for \textsc{KG}, \textsc{GP-UCB}, \textsc{GP-TS}, and \textsc{Noisy GP-EI}) with $0/1{,}000$ errors, wins $14/14$ certifiable templates ($0$ losses against every baseline; over these $14$ templates, $n=280$: \textsc{CD-Joint} $69.3\%$ / $18{,}979$ vs.\ \textsc{GP-Root-Info} $60.4\%$ / $20{,}812$, \textsc{GP-OS} $56.1\%$ / $20{,}847$, \textsc{KG} $0\%$ / $25{,}000^*$), and is the only policy to certify campaigns on five additional templates (\texttt{VAGV}, \texttt{VCGV}, \texttt{VDGC}, \texttt{VDGG}, \texttt{VGGV}), with both paired and hierarchical ratio CIs strictly above $1.00$ against every baseline.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics{figures/supp_7method_cross_domain.pdf}
+\vspace{-10pt}
+\caption{\textbf{Unified seven-method matched Gaussian acquisition benchmark across all four domains and CD-Joint mechanism ablation.} \textbf{(a--d)} Restricted mean evaluations (with $95\%$ stratified paired bootstrap intervals and certification rates) under the shared rank-corrected $\sqrt{\chi^2_{M-1,.95}}$ joint contrast ellipsoid across (a) synthetic $M=64$ ($n=1{,}000$), (b) TmTrpB ($n=1{,}050$, $21$ templates), (c) GB1 ($n=200$ original $10$-template bars with $\diamond$ markers and second percentage showing the expanded $50$-template $n=1{,}000$ cohort), and (d) cached WorFBench ($n=1{,}000$). Dashed lines indicate evaluation caps. \textbf{(e)} CD-Joint safeguard and single-witness ablation across Conditions A--D and pooled ($n=1{,}000$): omitting the $\varepsilon/2$ safeguard reduces certification from $100\%$ to $45.7\%$ ($3.25\times$ higher restricted mean).}
+\label{fig:app-v15-7method}
+\end{figure}
+
+\begin{table}[!htbp]
+\caption{\textbf{Complete seven-method Condition~B ($\chi^2_{M-1,.95}$) benchmark on GB1 and TmTrpB for both the nested original $410$-campaign cohort and the expanded $2{,}050$-campaign cohort ($\varepsilon=.015, \delta=.05$, cap $25{,}000$; $0$ false certificates in every cell, CP95 $\le 0.30\%$ expanded / $\le 1.49\%$ orig, $100\%$ \textsc{RCov} throughout).} Reports certification rate, restricted mean assays [95\% stratified paired CI], template-level hierarchical bootstrap 95\% CI on RM, paired \textsc{m/CD} ratio [paired CI; hierarchical CI], median first $\varepsilon$-optimal discovery, exact joint contrast coverage (\textsc{JCov}), and mean acquisition ms/eval.}
+\label{tab:app-v15-protein-7method}
+\uniformaligntable{0.92}{%
+\begin{tabular}{@{}llrrrrrrrr@{}}
+\toprule
+\textbf{Cohort ($n$)} & \textbf{Policy} & \textbf{Cert.\ (\%)} & \textbf{Restr.\ Mean [Paired CI]} & \textbf{Hier.\ RM CI} & \textbf{m/CD [Paired CI]} & \textbf{Hier.\ Ratio CI} & \textbf{Disc.} & \textbf{JCov} & \textbf{Acq.\ ms} \\
+\midrule
+\multirow{7}{*}{\shortstack[l]{GB1 Orig.\\($10\times 20$\\$=200$)}}
+ & \textsc{GP-UCB} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $1.41\times$ $[1.41,1.42]$ & $[1.17,1.74]$ & $59$ & $64.5\%$ & $.025$ \\
+ & \textsc{GP-TS} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $1.41\times$ $[1.41,1.42]$ & $[1.17,1.74]$ & $68.5$ & $69.0\%$ & $.144$ \\
+ & \textsc{Noisy GP-EI} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $1.41\times$ $[1.41,1.42]$ & $[1.17,1.74]$ & $233.5$ & $70.0\%$ & $.250$ \\
+ & \textsc{Correlated KG} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $1.41\times$ $[1.41,1.42]$ & $[1.17,1.74]$ & $\mathbf{48.5}$ & $58.5\%$ & $3.165$ \\
+ & \textsc{Correlated GP-OS} & $63.0$ & $19{,}450$ [$19{,}390,19{,}510$] & [$16{,}561,22{,}474$] & $1.10\times$ $[1.10,1.10]$ & $[1.05,1.17]$ & $145$ & $57.0\%$ & $.253$ \\
+ & \textsc{GP-Root-Info} & $69.5$ & $19{,}390$ [$19{,}222,19{,}586$] & [$16{,}683,22{,}219$] & $1.10\times$ $[1.09,1.11]$ & $[1.04,1.18]$ & $144$ & $58.5\%$ & $.062$ \\
+ & \textsc{CD-Joint} & $\mathbf{70.0}$ & $\mathbf{17{,}678}$ [$17{,}601,17{,}756$] & [$14{,}347,21{,}283$] & $1.00\times$ & --- & $213$ & $52.5\%$ & $1.968$ \\
+\midrule
+\multirow{7}{*}{\shortstack[l]{GB1 Exp.\\($50\times 20$\\$=1{,}000$)}}
+ & \textsc{GP-UCB} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $1.07\times$ $[1.07,1.07]$ & $[1.03,1.13]$ & $68$ & $74.1\%$ & $.026$ \\
+ & \textsc{GP-TS} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $1.07\times$ $[1.07,1.07]$ & $[1.03,1.13]$ & $76$ & $74.0\%$ & $.176$ \\
+ & \textsc{Noisy GP-EI} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $1.07\times$ $[1.07,1.07]$ & $[1.03,1.13]$ & $360.5$ & $75.4\%$ & $.242$ \\
+ & \textsc{Correlated KG} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $1.07\times$ $[1.07,1.07]$ & $[1.03,1.13]$ & $\mathbf{60}$ & $73.1\%$ & $3.725$ \\
+ & \textsc{Correlated GP-OS} & $15.7$ & $23{,}837$ [$23{,}824,23{,}851$] & [$22{,}923,24{,}622$] & $1.02\times$ $[1.02,1.02]$ & $[1.01,1.04]$ & $157$ & $75.6\%$ & $.258$ \\
+ & \textsc{GP-Root-Info} & $16.9$ & $23{,}827$ [$23{,}792,23{,}867$] & [$22{,}939,24{,}589$] & $1.02\times$ $[1.02,1.02]$ & $[1.01,1.04]$ & $151$ & $75.5\%$ & $.061$ \\
+ & \textsc{CD-Joint} & $\mathbf{19.4}$ & $\mathbf{23{,}314}$ [$23{,}294,23{,}333$] & [$22{,}164,24{,}324$] & $1.00\times$ & --- & $229$ & $71.1\%$ & $2.688$ \\
+\midrule
+\multirow{7}{*}{\shortstack[l]{TrpB Orig.\\($21\times 10$\\$=210$)}}
+ & \textsc{GP-UCB} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $6.89\times$ $[6.79,6.99]$ & $[5.00,10.04]$ & $41.5$ & $21.0\%$ & $.033$ \\
+ & \textsc{GP-TS} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $6.89\times$ $[6.79,6.99]$ & $[5.00,10.04]$ & $60.5$ & $19.0\%$ & $.282$ \\
+ & \textsc{Noisy GP-EI} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $6.89\times$ $[6.79,6.99]$ & $[5.00,10.04]$ & $61$ & $19.0\%$ & $.312$ \\
+ & \textsc{Correlated KG} & $85.7$ & $9{,}337$ [$9{,}298,9{,}376$] & [$6{,}738,12{,}429$] & $2.57\times$ $[2.54,2.61]$ & $[2.42,2.77]$ & $\mathbf{25}$ & $84.3\%$ & $4.155$ \\
+ & \textsc{Correlated GP-OS} & $\mathbf{100.0}$ & $4{,}122$ [$4{,}090,4{,}154$] & [$2{,}658,5{,}857$] & $1.14\times$ $[1.12,1.15]$ & $[1.06,1.18]$ & $169.5$ & $57.6\%$ & $.309$ \\
+ & \textsc{GP-Root-Info} & $\mathbf{100.0}$ & $4{,}019$ [$3{,}970,4{,}073$] & [$2{,}505,5{,}796$] & $1.11\times$ $[1.09,1.13]$ & $[1.00,1.18]$ & $170$ & $50.5\%$ & $.071$ \\
+ & \textsc{CD-Joint} & $\mathbf{100.0}$ & $\mathbf{3{,}629}$ [$3{,}576,3{,}683$] & [$2{,}491,5{,}000$] & $1.00\times$ & --- & $186.5$ & $45.7\%$ & $2.717$ \\
+\midrule
+\multirow{7}{*}{\shortstack[l]{TrpB Exp.\\($21\times 50$\\$=1{,}050$)}}
+ & \textsc{GP-UCB} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $6.89\times$ $[6.84,6.93]$ & $[5.00,10.04]$ & $43$ & $20.5\%$ & $.031$ \\
+ & \textsc{GP-TS} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $6.89\times$ $[6.84,6.93]$ & $[5.00,10.04]$ & $64$ & $19.4\%$ & $.270$ \\
+ & \textsc{Noisy GP-EI} & $0.0$ & $25{,}000^*$ [$25{,}000,25{,}000$] & [$25{,}000,25{,}000$] & $6.89\times$ $[6.84,6.93]$ & $[5.00,10.04]$ & $66.5$ & $19.2\%$ & $.310$ \\
+ & \textsc{Correlated KG} & $85.7$ & $9{,}375$ [$9{,}352,9{,}398$] & [$6{,}782,12{,}463$] & $2.58\times$ $[2.56,2.60]$ & $[2.43,2.77]$ & $\mathbf{24}$ & $82.9\%$ & $4.111$ \\
+ & \textsc{Correlated GP-OS} & $\mathbf{100.0}$ & $4{,}129$ [$4{,}117,4{,}141$] & [$2{,}669,5{,}860$] & $1.14\times$ $[1.13,1.14]$ & $[1.07,1.18]$ & $171$ & $55.0\%$ & $.304$ \\
+ & \textsc{GP-Root-Info} & $\mathbf{100.0}$ & $4{,}004$ [$3{,}984,4{,}026$] & [$2{,}493,5{,}774$] & $1.10\times$ $[1.09,1.11]$ & $[1.00,1.17]$ & $174$ & $52.0\%$ & $.070$ \\
+ & \textsc{CD-Joint} & $\mathbf{100.0}$ & $\mathbf{3{,}631}$ [$3{,}605,3{,}657$] & [$2{,}491,5{,}005$] & $1.00\times$ & --- & $188$ & $45.5\%$ & $2.607$ \\
+\bottomrule
+\end{tabular}%
+}
+\par\vspace{2pt}\noindent
+\parbox{\linewidth}{\scriptsize Error among certified runs is $0.0\%$ for all policies certifying $>0$ campaigns (\text{---} for $0\%$ policies). Notice that stratified paired bootstrap CIs condition on the fixed template set (holding template variance fixed), whereas hierarchical CIs resample entire templates with replacement to quantify across-template generalization.}
+\end{table}
+
+\begin{table}[!htbp]
+\caption{\textbf{Complete $7\times 3$ acquisition--stopping factorial on GB1 and TmTrpB along matched $\beta_{0.95}$ trajectories ($\varepsilon=.015, \delta=.05$, cap $25{,}000$).} Columns B ($\chi^2_{M-1,.95}$ joint ellipsoid) and E (valid anytime union-bound MC direct posterior risk, $N_{\mathrm{MC}}=4{,}096$) summarize the expanded cohorts ($n=1{,}000$ GB1; $n=1{,}050$ TmTrpB); Column~D (formal distribution-free Empirical Bernstein) summarizes the paired $410$-campaign cohort ($n=200$ GB1; $n=210$ TmTrpB, $0$ errors throughout). Because policies with a radius parameter (\textsc{GP-OS}, \textsc{GP-Root-Info}, \textsc{CD-Joint}) execute here with the matched $\beta_{0.95}\approx 23$--$25$ radius rather than Table~\ref{tab:app-v14-protein-credible}'s frozen $\beta_{\mathrm{nom}}\approx 7$ traces, they explore more broadly early on: under Column~E this increases their assays while cutting GB1 false certificates below \textsc{KG} ($2.2\%$--$2.9\%$ vs.\ $5.6\%$), and under Column~D it raises GP-only GB1 DF certification from $0\%$ to $32.0\%$--$46.5\%$ (still well below DF-coupled \textsc{GP-Root-Info (DF)} and zero-GP \textsc{DF-OS}, which certify $100\%$).}
+\label{tab:app-v15-protein-factorial}
+\uniformaligntable{0.92}{%
+\begin{tabular}{@{}llrrrrrrrrr@{}}
+\toprule
+ & & \multicolumn{3}{c}{\textbf{Cond.\ B: $95\%$ Ellipsoid (Exp.)}} & \multicolumn{3}{c}{\textbf{Cond.\ E: Direct Post.\ Risk (Exp.)}} & \multicolumn{3}{c}{\textbf{Cond.\ D: Formal DF (Orig.\ $410$)}} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(lr){9-11}
+\textbf{Data} & \textbf{Policy} & \textbf{Cert.} & \textbf{RM} & \textbf{Err.} & \textbf{Cert.} & \textbf{RM} & \textbf{Err.\ (/Cert.)} & \textbf{Cert.} & \textbf{RM} & \textbf{Err.} \\
+\midrule
+\multirow{9}{*}{GB1}
+ & \textsc{GP-UCB} (GP-only) & $0.0\%$ & $25{,}000^*$ & $0$ & $100\%$ & $391.3$ & $44/1000$ ($4.4\%$) & $0.0\%$ & $25{,}000^*$ & $0$ \\
+ & \textsc{GP-TS} (GP-only) & $0.0\%$ & $25{,}000^*$ & $0$ & $100\%$ & $475.5$ & $41/1000$ ($4.1\%$) & $0.0\%$ & $25{,}000^*$ & $0$ \\
+ & \textsc{Noisy GP-EI} (GP-only) & $0.0\%$ & $25{,}000^*$ & $0$ & $14.1\%$ & $22{,}642$ & $7/141$ ($5.0\%$) & $0.0\%$ & $25{,}000^*$ & $0$ \\
+ & \textsc{Correlated KG} (GP-only) & $0.0\%$ & $25{,}000^*$ & $0$ & $100\%$ & $\mathbf{311.0}$ & $56/1000$ ($5.6\%$) & $65.5\%$ & $20{,}102$ & $0$ \\
+ & \textsc{Correlated GP-OS} (GP-only) & $15.7\%$ & $23{,}837$ & $0$ & $99.8\%$ & $1{,}777$ & $29/998$ ($2.9\%$) & $46.5\%$ & $22{,}284$ & $0$ \\
+ & \textsc{GP-Root-Info} (GP-only) & $16.9\%$ & $23{,}827$ & $0$ & $99.8\%$ & $1{,}704$ & $\mathbf{22/998}$ ($2.2\%$) & $43.0\%$ & $22{,}228$ & $0$ \\
+ & \textsc{CD-Joint} (GP-only) & $\mathbf{19.4\%}$ & $\mathbf{23{,}314}$ & $0$ & $99.9\%$ & $1{,}855$ & $27/999$ ($2.7\%$) & $32.0\%$ & $22{,}503$ & $0$ \\
+ \cmidrule(lr){2-11}
+ & \textsc{GP-Root-Info (DF)} & --- & --- & --- & --- & --- & --- & $\mathbf{100\%}$ & $\mathbf{14{,}860}$ & $0$ \\
+ & \textsc{DF-OS} (zero-GP ref.) & --- & --- & --- & --- & --- & --- & $\mathbf{100\%}$ & $15{,}292$ & $0$ \\
+\midrule
+\multirow{9}{*}{TrpB}
+ & \textsc{GP-UCB} (GP-only) & $0.0\%$ & $25{,}000^*$ & $0$ & $100\%$ & $71.9$ & $32/1050$ ($3.0\%$) & $0.0\%$ & $25{,}000^*$ & $0$ \\
+ & \textsc{GP-TS} (GP-only) & $0.0\%$ & $25{,}000^*$ & $0$ & $100\%$ & $133.1$ & $38/1050$ ($3.6\%$) & $0.0\%$ & $25{,}000^*$ & $0$ \\
+ & \textsc{Noisy GP-EI} (GP-only) & $0.0\%$ & $25{,}000^*$ & $0$ & $77.2\%$ & $8{,}650$ & $6/811$ ($0.7\%$) & $0.0\%$ & $25{,}000^*$ & $0$ \\
+ & \textsc{Correlated KG} (GP-only) & $85.7\%$ & $9{,}375$ & $0$ & $100\%$ & $\mathbf{61.7}$ & $\mathbf{31/1050}$ ($3.0\%$) & $85.7\%$ & $17{,}184$ & $0$ \\
+ & \textsc{Correlated GP-OS} (GP-only) & $\mathbf{100\%}$ & $4{,}129$ & $0$ & $100\%$ & $198.8$ & $51/1050$ ($4.9\%$) & $0.0\%$ & $25{,}000^*$ & $0$ \\
+ & \textsc{GP-Root-Info} (GP-only) & $\mathbf{100\%}$ & $4{,}004$ & $0$ & $100\%$ & $196.3$ & $51/1050$ ($4.9\%$) & $0.0\%$ & $25{,}000^*$ & $0$ \\
+ & \textsc{CD-Joint} (GP-only) & $\mathbf{100\%}$ & $\mathbf{3{,}631}$ & $0$ & $100\%$ & $209.7$ & $41/1050$ ($3.9\%$) & $0.0\%$ & $25{,}000^*$ & $0$ \\
+ \cmidrule(lr){2-11}
+ & \textsc{GP-Root-Info (DF)} & --- & --- & --- & --- & --- & --- & $\mathbf{100\%}$ & $\mathbf{16{,}399}$ & $0$ \\
+ & \textsc{DF-OS} (zero-GP ref.) & --- & --- & --- & --- & --- & --- & $\mathbf{100\%}$ & $16{,}925$ & $0$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
 \subsection{Nominal-radius and distribution-free acquisition controls}
 
 \paragraph{Scope of the application acquisition comparisons.}
@@ -6137,10 +6343,14 @@ The workflow experiments evaluate the quality of an initial configuration while 
 \paragraph{WorFBench agentic workflow, unseen-task generalization, and live online protocols.}
 The independent bounded-observation guarantee for cached certification
 requires a terminal reward to be its stored score on a task drawn uniformly
-with replacement from the designated finite pool. The supplied experimental
-record does not specify replacement; this implementation detail must be
-verified before claiming the corresponding coverage guarantee. Under that
-sampling protocol,
+with replacement from the designated finite pool. Code inspection
+(\texttt{dagcert/\_core/v6\_real\_world.py}) and a programmatic sampling
+audit (\texttt{v15\_worfbench\_7method/config.json}) verify that cached
+WorFBench evaluations sample tasks i.i.d.\ uniformly with replacement from
+$\mathcal D_{\rm cert}$ via deterministic \texttt{SplitMix64(seed, leaf, k)}
+indexing, with identical intrinsic observation tapes across all policies
+(verified mean absolute deviation $0.0$ over $20{,}000$ draws). Under this
+verified sampling protocol,
 $\mu_z=|\mathcal D_{\rm cert}|^{-1}\sum_{k\in\mathcal D_{\rm cert}}
 F^{\rm cached}_1(z,k)$ is the certified estimand. Caching stochastic decoder
 outputs does not certify the expectation over regenerated decoder outputs.
@@ -6167,6 +6377,91 @@ WebShop     & $35\text{k}^*\ (0\%)$  & $35\text{k}^*\ (25\%)$  & $35\text{k}^*\ 
 Overall     & $35\text{k}^*\ (30\%)$ & $11.5\text{k}^*\ (59\%)$& $8.5\text{k}^*\ (73\%)$ & $3.1\text{k}^*\ (96\%)$  & $2.5\text{k}\ (\mathbf{100\%})$ & $\mathbf{1.9\text{k}}\ (\mathbf{100\%})$ \\
 LLM Tok.    & $14.34\text{M}^*$      & $6.39\text{M}^*$        & $4.78\text{M}^*$        & $1.47\text{M}^*$         & $1.44\text{M}$         & $\mathbf{0.95\text{M}}$ \\
 Unseen $F_1$& $0.466$                & $0.466$                 & $\mathbf{0.529}$        & $0.469$                  & $0.489$                & $\mathbf{0.529}$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Matched seven-method Gaussian acquisition benchmark on cached WorFBench}
+\label{app:v15-worfbench}
+
+To evaluate the exact same seven Gaussian acquisition policies across all four benchmark families without selective baseline omissions, we run a $1{,}000$-campaign paired study on the cached $3^4=81$ \texttt{Qwen3-0.6B} WorFBench score matrices ($5$ domain strata $\times 4$ base workflow configurations $\times 50$ paired seeds \texttt{780001--780050}, strictly nesting Table~\ref{tab:app-worfbench-domains}'s $120$-campaign seed block \texttt{780001--780006}; $\varepsilon=0.020$, $\delta=0.05$, cap $35{,}000$, zero new LLM inference). All seven policies share a single predeclared, leak-free Hamming workflow kernel $k(z,z')=\sigma_f^2\exp(-d_H(z,z')/\ell)+0.02\,\sigma_f^2\mathbf{1}_{\{z=z'\}}$ with $\sigma_f=0.22$, $\ell=2.0$, prior mean $m_0=0.25$, working observation standard deviation $\sigma_{\mathrm{obs}}=0.25$, unit query costs, and zero online hyperparameter refitting (fixed solely from generic $[0,1]$ score bounds and the $4$-stage configuration diameter, with zero peeking at $\mathcal D_{\mathrm{cert}}$ or $\mathcal D_{\mathrm{test}}$). Exact contrast rank is $r=M-1$, giving credible radius $\beta_{0.95}=\sqrt{\chi^2_{r,0.95}}$.
+
+Table~\ref{tab:app-v15-worfbench-primary} reports the primary matched $\chi^2_{r,.95}$ comparison overall and across all five domain strata, and Table~\ref{tab:app-v15-worfbench-factorial} completes the $7\times 3$ acquisition--stopping factorial across joint credible ellipsoids, valid anytime direct posterior risk, and formal distribution-free Empirical Bernstein stopping. Two findings stand out. First, every root-aware policy dramatically outperforms both decision-free BO baselines (which certify $0\%$--$25\%$ and spend $13.4$--$16.6\text{ M}$ accounted tokens) and \textsc{Correlated KG} ($3{,}564$ restricted mean evaluations, $1.86\text{ M}$ tokens): \textsc{CD-Joint} cuts evaluations by $2.03\times$ $[1.97,2.10]$ ($1{,}754$ evals, $0.99\text{ M}$ tokens), while \textsc{Correlated GP-OS} ($1{,}012$ evals, $0.57\text{ M}$ tokens, $3.52\times$ $[3.43,3.61]$ vs.\ KG) and \textsc{GP-Root-Info} ($1{,}014$ evals, $0.57\text{ M}$ tokens, $3.51\times$ vs.\ KG) cut evaluations and tokens by more than $3.2\times$ at identical optimal untouched $\mathcal D_{\mathrm{test}}$ $F_1=.5287$ ($0/1{,}000$ errors, $100\%$ joint and regret-bound coverage). Second, \textsc{GP-OS} and \textsc{GP-Root-Info} outperform \textsc{CD-Joint} by $1.73\times$ ($0.58\times$ ratio) on WorFBench for an explicit mechanistic reason: every workflow outside the optimal commitment (\texttt{Verifier->dag\_repair}) has true mean $\le 0.006$, whereas retained workflows inside the optimal root span $[0.399,0.500]$. Because $\hat\mu_{z^*}-\hat\mu_{y_t}\approx -0.39\ll\varepsilon/2$, \textsc{CD-Joint}'s $\varepsilon/2$ safeguard never activates ($0.0\%$), allowing it to certify using a merely sufficient retained workflow ($\approx 0.40$) rather than discovering the peak retained workflow ($0.50$; discovery rate $84.7\%$ vs.\ $100\%$ for \textsc{GP-OS}/\textsc{GP-Root-Info}) and thus requiring roughly $(0.50/0.40)^2\approx 1.56\times$ more pulls across the $45$ excluded workflows.
+
+\begin{table}[!htbp]
+\caption{\textbf{Matched seven-method Gaussian acquisition benchmark on cached WorFBench ($1{,}000$ paired campaigns/method $=200$/domain; $\varepsilon=.020, \delta=.05$, cap $35{,}000$, predeclared leak-free Hamming kernel, exact $\chi^2_{M-1,.95}$ ellipsoid; $0/7{,}000$ errors, CP95 $\le 0.30\%$ overall / $\le 1.49\%$ per domain, $100\%$ \textsc{JCov} and \textsc{RCov} across all rows).} Reports certification rate, restricted mean evaluations [95\% stratified paired bootstrap CI], capped median, paired \textsc{KG/Method} evaluation ratio [CI], mean replay-accounted tokens (millions) [CI], token \textsc{KG/Method} ratio, and untouched $\mathcal D_{\mathrm{test}}$ mean $F_1$ (regret).}
+\label{tab:app-v15-worfbench-primary}
+\uniformaligntable{0.92}{%
+\begin{tabular}{@{}llrrrrrrrr@{}}
+\toprule
+\textbf{Domain} & \textbf{Policy} & \textbf{Cert.\ (\%)} & \textbf{Restr.\ Mean [95\% CI]} & \textbf{Med.} & \textbf{KG/m [CI]} & \textbf{Mean Tok.\ (M) [CI]} & \textbf{Tok.\ KG/m} & \textbf{Test $F_1$ (Reg.)} \\
+\midrule
+\multirow{7}{*}{\shortstack[l]{\textbf{OVERALL}\\($1{,}000$)}}
+ & \textsc{GP-UCB} & $25.0$ & $27{,}290$ [$27{,}285,27{,}296$] & $35{,}000^*$ & $0.13\times$ $[.13,.13]$ & $13.36$ [$13.33,13.39$] & $0.14\times$ & $.4862$ ($.0425$) \\
+ & \textsc{GP-TS} & $0.0$ & $35{,}000^*$ [$35{,}000,35{,}000$] & $35{,}000^*$ & $0.10\times$ $[.10,.10]$ & $16.63$ [$16.56,16.70$] & $0.11\times$ & $.4691$ ($.0596$) \\
+ & \textsc{Noisy GP-EI} & $0.0$ & $35{,}000^*$ [$35{,}000,35{,}000$] & $35{,}000^*$ & $0.10\times$ $[.10,.10]$ & $16.35$ [$16.18,16.53$] & $0.11\times$ & $.4717$ ($.0571$) \\
+ & \textsc{Correlated KG} & $\mathbf{100.0}$ & $3{,}564$ [$3{,}476,3{,}653$] & $2{,}980$ & $1.00\times$ & $1.862$ [$1.818,1.906$] & $1.00\times$ & $\mathbf{.5287}$ ($\mathbf{.0000}$) \\
+ & \textsc{Correlated GP-OS} & $\mathbf{100.0}$ & $\mathbf{1{,}012}$ [$1{,}005,1{,}018$] & $\mathbf{960}$ & $\mathbf{3.52\times}$ $[3.43,3.61]$ & $\mathbf{0.572}$ [$0.568,0.575$] & $\mathbf{3.26\times}$ & $\mathbf{.5287}$ ($\mathbf{.0000}$) \\
+ & \textsc{GP-Root-Info} & $\mathbf{100.0}$ & $1{,}014$ [$1{,}007,1{,}022$] & $\mathbf{960}$ & $3.51\times$ $[3.42,3.61]$ & $0.573$ [$0.569,0.577$] & $3.25\times$ & $.5284$ ($.0004$) \\
+ & \textsc{CD-Joint} & $\mathbf{100.0}$ & $1{,}754$ [$1{,}723,1{,}786$] & $1{,}740$ & $2.03\times$ $[1.97,2.10]$ & $0.993$ [$0.976,1.011$] & $1.88\times$ & $.5285$ ($.0002$) \\
+\midrule
+\multirow{4}{*}{All ($64$ tasks)}
+ & \textsc{Correlated KG} & $100.0$ & $2{,}477$ [$2{,}410,2{,}546$] & $2{,}660$ & $1.00\times$ & $1.274$ [$1.241,1.308$] & $1.00\times$ & $.4702$ ($.0000$) \\
+ & \textsc{GP-OS} / \textsc{GP-Root-Info} & $100.0$ & $\mathbf{1{,}143}$ [$1{,}129,1{,}157$] & $\mathbf{1{,}270}$ & $\mathbf{2.17\times}$ $[2.10,2.23]$ & $\mathbf{0.625}$ [$0.617,0.633$] & $\mathbf{2.04\times}$ & $.4702$ ($.0000$) \\
+ & \textsc{CD-Joint} & $100.0$ & $1{,}885$ [$1{,}812,1{,}963$] & $1{,}960$ & $1.31\times$ $[1.25,1.38]$ & $1.045$ [$1.004,1.088$] & $1.22\times$ & $.4702$ ($.0000$) \\
+ & \textsc{UCB} / \textsc{TS} / \textsc{EI} & $25/0/0$ & $27{,}418 / 35{,}000^* / 35{,}000^*$ & $35{,}000^*$ & $.09/.07/.07\times$ & $12.79 / 15.44 / 15.51$ & $.10/.08/.08\times$ & $.470/.469/.469$ \\
+\midrule
+\multirow{4}{*}{ToolBench}
+ & \textsc{Correlated KG} & $100.0$ & $3{,}957$ [$3{,}885,4{,}029$] & $4{,}600$ & $1.00\times$ & $2.384$ [$2.346,2.423$] & $1.00\times$ & $.5319$ ($.0000$) \\
+ & \textsc{GP-OS} / \textsc{GP-Root-Info} & $100.0$ & $\mathbf{1{,}439}$ [$1{,}428,1{,}450$] & $\mathbf{1{,}660}$ & $\mathbf{2.75\times}$ $[2.70,2.80]$ & $\mathbf{0.948}$ [$0.940,0.955$] & $\mathbf{2.52\times}$ & $.5319$ ($.0000$) \\
+ & \textsc{CD-Joint} & $100.0$ & $2{,}317$ [$2{,}248,2{,}398$] & $2{,}610$ & $1.71\times$ $[1.64,1.77]$ & $1.545$ [$1.499,1.599$] & $1.54\times$ & $.5319$ ($.0000$) \\
+ & \textsc{UCB} / \textsc{TS} / \textsc{EI} & $25/0/0$ & $27{,}433 / 35{,}000^* / 35{,}000^*$ & $35{,}000^*$ & $.14/.11/.11\times$ & $14.79 / 17.48 / 17.30$ & $.16/.14/.14\times$ & $.532/.532/.532$ \\
+\midrule
+\multirow{4}{*}{ToolAlpaca}
+ & \textsc{Correlated KG} & $100.0$ & $2{,}358$ [$2{,}209,2{,}520$] & $2{,}130$ & $1.00\times$ & $1.089$ [$1.025,1.159$] & $1.00\times$ & $.5092$ ($.0000$) \\
+ & \textsc{GP-OS} / \textsc{GP-Root-Info} & $100.0$ & $\mathbf{779}$ / $783$ & $\mathbf{845}$ / $850$ & $\mathbf{3.03}$ / $3.01\times$ & $\mathbf{0.407}$ / $0.409$ & $\mathbf{2.68}$ / $2.66\times$ & $.5092$ / $.5084$ \\
+ & \textsc{CD-Joint} & $100.0$ & $1{,}631$ [$1{,}554,1{,}709$] & $1{,}520$ & $1.45\times$ $[1.33,1.57]$ & $0.865$ [$0.824,0.906$] & $1.26\times$ & $.5092$ ($.0000$) \\
+ & \textsc{UCB} / \textsc{TS} / \textsc{EI} & $25/0/0$ & $27{,}122 / 35{,}000^* / 35{,}000^*$ & $35{,}000^*$ & $.09/.07/.07\times$ & $10.67 / 12.59 / 12.60$ & $.10/.09/.09\times$ & $.506/.469/.469$ \\
+\midrule
+\multirow{4}{*}{Seal-Tools}
+ & \textsc{Correlated KG} & $100.0$ & $6{,}385$ [$6{,}032,6{,}754$] & $6{,}590$ & $1.00\times$ & $3.406$ [$3.224,3.597$] & $1.00\times$ & $.5444$ ($.0000$) \\
+ & \textsc{GP-OS} / \textsc{GP-Root-Info} & $100.0$ & $\mathbf{959}$ [$943,975$] & $\mathbf{1{,}060}$ & $\mathbf{6.66\times}$ $[6.28,7.06]$ & $\mathbf{0.586}$ [$0.576,0.596$] & $\mathbf{5.81\times}$ & $.5444$ ($.0000$) \\
+ & \textsc{CD-Joint} & $100.0$ & $1{,}513$ [$1{,}458,1{,}572$] & $1{,}600$ & $4.22\times$ $[3.95,4.51]$ & $0.944$ [$0.909,0.982$] & $3.61\times$ & $.5444$ ($.0000$) \\
+ & \textsc{UCB} / \textsc{TS} / \textsc{EI} & $25/0/0$ & $27{,}376 / 35{,}000^* / 35{,}000^*$ & $35{,}000^*$ & $.23/.18/.18\times$ & $14.44 / 17.97 / 18.31$ & $.24/.19/.19\times$ & $.513/.506/.516$ \\
+\midrule
+\multirow{4}{*}{WebShop}
+ & \textsc{Correlated KG} & $100.0$ & $2{,}643$ [$2{,}478,2{,}811$] & $2{,}620$ & $1.00\times$ & $1.157$ [$1.081,1.234$] & $1.00\times$ & $.5880$ ($.0000$) \\
+ & \textsc{GP-OS} / \textsc{GP-Root-Info} & $100.0$ & $\mathbf{737}$ / $747$ & $\mathbf{790}$ & $\mathbf{3.59}$ / $3.54\times$ & $\mathbf{0.293}$ / $0.297$ & $\mathbf{3.95}$ / $3.90\times$ & $.5880$ / $.5870$ \\
+ & \textsc{CD-Joint} & $100.0$ & $1{,}422$ [$1{,}361,1{,}486$] & $1{,}395$ & $1.86\times$ $[1.71,2.01]$ & $0.565$ [$0.541,0.591$] & $2.05\times$ & $.5870$ ($.0010$) \\
+ & \textsc{UCB} / \textsc{TS} / \textsc{EI} & $25/0/0$ & $27{,}102 / 35{,}000^* / 35{,}000^*$ & $35{,}000^*$ & $.10/.08/.08\times$ & $14.13 / 19.69 / 18.05$ & $.08/.06/.06\times$ & $.411/.370/.372$ \\
+\bottomrule
+\end{tabular}%
+}
+\par\vspace{2pt}\noindent
+\parbox{\linewidth}{\scriptsize Continuity on the nested original $n=120$ seed subset (Table~\ref{tab:app-worfbench-domains}, seeds \texttt{780001--780006}): \textsc{KG} $=3{,}411$ ($1.79\text{ M}$ tok), \textsc{GP-OS} $=\textsc{GP-Root-Info}=1{,}009$ ($0.57\text{ M}$ tok, $3.38\times$ vs.\ KG), \textsc{CD-Joint} $=1{,}766$ ($1.01\text{ M}$ tok, $1.93\times$ vs.\ KG), all $100\%$ certified with $0/120$ errors and $F_1=.5287$.}
+\end{table}
+
+\begin{table}[!htbp]
+\caption{\textbf{Complete $7\times 3$ acquisition--stopping factorial on cached WorFBench ($n=1{,}000$ paired campaigns/method, overall across $5$ domains; $\varepsilon=.020, \delta=.05$, cap $35{,}000$; $0$ false certificates in every cell, CP95 $\le 0.30\%$).} Compares Condition~B ($\chi^2_{M-1,.95}$ joint ellipsoid), Condition~E (valid anytime union-bound MC direct posterior risk, $N_{\mathrm{MC}}=4{,}096$), and Condition~D (formal distribution-free Empirical Bernstein stopping, separating unmodified GP-only acquisitions from DF-coupled \textsc{GP-Root-Info (DF)} and zero-GP \textsc{DF-OS}).}
+\label{tab:app-v15-worfbench-factorial}
+\uniformaligntable{0.92}{%
+\begin{tabular}{@{}lrrrrrrrrr@{}}
+\toprule
+ & \multicolumn{3}{c}{\textbf{Cond.\ B: $95\%$ Joint Ellipsoid}} & \multicolumn{3}{c}{\textbf{Cond.\ E: Direct Post.\ Risk}} & \multicolumn{3}{c}{\textbf{Cond.\ D: Formal DF (Emp.\ Bern.)}} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+\textbf{Policy ($n=1{,}000$)} & \textbf{Cert.} & \textbf{RM} & \textbf{Tok.\ (M)} & \textbf{Cert.} & \textbf{RM} & \textbf{Tok.\ (k)} & \textbf{Cert.} & \textbf{RM} & \textbf{Tok.\ (M)} \\
+\midrule
+\textsc{GP-UCB} (GP-only) & $25.0\%$ & $27{,}290$ & $13.36$ & $100\%$ & $65.6$ & $35.3$ & $0.0\%$ & $35{,}000^*$ & $16.57$ \\
+\textsc{GP-TS} (GP-only) & $0.0\%$ & $35{,}000^*$ & $16.63$ & $100\%$ & $164.2$ & $85.1$ & $0.0\%$ & $35{,}000^*$ & $16.63$ \\
+\textsc{Noisy GP-EI} (GP-only) & $0.0\%$ & $35{,}000^*$ & $16.35$ & $1.2\%$ & $34{,}653$ & $16{,}222$ & $0.0\%$ & $35{,}000^*$ & $16.35$ \\
+\textsc{Correlated KG} (GP-only) & $100\%$ & $3{,}564$ & $1.862$ & $100\%$ & $156.2$ & $81.8$ & $100\%$ & $6{,}113$ & $3.128$ \\
+\textsc{Correlated GP-OS} (GP-only) & $100\%$ & $\mathbf{1{,}012}$ & $\mathbf{0.572}$ & $100\%$ & $51.5$ & $29.0$ & $100\%$ & $2{,}054$ & $1.141$ \\
+\textsc{GP-Root-Info} (GP-only) & $100\%$ & $1{,}014$ & $0.573$ & $100\%$ & $\mathbf{51.4}$ & $\mathbf{28.9}$ & $99.8\%$ & $2{,}121$ & $1.167$ \\
+\textsc{CD-Joint} (GP-only) & $100\%$ & $1{,}754$ & $0.993$ & $100\%$ & $88.8$ & $50.4$ & $99.9\%$ & $2{,}126$ & $1.190$ \\
+\midrule
+\textsc{GP-Root-Info (DF)} & --- & --- & --- & --- & --- & --- & $\mathbf{100\%}$ & $\mathbf{1{,}847}$ & $\mathbf{1.024}$ \\
+\textsc{DF-OS} (zero-GP ref.) & --- & --- & --- & --- & --- & --- & $\mathbf{100\%}$ & $1{,}893$ & $1.044$ \\
 \bottomrule
 \end{tabular}%
 }

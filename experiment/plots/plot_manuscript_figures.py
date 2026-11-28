@@ -19,6 +19,7 @@ the same number is recomputed here from the archive.
   Fig. 12  supp_eprocess_safety_and_compute.pdf     v9_3, v9_1
   Fig. 13  supp_sparse_variance_tracking.pdf        v9_1, v9_2
   Fig. 14  supp_native_solver_and_workflows.pdf     v10_1, v10_2, v10_3
+  Fig. 15  supp_7method_cross_domain.pdf            v15_synth, v15_prot, v15_worf
 """
 from __future__ import annotations
 
@@ -938,6 +939,120 @@ def fig15_native_solver_and_workflows(out: Path) -> None:
     ps.save(fig, out / "supp_native_solver_and_workflows.pdf")
 
 
+def fig16_seven_method_cross_domain(out: Path) -> None:
+    """Unified 7-method matched Gaussian acquisition comparison across all 4 benchmarks + CD-Joint ablation."""
+    syn_rows = _csv(BAY / "v15_synthetic_7method/v15_synthetic_main64_full1000_summary.csv")
+    syn_all = {r["acquisition_method"]: r for r in syn_rows if r["condition"] == "ALL"}
+    syn_cond = {(r["condition"], r["acquisition_method"]): r for r in syn_rows}
+    prot_rows = _csv(BAY / "v15_protein_7method/v15_protein_7method_summary.csv")
+    prot = {
+        (r["landscape"], r["cohort"], r["acquisition_method"]): r
+        for r in prot_rows
+        if r["stopping_rule"] == "credible_ellipsoid_chi95"
+    }
+    worf_all = {
+        r["acquisition_method"]: r
+        for r in _csv(BAY / "v15_worfbench_7method/v15_worfbench_full1000_summary.csv")
+        if r["domain"] == "OVERALL" and r["stopping_rule"] == "credible_ellipsoid_chi95"
+    }
+
+    seven = (
+        ("gp_ucb", "GP-UCB", BAD),
+        ("gp_ts", "GP-TS", BAD),
+        ("gp_ei", "Noisy GP-EI", BAD),
+        ("kg", "Correlated KG", BLUE),
+        ("gp_os", "GP-OS", ORANGE),
+        ("gp_root_info", "GP-Root-Info", PINK),
+        ("cd_joint", "CD-Joint", OURS),
+    )
+
+    fig = plt.figure(figsize=(ps.TEXT_WIDTH, 5.15))
+    top, mid, bot = fig.subfigures(3, 1, height_ratios=[1.15, 1.15, 1.0], hspace=0.04)
+    ax, bx = top.subplots(1, 2)
+    cx, dx = mid.subplots(1, 2)
+    (ex,) = (bot.subplots(1, 1),)
+
+    ys = np.arange(len(seven))[::-1]
+    labels_y = [n for _, n, _ in seven]
+
+    def _hbar_panel(axis, letter, title, lookup, cap_k, xlim_k, xlabel, show_y=True, overlay=None):
+        ps.panel(axis, letter, title)
+        ps.xgrid(axis)
+        for y, (m, _, col) in zip(ys, seven):
+            r = lookup[m]
+            v = float(r["restricted_mean"]) / 1000.0
+            lo = float(r["rm_ci95_lo"]) / 1000.0
+            hi = float(r["rm_ci95_hi"]) / 1000.0
+            cert = 100.0 * float(r["cert_rate"])
+            axis.barh(y, v, height=0.62, color=col, edgecolor=ps.EDGE, linewidth=0.55, zorder=3)
+            if hi - lo > 0.05:
+                axis.plot([lo, hi], [y, y], color=INK, linewidth=0.8, zorder=4)
+            txt = f"{v:.1f}k ({cert:.0f}%)"
+            x_txt = max(v, hi)
+            if overlay is not None:
+                ro = overlay[m]
+                vo = float(ro["restricted_mean"]) / 1000.0
+                co = 100.0 * float(ro["cert_rate"])
+                axis.plot([vo], [y], marker="D", markersize=3.6, color="white",
+                          markeredgecolor=INK, markeredgewidth=0.85, zorder=5)
+                x_txt = max(x_txt, vo)
+                txt = f"{v:.1f}k ({cert:.0f}%) | {co:.0f}%"
+            axis.annotate(
+                txt, (x_txt, y), xytext=(4.5 if overlay is not None else 3.2, 0),
+                textcoords="offset points", va="center", ha="left", fontsize=ps.fs(5.9), color=INK,
+                bbox=dict(boxstyle="square,pad=0.06", facecolor="white", edgecolor="none", alpha=0.85),
+                zorder=6,
+            )
+        axis.axvline(cap_k, color=MUTED, linestyle=(0, (3, 2)), linewidth=0.7, zorder=2)
+        axis.set_yticks(ys)
+        axis.set_yticklabels(labels_y if show_y else [""] * len(seven))
+        axis.set_xlim(0, xlim_k)
+        axis.set_xlabel(xlabel)
+
+    _hbar_panel(ax, "a", "Synthetic $M=64$ ($n=1{,}000$)", syn_all, 12.0, 18.2,
+                "Mean evals ($\\times 10^3$)", show_y=True)
+    _hbar_panel(bx, "b", "TmTrpB ($n=1{,}050$, 21 tmpls)",
+                {m: prot[("trpb", "expanded", m)] for m, _, _ in seven}, 25.0, 38.0,
+                "Mean assays ($\\times 10^3$)", show_y=False)
+    _hbar_panel(cx, "c", "GB1 ($n=200$ bar; $\\diamond$ 50-tmpl $n=1{,}000$)",
+                {m: prot[("gb1", "orig_cohort", m)] for m, _, _ in seven}, 25.0, 46.5,
+                "Mean assays ($\\times 10^3$)", show_y=True,
+                overlay={m: prot[("gb1", "expanded", m)] for m, _, _ in seven})
+    _hbar_panel(dx, "d", "Cached WorFBench ($n=1{,}000$)", worf_all, 35.0, 53.5,
+                "Mean evals ($\\times 10^3$)", show_y=False)
+
+    # (e) CD-Joint safeguard & single-witness ablation across Conditions A-D + ALL
+    ps.panel(ex, "e", "CD-Joint mechanism ablation on synthetic $M=64$ ($n=1{,}000$)")
+    ps.ygrid(ex)
+    conds = (("A_indep", "A (0,0)"), ("B_struct", "B (.75,0)"), ("C_stat", "C (0,.9)"),
+             ("D_both", "D (.75,.9)"), ("ALL", "ALL (1,000)"))
+    abl_pols = (
+        ("cd_joint", "CD-Joint (full)", OURS),
+        ("cd_joint_no_safeguard", "No safeguard", BAD),
+        ("cd_joint_single_witness", "Single witness", PINK),
+    )
+    gx, w = _grouped(ex, len(conds), len(abl_pols), width=0.72)
+    for (m, name, col), x in zip(abl_pols, gx):
+        rs = [syn_cond[(c, m)] for c, _ in conds]
+        vals = [float(r["restricted_mean"]) / 1000.0 for r in rs]
+        lo = [float(r["rm_ci95_lo"]) / 1000.0 for r in rs]
+        hi = [float(r["rm_ci95_hi"]) / 1000.0 for r in rs]
+        lbls = [
+            f"{v:.1f}k\n({100 * float(r['cert_rate']):.0f}%)" if float(r["cert_rate"]) < 0.999 else f"{v:.1f}k"
+            for v, r in zip(vals, rs)
+        ]
+        ps.bars(ex, x, vals, col, width=w * 0.9, lo=lo, hi=hi, labels=lbls, label_size=5.8, legend=name)
+    ex.set_xticks(range(len(conds)))
+    ex.set_xticklabels([lbl for _, lbl in conds])
+    ex.set_ylim(0, 14.5)
+    ex.set_yticks([0, 4, 8, 12])
+    ex.set_ylabel("Mean evals ($\\times 10^3$)")
+    h, l = ex.get_legend_handles_labels()
+    bot.legend(h, l, loc="outside lower center", ncol=3, handlelength=1.0, columnspacing=1.4)
+
+    ps.save(fig, out / "supp_7method_cross_domain.pdf")
+
+
 FIGURES = (
     fig1_concept_overview,
     fig2_main_results,
@@ -953,6 +1068,7 @@ FIGURES = (
     fig13_eprocess_safety_and_compute,
     fig14_sparse_variance_tracking,
     fig15_native_solver_and_workflows,
+    fig16_seven_method_cross_domain,
 )
 
 
@@ -961,7 +1077,7 @@ def generate_all(out_dir: Path) -> None:
     ps.setup()
     for fn in FIGURES:
         fn(out_dir)
-    print(f"Generated {len(FIGURES)} manuscript figure PDFs (Figures 1-14) in {out_dir}")
+    print(f"Generated {len(FIGURES)} manuscript figure PDFs (Figures 1-15) in {out_dir}")
 
 
 def main() -> None:

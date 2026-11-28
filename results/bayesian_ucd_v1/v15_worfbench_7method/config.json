@@ -1,0 +1,88 @@
+{
+  "experiment": "v15_worfbench_7method",
+  "git_commit": "1f490cea4111dd40552264a2a124e731e8afd51d",
+  "smoke": false,
+  "epsilon": 0.02,
+  "delta": 0.05,
+  "budget_cap": 35000,
+  "domains": [
+    "all",
+    "toolbench",
+    "toolalpaca",
+    "seal_tools",
+    "webshop"
+  ],
+  "base_configs": [
+    {
+      "name": "default_0000_u3",
+      "cfg": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_upgrades": 3
+    },
+    {
+      "name": "default_0000_u2",
+      "cfg": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_upgrades": 2
+    },
+    {
+      "name": "compact_1000_u3",
+      "cfg": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "max_upgrades": 3
+    },
+    {
+      "name": "cot_0100_u3",
+      "cfg": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "max_upgrades": 3
+    }
+  ],
+  "n_seeds_per_campaign": 50,
+  "total_instances_per_method": 1000,
+  "seed_range": [
+    780001,
+    780050
+  ],
+  "orig_table35_seed_range": [
+    780001,
+    780006
+  ],
+  "predeclared_working_gp_model": {
+    "leak_free_status": "Predeclared purely from generic [0,1] bounds and 4-stage diameter; zero fitting on D_cert or D_test",
+    "kernel": "k(z, z') = sigma_f^2 * exp(-d_H(z, z') / ell) + (nugget_frac * sigma_f^2) * 1_{z == z'}",
+    "prior_mean": 0.25,
+    "sigma_f": 0.22,
+    "lengthscale_ell": 2.0,
+    "nugget_frac": 0.02,
+    "working_obs_std": 0.25,
+    "query_costs": "unit (1.0) for all policies; replay-accounted LLM tokens tracked separately",
+    "credible_radius": "sqrt(chi2_{r, 0.95}) with exact contrast rank r = M - 1",
+    "hyperparameter_refitting": "disabled"
+  },
+  "sampling_protocol_audit": {
+    "sampling_mode": "i.i.d. uniform with replacement over D_cert via SplitMix64(seed, leaf, k)",
+    "intrinsic_tape_identical_across_policies": true,
+    "verified_20k_sample_mean_abs_error": 0.0,
+    "d_cert_tasks_pooled": 64,
+    "d_cert_tasks_per_domain": 16,
+    "d_test_tasks_pooled": 32,
+    "d_test_tasks_per_domain": 8
+  }
+}

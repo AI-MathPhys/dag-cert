@@ -325,4 +325,34 @@ double cpp_voi_eval_candidate(
     return acc_best_risk / static_cast<double>(n_y);
 }
 
+// Exact O(M^2) hyperbolic-Givens rank-1 Cholesky downdate:
+// Given Fortran (column-major) lower-triangular L (m x m) with L L^T = Sigma and vector v (m),
+// updates L in-place so L_new L_new^T = L L^T - v v^T (v is modified as workspace).
+// Column-major layout makes the inner loop strictly unit-stride and SIMD-vectorizable.
+// Returns 1 on success, 0 if any diagonal falls below 1e-18 (caller falls back to exact Cholesky).
+int cpp_chol_rank1_downdate(int m, double* L, double* v) {
+    const std::size_t stride = static_cast<std::size_t>(m);
+    for (int k = 0; k < m; ++k) {
+        double* col_k = L + static_cast<std::size_t>(k) * stride;
+        double lkk = col_k[k];
+        double vk = v[k];
+        if (lkk <= 1e-15) return 0;
+        double r2 = lkk * lkk - vk * vk;
+        if (r2 <= 1e-18) return 0;
+        double r = std::sqrt(r2);
+        double c = r / lkk;
+        double s = vk / lkk;
+        double inv_c = 1.0 / c;
+        col_k[k] = r;
+        for (int i = k + 1; i < m; ++i) {
+            double lik = col_k[i];
+            double vi = v[i];
+            double lik_new = (lik - s * vi) * inv_c;
+            v[i] = c * vi - s * lik_new;
+            col_k[i] = lik_new;
+        }
+    }
+    return 1;
+}
+
 }  // extern "C"

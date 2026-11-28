@@ -55,7 +55,7 @@ DATA_DIR = Path(__file__).resolve().parents[1] / "benchmarks" / "data"
 GB1_NPZ_PATH = DATA_DIR / "gb1_wu2016_measured.npz"
 TRPB_NPZ_PATH = DATA_DIR / "trpb_johnston2024_measured.npz"
 WORFBENCH_NPZ_PATH = DATA_DIR / "worfbench_qwen3_81x64.npz"
-WORFBENCH_TEST_NPZ_PATH = DATA_DIR / "worfbench_qwen3_test_81x64.npz"
+WORFBENCH_TEST_NPZ_PATH = DATA_DIR / "worfbench_qwen3_test_81x32.npz"
 
 GB1_FITNESS_MAX = 8.761966133117676  # Global max measured GB1 fitness (`FWAA`) in Wu et al. (2016)
 GB1_ASSAY_OFFSET = 0.10              # Baseline nonspecific assay readout in [0, 1]

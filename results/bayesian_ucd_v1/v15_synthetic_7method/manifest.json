@@ -1,0 +1,56 @@
+{
+  "experiment": "v15_synthetic_7method",
+  "smoke": false,
+  "elapsed_s": 1029.26,
+  "python": "3.12.14",
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "files": {
+    "config.json": {
+      "sha256": "ed1fd7637424e55f9ba4c4496f6c1b965225ce16f10c50825b84c69243c6c59e",
+      "bytes": 3331
+    },
+    "v15_synthetic_confirm_freq_full1000_summary.csv": {
+      "sha256": "7646ec1c2dbd25879ca3230e49c1593ab6eeaa01519c9d308fdfcd161ede3d5f",
+      "bytes": 12291
+    },
+    "v15_synthetic_confirm_freq_orig400_summary.csv": {
+      "sha256": "192d4c9f39df8b24b18675c405059d2339f522e170d53d1f7ca06c3f4c576d2c",
+      "bytes": 12117
+    },
+    "v15_synthetic_confirm_freq_records.csv": {
+      "sha256": "949b95612d0f6d2ffe02bd9b49636459f8069e72e856c2ec58c8a0db1c5a9cb3",
+      "bytes": 1520514
+    },
+    "v15_synthetic_confirm_freq_records.parquet": {
+      "sha256": "bfa5fad6c499924e69a7a6e595d73b3ab9254b12e12c357988a144d338cb95c7",
+      "bytes": 391525
+    },
+    "v15_synthetic_main64_full1000_summary.csv": {
+      "sha256": "502ac2d337812ac7b3b0d2cc25c4486260b9a4e53db6d84d1a46ccb2dddbff3d",
+      "bytes": 15773
+    },
+    "v15_synthetic_main64_orig400_summary.csv": {
+      "sha256": "014c55f69f8504fa01acb70422af28d776eb9e5f738a5c0d9c362137093102ab",
+      "bytes": 15539
+    },
+    "v15_synthetic_main64_records.csv": {
+      "sha256": "2f35c0bd0651cc75d76d8ad86b7298121b03cf9a4ee0aff4974fdc2cc685b661",
+      "bytes": 3291163
+    },
+    "v15_synthetic_main64_records.parquet": {
+      "sha256": "83b616744dd6ca7f67bd958d4b73048a47258befa145bb4a4b367223bde69731",
+      "bytes": 646917
+    },
+    "v15_synthetic_postrisk_full1000_summary.csv": {
+      "sha256": "72e04290961f81f44e4e040c6eaa94dc29ae1bcb0c4b6eb53e599fe567abf89d",
+      "bytes": 11934
+    },
+    "v15_synthetic_postrisk_orig400_summary.csv": {
+      "sha256": "8703b508f3492113260f649f1e5ca032b8024dee11b8aaf4c58241a95ef7009b",
+      "bytes": 11680
+    }
+  },
+  "n_main64_rows": 16000,
+  "n_confirm_freq_rows": 7000,
+  "n_seeds_per_condition": 250
+}

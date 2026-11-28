@@ -1,0 +1,31 @@
+{
+  "experiment": "v15_worfbench_7method",
+  "smoke": false,
+  "elapsed_s": 3333.08,
+  "python": "3.12.14",
+  "platform": "Linux-7.1.6-1rodete1-amd64-x86_64-with-glibc2.43",
+  "files": {
+    "config.json": {
+      "sha256": "a5f82e2d0d72b4a1b7911bbc9ae54d3c30c96ab38980d83af4e94c48d8ab2a43",
+      "bytes": 2008
+    },
+    "v15_worfbench_7method_records.csv": {
+      "sha256": "ab20dddc2f4d2d3f6eaaf3e297258c6ed910fbea54f214d93748e944ee1a875f",
+      "bytes": 5613563
+    },
+    "v15_worfbench_7method_records.parquet": {
+      "sha256": "fef5d930adecf3ccd73ed32af5fd555dbcf2a8b1703554063ff46f41e2149828",
+      "bytes": 957228
+    },
+    "v15_worfbench_full1000_summary.csv": {
+      "sha256": "de6b5c4e3d9c729ddcfa66cae48a7a2ac0f6fe104a884e950ee0d052cd04bb9f",
+      "bytes": 62269
+    },
+    "v15_worfbench_orig120_summary.csv": {
+      "sha256": "b0de0a65920915bc6d5975ecbfba6d1a1165b5bde9e2a5fb057cb9ebe8042fdd",
+      "bytes": 61654
+    }
+  },
+  "n_total_rows": 23000,
+  "total_campaigns_per_method": 1000
+}

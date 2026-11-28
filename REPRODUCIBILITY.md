@@ -3,7 +3,7 @@
 This document maps **every table (Tables 1–69) and every figure (Figures 1–14)** of **Certify the Decision, Not the Outcome: Bayesian Experimental Design on Search Graphs** ([`manuscript/Joint_cert_manuscript.pdf`](manuscript/Joint_cert_manuscript.pdf)) to its executable script under `experiment/`, its SHA-256-verified archive under `results/`, and its reproduction command via `experiment/run_all.py`.
 
 **Coverage status: 100% complete — zero missing experiments, logs, supplementary figures, or formalizations.**
-All 41 extension/Bayesian/protein/workflow suites (`exp1`–`exp15`, `e0`–`e6`, `v8_1`–`v8_6`, `v9_1`–`v9_4`, `v10_1`–`v10_3`, `v11_1`–`v11_3`, `v12`, `v13`, `v14`), the frozen passive-UCT v1 archive (`results/uct_v1_manifest.json`), all seven supplementary vector PDFs (`figures/supp_*.pdf`), and the Lean 4 formalizations (`lean/`) are included and verified in this repository. (Tables 2 and 6 are conceptual validity-regime summaries requiring no experimental archive.)
+All 44 extension/Bayesian/protein/workflow suites (`exp1`–`exp15`, `e0`–`e6`, `v8_1`–`v8_6`, `v9_1`–`v9_4`, `v10_1`–`v10_3`, `v11_1`–`v11_3`, `v12`, `v13`, `v14`, `v15_synth`, `v15_prot`, `v15_worf`), the frozen passive-UCT v1 archive (`results/uct_v1_manifest.json`), all supplementary vector PDFs (`figures/supp_*.pdf`), and the Lean 4 formalizations (`lean/`) are included and verified in this repository. (Tables 2 and 6 are conceptual validity-regime summaries requiring no experimental archive.)
 
 Appendix letters follow the compiled PDF: A–F (theory & methods), **G** (simulated experiments), **H** (protein engineering), **I** (agentic workflows), **J** (extended validation & unknown variance), **K** (algorithms), **L** (computational performance & independent oracle audit).
 
@@ -49,7 +49,8 @@ Covers Section 2.3, Section 3.1, Appendix G, Appendix J, and Appendix L.
 
 | Key | Manuscript Evidence | Script (`experiment/simulated/`) | Verified Archive (`results/`) |
 |---|---|---|---|
-| `v12` | **Table 3** (§3.1); **Tables 7, 8, 9, 14, 59; Fig. 3** (App. G.1, L.1) — 15,280-run matched-model BED vs. Correlated KG, GP-OS, VOI, BO & $d=8$ anytime frequentist + latency crossover | `exp_bed_vs_bo.py` | `bayesian_ucd_v1/v12_bed_vs_bo/` |
+| `v15_synth` | **App. G.1** (expanded 7-method Table 7, safeguard/single-witness ablation, 7-method stopping factorial, cross-domain Fig. `supp_7method_cross_domain.pdf`) — 1,000 paired runs/method + Parquet/CSV records & frozen generator/policy `config.json` | `exp_v15_synthetic_7method_and_ablations.py` | `bayesian_ucd_v1/v15_synthetic_7method/` |
+| `v12` | **Table 3** (§3.1); **App. G.1, L.1; Fig. 3** — 15,280-run matched-model BED vs. Correlated KG, GP-OS, VOI, BO & $d=8$ anytime frequentist + latency crossover | `exp_bed_vs_bo.py` | `bayesian_ucd_v1/v12_bed_vs_bo/` |
 | `exp1` | **Fig. 2d, Table 10, Fig. 4** (§3.1, App. G.2) — exact outside-support vs. marginal stopping across overlap | `exp_overlap_exact_regret.py` | `uct_v2_extensions/exp1_exact_regret/` |
 | `e0` | **Fig. 2e, Table 11** (§3.1, App. G.3) — off-witness low-valued proxy benchmark & conic audit | `exp_proxy_and_toy.py` | `bayesian_ucd_v1/e0_and_toy/` |
 | `e1` | **Table 12** (App. G.3) — $4\times 4$ overlap $\times$ correlation phase diagram | `exp_phase_diagram.py` | `bayesian_ucd_v1/e1_phase_diagram/` |
@@ -86,7 +87,8 @@ Covers Section 3.2, Appendix H, and Appendix J.2/J.4 on measured four-site GB1 (
 
 | Key | Manuscript Evidence | Script (`experiment/protein_engineering/`) | Verified Archive (`results/`) |
 |---|---|---|---|
-| `v14` | **Fig. 2f–h, Table 4** (§3.2); **Table 24, Fig. 8** (App. H.3) — 410-campaign proper $\sqrt{\chi^2_{M-1,.95/.90}}$ joint credible ellipsoid, valid anytime direct posterior-risk MC & simultaneous contrast coverage audit | `exp_credible_ellipsoid_audit.py` | `bayesian_ucd_v1/v14_protein_credible_ellipsoid/` |
+| `v15_prot` | **App. H.3** (complete 7-method Condition B table, 7×3 stopping factorial, `supp_7method_cross_domain.pdf`) — 2,050 paired campaigns/method (50 predeclared GB1 templates $\times 20$; all 21 TmTrpB templates $\times 50$) with paired & hierarchical bootstrap CIs, Parquet/CSV records | `exp_v15_protein_7method.py` | `bayesian_ucd_v1/v15_protein_7method/` |
+| `v14` | **Fig. 2f–h, Table 4** (§3.2); **App. H.3** — 410-campaign proper $\sqrt{\chi^2_{M-1,.95/.90}}$ joint credible ellipsoid, valid anytime direct posterior-risk MC & simultaneous contrast coverage audit | `exp_credible_ellipsoid_audit.py` | `bayesian_ucd_v1/v14_protein_credible_ellipsoid/` |
 | `v13` | **Table 4 (DF rows), Fig. 2h** (§3.2); **Tables 25, 26** (App. H.2, H.4) — 12,300-run matched GB1 & TmTrpB acquisition comparison (CD-Joint, Correlated KG, GP-OS, GP-Root-Info, GP-UCB) under nominal & DF stopping | `exp_matched_bed_vs_kg.py` | `bayesian_ucd_v1/v13_protein_bed_vs_kg/` |
 | `v11_1` | **Table 27** (§3.2, App. H.5); **Tables 49, 50** (App. J.4) — protein certificate-validity factorial & coupled-stream replay ($91.5\%$ / $82.9\%$ terminal vs. $100\%$ root-regret coverage) | `exp_validity_ablation.py` | `bayesian_ucd_v1/v11_exp1_protein_validity_ablation/` |
 | `v8_1` | **Table 28** (App. H.5); **Table 42, Fig. 11** (App. J.2) — calibrated EB+LOO proteins, rough-GP cure & $(\xi,\varepsilon)$ bounded-residual frontier | `exp_calibrated_proteins.py` | `bayesian_ucd_v1/v8_exp1_calibrated_proteins/` |
@@ -107,7 +109,8 @@ Covers Section 3.3 and Appendix I on WorFBench ($3^4=81$ workflows) and fresh un
 
 | Key | Manuscript Evidence | Script (`experiment/agentic_workflows/`) | Verified Archive (`results/`) |
 |---|---|---|---|
-| `v11_2` | **Table 5 (live rows)** (§3.3); **Table 37, Fig. 9** (App. I) — 36-campaign, 4-domain fresh uncached live Qwen3-0.6B replication ($0/36$ DF vs. $36/36$ EB+LOO in 24 evals / 14,291 tokens) | `exp_live_qwen3_36campaigns.py` | `bayesian_ucd_v1/v11_exp2_live_worfbench_36campaigns/` |
+| `v15_worf` | **App. I** (1,000-campaign 7-method matched Gaussian WorFBench table, 7×3 stopping factorial, verified uniform-with-replacement `SplitMix64` sampling audit, `supp_7method_cross_domain.pdf`) — predeclared leak-free Hamming kernel, Parquet/CSV records | `exp_v15_worfbench_7method.py` | `bayesian_ucd_v1/v15_worfbench_7method/` |
+| `v11_2` | **Table 5 (live rows)** (§3.3); **App. I** — 36-campaign, 4-domain fresh uncached live Qwen3-0.6B replication ($0/36$ DF vs. $36/36$ EB+LOO in 24 evals / 14,291 tokens) | `exp_live_qwen3_36campaigns.py` | `bayesian_ucd_v1/v11_exp2_live_worfbench_36campaigns/` |
 | `v10_3` | **Table 38, Fig. 14c** (App. I) — 8-campaign (24-run) fresh uncached live Qwen3-0.6B cohort | `exp_live_qwen3_8campaigns.py` | `bayesian_ucd_v1/v10_exp3_live_worfbench_expanded/` |
 | `v8_5` | **Table 39** (App. I) — WorFBench 3-way unseen-task generalization & initial uncached live audit | `exp_worfbench_unseen_live.py` | `bayesian_ucd_v1/v8_exp5_fresh_worfbench_live/` |
 | `exp12` / `exp13` | **Table 5 (offline rows)** (§3.3); **Tables 35, 36** (App. I) — WorFBench offline factorial ($1{,}937$ evals / $0.95\text{ M}$ tokens) & overlap sweep | `exp_worfbench_offline_and_overlap.py` (wrapper around `exp12`/`exp13`) | `uct_v4_icml_baselines/exp12_real_world/`, `exp13_real_world_validation/` |
@@ -137,6 +140,7 @@ Figures 2–14 are vector PDFs generated at their printed size, in one shared st
 | **Fig. 12** (App. J.3) | `supp_eprocess_safety_and_compute.pdf` | `v9_3`, `v9_1` |
 | **Fig. 13** (App. J.3) | `supp_sparse_variance_tracking.pdf` | `v9_1`, `v9_2` |
 | **Fig. 14** (App. L.5) | `supp_native_solver_and_workflows.pdf` | `v10_1`, `v10_2`, `v10_3` |
+| **Fig. 15** (App. H.3) | `supp_7method_cross_domain.pdf` | `v15_synth`, `v15_prot`, `v15_worf` |
 
 Pass `--all-suites` to `python experiment/run_all.py figures --all-suites` to also generate every detailed per-suite diagnostic figure into `figures/detailed/`.
 

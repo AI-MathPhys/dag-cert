@@ -52,6 +52,7 @@ def select_gp_arm_with_beta(
     delta: float = 0.05,
     rng: np.random.Generator | None = None,
     use_cpp: bool = True,
+    cd_stop_if_above_eps: bool = True,
 ) -> int:
     """Select the next terminal index ``0..M-1`` under a shared Gaussian posterior and radius ``beta``.
 
@@ -140,7 +141,7 @@ def select_gp_arm_with_beta(
                 means=means,
                 sigma_mat=posterior.sigma_mat,
                 beta=beta,
-                stop_if_above_eps=True,
+                stop_if_above_eps=cd_stop_if_above_eps,
             )
         finally:
             certifier.epsilon = prev_eps

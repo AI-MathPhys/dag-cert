@@ -50,6 +50,11 @@ SUITES: tuple[SuiteSpec, ...] = (
     # 1. SIMULATED EXPERIMENTS (Section 3.1 + Appendices G, J, L)
     # =========================================================================
     SuiteSpec(
+        "v15_synth", "simulated", "experiment/simulated/exp_v15_synthetic_7method_and_ablations.py",
+        "results/bayesian_ucd_v1/v15_synthetic_7method", "files_map", "--out-dir",
+        "Expanded 1,000-instance 7-method matched synthetic benchmark, CD-Joint safeguard/single-witness ablations & stopping factorial (App. G.1)",
+    ),
+    SuiteSpec(
         "v12", "simulated", "experiment/simulated/exp_bed_vs_bo.py",
         "results/bayesian_ucd_v1/v12_bed_vs_bo", "files_map", "--out-dir",
         "Matched-model BED vs. BO/KG/VOI/proxy & d=8 anytime frequentist (15,280 runs; Table 3, App. G.1)",
@@ -193,6 +198,11 @@ SUITES: tuple[SuiteSpec, ...] = (
     # 2. PROTEIN ENGINEERING (Section 3.2 + Appendix H: GB1 & TmTrpB)
     # =========================================================================
     SuiteSpec(
+        "v15_prot", "protein_engineering", "experiment/protein_engineering/exp_v15_protein_7method.py",
+        "results/bayesian_ucd_v1/v15_protein_7method", "files_map", "--out-dir",
+        "Expanded 2,050-campaign 7-method matched GB1 (50 templates x 20) & TmTrpB (21 x 50) chi2 ellipsoid + 7x3 stopping factorial (App. H.3)",
+    ),
+    SuiteSpec(
         "v14", "protein_engineering", "experiment/protein_engineering/exp_credible_ellipsoid_audit.py",
         "results/bayesian_ucd_v1/v14_protein_credible_ellipsoid", "files_map", "--out-dir",
         "410-campaign proper chi2_{M-1,.95/.90} ellipsoid, direct post.-risk & coverage audit (Table 4, Fig. 3, Table 24, Fig. 9)",
@@ -246,6 +256,11 @@ SUITES: tuple[SuiteSpec, ...] = (
     # =========================================================================
     # 3. AGENTIC WORKFLOWS (Section 3.3 + Appendix I: WorFBench & Live Qwen3-0.6B)
     # =========================================================================
+    SuiteSpec(
+        "v15_worf", "agentic_workflows", "experiment/agentic_workflows/exp_v15_worfbench_7method.py",
+        "results/bayesian_ucd_v1/v15_worfbench_7method", "files_map", "--out-dir",
+        "1,000-campaign 7-method matched Gaussian WorFBench benchmark (predeclared Hamming kernel) + 7x3 stopping factorial (App. I)",
+    ),
     SuiteSpec(
         "v11_2", "agentic_workflows", "experiment/agentic_workflows/exp_live_qwen3_36campaigns.py",
         "results/bayesian_ucd_v1/v11_exp2_live_worfbench_36campaigns", "files_map", "--out-dir",
@@ -370,7 +385,7 @@ def cmd_verify(_args: argparse.Namespace) -> None:
 
     print(
         f"PASS: Verified SHA-256 integrity across passive-UCT v1 ({len(v1_man['files'])} files) "
-        f"and all {len(SUITES)} experiment suites (v2--v14, zero gaps)."
+        f"and all {len(SUITES)} experiment suites (v2--v15, zero gaps)."
     )
 
 
